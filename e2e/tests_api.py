@@ -59,11 +59,14 @@ class FunctionalTest(APIStaticLiveServerTestCase):
     @classmethod
     def setUpTestData(cls):
         # Set up data for the whole TestCase
-        # cls.foo = Foo.objects.create(bar="Test")
+
         pass
 
     def test_simulations_get_endpoint(self):
-        response = self.client.get("/api/simulations/")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        actual_simulations = response.json()["results"]
-        self.assertEqual(len(actual_simulations), 3)
+        pass
+        # The following is the old code that ended up in the proper integration tests
+        # in test_views.py
+        # response = self.client.get("/api/simulations/")
+        # self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # actual_simulations = response.json()["results"]
+        # self.assertEqual(len(actual_simulations), 3)

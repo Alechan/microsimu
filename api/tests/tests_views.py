@@ -1,14 +1,23 @@
 from django.urls import reverse
+from rest_framework import status
 from rest_framework.test import APITestCase
 
+from api.models.models import LAWMSimulation, LAWMResult
+from api.serializers import SimulationSerializer
+from api.tests.api_test_mixin import ApiTestMixin
 
-class SimulationsTest(APITestCase):
-    def test_uses_home_template(self):
+
+class ApiViewsTest(APITestCase, ApiTestMixin):
+    def test_simulations_calls_correct_serializer(self):
+        self.create_simple_db_simulations(pop_values=[1])
+        self.create_simple_db_simulations(pop_values=[2, 3, 4])
+        simus = LAWMSimulation.objects.all()
+
         url = reverse("api:simulations")
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, 201)
-        actual_simulations = response.json()["results"]
-        self.assertEqual(len(actual_simulations), 3)
+        serializer = SimulationSerializer(simus, many=True)
 
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
 
