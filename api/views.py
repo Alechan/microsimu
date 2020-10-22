@@ -3,7 +3,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from api.models.models import LAWMSimulation
-from api.serializers import SimulationSerializer
+from api.serializers import SimulationListSerializer
 
 
 @api_view(('GET',))
@@ -15,5 +15,5 @@ def simulations(request):
     :return:
     """
     simus = LAWMSimulation.objects.all()
-    serializer = SimulationSerializer(simus, many=True)
+    serializer = SimulationListSerializer(simus, many=True)
     return Response(serializer.data)

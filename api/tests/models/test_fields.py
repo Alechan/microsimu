@@ -15,4 +15,3 @@ class VariableFloatFieldTest(TestCase):
         model_created = DjangoModelWithCustomFields.objects.create(float_var=value)
 
         self.assertEqual(model_created.float_var, value)
-

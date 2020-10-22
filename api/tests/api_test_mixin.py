@@ -5,7 +5,7 @@ from api.models.models import LAWMSimulation, LAWMResult
 
 class ApiTestMixin:
     @staticmethod
-    def create_simple_db_simulations(pop_values):
+    def create_simple_db_simulation(pop_values):
         simu = LAWMSimulation.objects.create()
         for val in pop_values:
             _ = LAWMResult.objects.create(
@@ -13,6 +13,7 @@ class ApiTestMixin:
                 popr=4000,
                 simulation=simu,
             )
+        return simu
 
     @staticmethod
     def get_lawm_results_from_ids(ids):

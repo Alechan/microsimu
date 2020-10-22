@@ -4,20 +4,13 @@ from api.models import fields
 from api.models.models import LAWMSimulation, LAWMResult
 
 
-class VariableFloatField(serializers.Field):
+class VariableFloatSerializerField(serializers.Field):
     """
     Serializer field targeting custom VariableFloatField
     """
+
     def to_representation(self, value):
         return float(value.value)
-
-
-class SimulationSerializer(serializers.ModelSerializer):
-    results = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
-    class Meta:
-        model = LAWMSimulation
-        fields = '__all__'
 
 
 class ResultSerializerMetaClass(type(serializers.ModelSerializer)):
@@ -26,13 +19,31 @@ class ResultSerializerMetaClass(type(serializers.ModelSerializer)):
     class.
     """
     def __new__(cls, clsname, bases, attrs):
+        # noinspection PyTypeChecker
         super_new = super().__new__(cls, clsname, bases, attrs)
-        super_new.serializer_field_mapping[fields.VariableFloatField] = VariableFloatField
+        super_new.serializer_field_mapping[fields.VariableFloatField] = VariableFloatSerializerField
         return super_new
 
 
-class ResultSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+class ResultInstanceSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+    """
+    Serializes the instance's values into primitive types
+    """
 
     class Meta:
         model = LAWMResult
+        exclude = ["simulation"]
+
+
+class SimulationDetailSerializer(serializers.ModelSerializer):
+    results = ResultInstanceSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = LAWMSimulation
         fields = '__all__'
+
+
+class SimulationListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LAWMSimulation
+        fields = ["id", "created"]
