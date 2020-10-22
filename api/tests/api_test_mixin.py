@@ -5,15 +5,69 @@ from api.models.models import LAWMSimulation, LAWMResult
 
 class ApiTestMixin:
     @staticmethod
+    def get_result_creation_kwargs(simulation):
+        return {
+            "simulation": simulation,
+            "year"      : 1960,
+            "pop"       : 123,
+            "popr"      : 124,
+            "exlife"    : 125,
+            "grmor"     : 126,
+            "birthr"    : 127,
+            "chmor"     : 128,
+            "calor"     : 129,
+            "prot"      : 130,
+            "hsexfl"    : 131,
+            "gnpxc"     : 132,
+            "enrol"     : 133,
+            "educr"     : 134,
+            "eapopr"    : 135,
+            "tlf"       : 136,
+            "rlfd_1"    : 137,
+            "rlfd_2"    : 138,
+            "rlfd_3"    : 139,
+            "rlfd_4"    : 140,
+            "rlfd_5"    : 141,
+            "capt"      : 142,
+            "capd_1"    : 143,
+            "capd_2"    : 144,
+            "capd_3"    : 145,
+            "capd_4"    : 146,
+            "capd_5"    : 147,
+            "_0_5"      : 148,
+            "_6_17"     : 149,
+            "_11_70"    : 150,
+            "al"        : 151,
+            "excal"     : 152,
+            "fert"      : 153,
+            "rend"      : 154,
+            "falu"      : 155,
+            "urbanr"    : 156,
+            "turbh"     : 157,
+            "sepopr"    : 158,
+            "houser"    : 159,
+            "perxfl"    : 160,
+            "gnp"       : 161,
+            "gnpd_1"    : 162,
+            "gnpd_2"    : 163,
+            "gnpd_3"    : 164,
+            "gnpd_4"    : 165,
+            "gnpd_5"    : 166,
+
+        }
+
+    @staticmethod
     def create_simple_db_simulation(pop_values):
         simu = LAWMSimulation.objects.create()
+        result_kwargs = ApiTestMixin.get_result_creation_kwargs(simu)
+        results = []
         for val in pop_values:
-            _ = LAWMResult.objects.create(
-                pop=val,
-                popr=4000,
-                simulation=simu,
-            )
-        return simu
+            # Create a new result with different year and pop, but the other variables stay the same
+            result_kwargs["pop"] = val
+            result_kwargs["year"] = result_kwargs["year"] + 1
+            res = LAWMResult.objects.create(**result_kwargs)
+            results.append(res)
+        return simu, results
 
     @staticmethod
     def get_lawm_results_from_ids(ids):

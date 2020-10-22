@@ -25,18 +25,18 @@ class ResultSerializerMetaClass(type(serializers.ModelSerializer)):
         return super_new
 
 
-class ResultInstanceSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+class ResultSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
     """
     Serializes the instance's values into primitive types
     """
 
     class Meta:
         model = LAWMResult
-        exclude = ["simulation"]
+        exclude = ["simulation", "id"]
 
 
 class SimulationDetailSerializer(serializers.ModelSerializer):
-    results = ResultInstanceSerializer(many=True, read_only=True)
+    results = ResultSerializer(many=True, read_only=True)
 
     class Meta:
         model = LAWMSimulation

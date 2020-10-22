@@ -2,12 +2,34 @@
   <dictionary name="adanos">
     <words>
       <w>asdict</w>
+      <w>birthr</w>
+      <w>calor</w>
+      <w>capd</w>
+      <w>chmor</w>
       <w>clsname</w>
+      <w>eapopr</w>
+      <w>educr</w>
+      <w>excal</w>
+      <w>exlife</w>
+      <w>falu</w>
+      <w>fert</w>
+      <w>gnpd</w>
+      <w>gnpxc</w>
+      <w>grmor</w>
+      <w>houser</w>
+      <w>hsexfl</w>
       <w>lawm</w>
+      <w>perc</w>
+      <w>perxfl</w>
       <w>popr</w>
+      <w>prot</w>
+      <w>rlfd</w>
+      <w>sepopr</w>
       <w>simu</w>
       <w>simus</w>
       <w>subclassify</w>
+      <w>turbh</w>
+      <w>urbanr</w>
     </words>
   </dictionary>
 </component>
