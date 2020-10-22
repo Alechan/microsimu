@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Any
 
 
@@ -19,6 +19,22 @@ class ModelVariable:
     unit        : str
     description : str
     category    : str
+
+    @classmethod
+    def info_as_dict(cls):
+        """
+        Returns the variable information excluding the value attribute
+
+        :return: a dictionary such as {name:"Population", "unit":"persons",...} - {"value": 423}
+        """
+        # Create an instance that with any value
+        # noinspection PyArgumentList
+        instance = cls(1)
+        # Call the official dataclass asdict
+        base_dict = asdict(instance)
+        # Remove the value key
+        del base_dict["value"]
+        return base_dict
 
 
 @dataclass

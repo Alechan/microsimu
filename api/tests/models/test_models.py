@@ -15,6 +15,18 @@ class LAWMSimulationTest(TestCase):
         self.assertGreater(simulation.created, time_before_creation)
         self.assertGreater(time_after_creation, simulation.created)
 
+    def test_get_variables_information_returns_results_variables_information(self):
+        value = 423.32
+        simulation = LAWMSimulation.objects.create()
+        res = LAWMResult.objects.create(
+            simulation=simulation,
+            pop=value,
+            popr=value,
+        )
+        actual_vars_info   = simulation.get_variables_information()
+        expected_vars_info = res.get_variables_information()
+        self.assertEqual(actual_vars_info, expected_vars_info)
+
 
 class LAWMResultTest(TestCase):
     def test_all_attributes_are_readable_and_casted_to_variables(self):
@@ -28,3 +40,17 @@ class LAWMResultTest(TestCase):
         self.assertEqual(res.pop, Population(value))
         self.assertEqual(res.popr, PopulationGrowth(value))
 
+    def test_get_variables_information_returns_collection_of_correct_vars_info(self):
+        value = 423.32
+        simulation = LAWMSimulation.objects.create()
+        res = LAWMResult.objects.create(
+            simulation=simulation,
+            pop=value,
+            popr=value,
+        )
+        actual_vars_info = res.get_variables_information()
+        expected_vars_info = {
+            "pop" : Population.info_as_dict(),
+            "popr": PopulationGrowth.info_as_dict(),
+        }
+        self.assertEqual(actual_vars_info, expected_vars_info)
