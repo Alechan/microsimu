@@ -60,9 +60,6 @@ class LAWMResult(models.Model):
     gnpd_4     = VariableFloatField(model_variable=GNPOtherGoodsSectorProportion, null=False)
     gnpd_5     = VariableFloatField(model_variable=GNPCapitalGoodsSectorProportion, null=False)
 
-
-
-
     def get_variables_information(self):
         fields_names    = [x.name for x in self._meta.get_fields() if isinstance(x, VariableFloatField)]
         extra_info_dict = {field : getattr(self, field).info_as_dict() for field in fields_names}

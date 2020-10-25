@@ -43,7 +43,9 @@ class SimulationDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SimulationListSerializer(serializers.ModelSerializer):
+class SimulationListSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="api:simulation-detail")
+
     class Meta:
         model = LAWMSimulation
-        fields = ["id", "created"]
+        fields = ["url", "created"]

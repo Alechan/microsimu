@@ -5,5 +5,6 @@ from api import views
 app_name = "api"
 
 urlpatterns = [
-    path('simulations/', views.simulations, name="simulations"),
+    path('simulations/', views.simulations_list           , name="simulations"),
+    path('simulations/<int:pk>/', views.simulations_detail, name='simulation-detail'),
 ]
