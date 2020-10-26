@@ -1,3 +1,5 @@
+import functools
+
 from django.db import models
 
 from api.std_lib.lawm.variables import *
@@ -8,8 +10,13 @@ class LAWMSimulation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def get_variables_information(self):
-        any_result = self.results.first()
-        return any_result.get_variables_information()
+        if hasattr(LAWMSimulation, "_cached_vars_info"):
+            return LAWMSimulation._cached_vars_info
+        else:
+            any_result = self.results.first()
+            vars_info = any_result.get_variables_information()
+            LAWMSimulation._cached_vars_info = vars_info
+            return vars_info
 
 
 class LAWMResult(models.Model):

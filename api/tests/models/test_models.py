@@ -1,3 +1,6 @@
+from unittest import mock
+from unittest.mock import patch, MagicMock
+
 import django
 from django.test import TestCase
 from django.utils import timezone
@@ -17,13 +20,26 @@ class LAWMSimulationTest(TestCase, ApiTestMixin):
         self.assertGreater(simulation.created, time_before_creation)
         self.assertGreater(time_after_creation, simulation.created)
 
-    def test_get_variables_information_returns_results_variables_information(self):
-        simulation, results = self.create_simple_db_simulation(pop_values=[1])
-        res = results[0]
+    @mock.patch('api.models.models.LAWMResult.get_variables_information')
+    def test_get_variables_information_returns_results_variables_information_and_is_cached(self, method_mock):
+        simulation_1, results_1 = self.create_simple_db_simulation(pop_values=[1])
+        simulation_2, results_2 = self.create_simple_db_simulation(pop_values=[1])
 
-        actual_vars_info   = simulation.get_variables_information()
-        expected_vars_info = res.get_variables_information()
-        self.assertEqual(actual_vars_info, expected_vars_info)
+        vars_info_mock = MagicMock()
+        method_mock.return_value = vars_info_mock
+
+        self.assertEqual(method_mock.call_count, 0)
+        simu_1_vars_info   = simulation_1.get_variables_information()
+        self.assertEqual(method_mock.call_count, 1)
+        self.assertEqual(vars_info_mock, simu_1_vars_info)
+
+        simu_1_vars_info_2   = simulation_1.get_variables_information()
+        self.assertEqual(method_mock.call_count, 1)
+        self.assertEqual(vars_info_mock, simu_1_vars_info_2)
+
+        simu_2_vars_info   = simulation_2.get_variables_information()
+        self.assertEqual(method_mock.call_count, 1)
+        self.assertEqual(vars_info_mock, simu_2_vars_info)
 
 
 class LAWMResultTest(TestCase, ApiTestMixin):
