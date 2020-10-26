@@ -22,8 +22,11 @@ class LAWMSimulationTest(TestCase, ApiTestMixin):
 
     @mock.patch('api.models.models.LAWMResult.get_variables_information')
     def test_get_variables_information_returns_results_variables_information_and_is_cached(self, method_mock):
+        # Clean cache just in case other tests have set it up
+        if hasattr(LAWMSimulation, "_cached_vars_info"):
+            del LAWMSimulation._cached_vars_info
         simulation_1, results_1 = self.create_simple_db_simulation(pop_values=[1])
-        simulation_2, results_2 = self.create_simple_db_simulation(pop_values=[1])
+        simulation_2, results_2 = self.create_simple_db_simulation(pop_values=[43])
 
         vars_info_mock = MagicMock()
         method_mock.return_value = vars_info_mock
@@ -40,6 +43,10 @@ class LAWMSimulationTest(TestCase, ApiTestMixin):
         simu_2_vars_info   = simulation_2.get_variables_information()
         self.assertEqual(method_mock.call_count, 1)
         self.assertEqual(vars_info_mock, simu_2_vars_info)
+
+        # Clean up cache or other tests will fail because it's stored in the model class (which is used
+        # in all tests)
+        del LAWMSimulation._cached_vars_info
 
 
 class LAWMResultTest(TestCase, ApiTestMixin):

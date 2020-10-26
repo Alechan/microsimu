@@ -36,7 +36,13 @@ class ResultSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMe
 
 
 class SimulationDetailSerializer(serializers.ModelSerializer):
-    results = ResultSerializer(many=True, read_only=True)
+    results   = ResultSerializer(many=True, read_only=True)
+    variables = serializers.SerializerMethodField('get_variables_information')
+
+    # noinspection PyMethodMayBeStatic
+    def get_variables_information(self, obj):
+        vars_info = obj.get_variables_information()
+        return vars_info
 
     class Meta:
         model = LAWMSimulation
