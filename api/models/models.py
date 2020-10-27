@@ -14,9 +14,10 @@ class LAWMSimulation(models.Model):
 
 class LAWMRegionResult(models.Model):
     simulation = models.ForeignKey(LAWMSimulation, related_name="region_results", null=False, on_delete=models.CASCADE)
-    region     = models.OneToOneField(LAWMRegion    , related_name="region_result", null=False, on_delete=models.CASCADE)
+    region     = models.ForeignKey(LAWMRegion    , related_name="region_result", null=False, on_delete=models.CASCADE)
 
-    unique_together = ('simulation', 'year')
+    class Meta:
+        unique_together = ('simulation', 'region')
 
     @property
     def region_name(self):
