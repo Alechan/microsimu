@@ -9,7 +9,7 @@ class RegionResultSerializerTest(test.TestCase, ApiTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()
-        cls.region_result = db_tree.reg_res_s1_r1
+        cls.region_result = db_tree.region_result_r1
         serializer = RegionResultSerializer(cls.region_result, context={"request": None})
         cls.data = serializer.data
 

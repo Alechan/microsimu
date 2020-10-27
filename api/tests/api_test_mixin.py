@@ -8,10 +8,10 @@ class TestDatabaseTree:
         self.simu    = LAWMSimulation.objects.create()
         self.region_1 = LAWMRegion.objects.get_or_create(name=f"region_1")[0]
         self.region_2 = LAWMRegion.objects.get_or_create(name=f"region_2")[0]
-        self.reg_res_s1_r1 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_1)
-        self.reg_res_s1_r2 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_2)
-        self.year_results_reg_1 = self.create_year_results(self.reg_res_s1_r1, n_years=2)
-        self.year_results_reg_2 = self.create_year_results(self.reg_res_s1_r2, n_years=2)
+        self.region_result_r1 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_1)
+        self.region_result_r2 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_2)
+        self.year_results_reg_1 = self.create_year_results(self.region_result_r1, n_years=2)
+        self.year_results_reg_2 = self.create_year_results(self.region_result_r2, n_years=2)
 
     @classmethod
     def create_year_results(cls, region_result, n_years):

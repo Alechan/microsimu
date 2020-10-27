@@ -10,7 +10,7 @@ class LAWMYearResultTest(TestCase, ApiTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()
-        cls.region_result = db_tree.reg_res_s1_r1
+        cls.region_result = db_tree.region_result_r1
         cls.year_1960_result = db_tree.year_results_reg_1[0]
         cls.year_1960_result_creation_kwargs = cls.get_year_result_creation_kwargs(cls.region_result, year=1960)
 
