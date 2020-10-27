@@ -19,41 +19,41 @@ urlpatterns = [
 
 @override_settings(ROOT_URLCONF=__name__)
 class SimulationListSerializerTest(test.TestCase, ApiTestMixin):
-    def test_list_serializer_one_simu_still_returns_list(self):
-        self.create_simple_db_simulation(pop_values=[1, 2, 3])
-        all_simus = LAWMSimulation.objects.all()
+    @classmethod
+    def setUpTestData(cls):
+        data = cls.get_serializer_data_for_multiple_simulations()
+        cls.data = data
 
-        serializer = SimulationListSerializer(all_simus, many=True, context={'request': None})
-
-        data = serializer.data
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]["url"], "/test_path/1/")
-
-    def test_list_serializer_returns_correct_fields(self):
-        self.create_simple_db_simulation(pop_values=[1])
-        self.create_simple_db_simulation(pop_values=[2, 3, 4])
-        all_simus = LAWMSimulation.objects.all()
-
-        serializer = SimulationListSerializer(all_simus, many=True, context={'request': None})
-        data = serializer.data
+    def test_correct_fields(self):
         expected_fields = {"created", "url"}
 
-        for simu_data in data:
+        for simu_data in self.data:
             actual_fields = simu_data.keys()
             self.assertEqual(expected_fields, actual_fields)
 
+    def test_one_simu_still_returns_list(self):
+        simu = LAWMSimulation.objects.create()
+        simus = [simu]
+
+        serializer = SimulationListSerializer(simus, many=True, context={'request': None})
+
+        data = serializer.data
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["url"], f"/test_path/{simu.id}/")
+
     def test_list_serializer_many_simulations_returns_correct_time(self):
         before_creation_time_iso = timezone.localtime().isoformat()
-        _ = LAWMSimulation.objects.create()
-        _ = LAWMSimulation.objects.create()
-        _ = LAWMSimulation.objects.create()
-        all_simus = LAWMSimulation.objects.all()
-
-        serializer = SimulationListSerializer(all_simus, many=True, context={'request': None})
-        data = serializer.data
+        data = self.get_serializer_data_for_multiple_simulations()
 
         for simu_id in range(1, 4):
             simulation = data[simu_id - 1]
-            self.assertEqual(simulation["url"], f"/test_path/{simu_id}/")
             actual_creation_time_iso = simulation["created"]
             self.assert_is_later_and_close(actual_creation_time_iso, before_creation_time_iso)
+
+    @staticmethod
+    def get_serializer_data_for_multiple_simulations():
+        simus = [LAWMSimulation.objects.create() for _ in range(3)]
+        serializer = SimulationListSerializer(simus, many=True, context={'request': None})
+        data = serializer.data
+        return data
+

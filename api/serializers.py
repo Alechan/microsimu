@@ -1,7 +1,8 @@
 from rest_framework import serializers
+from django.urls import reverse
 
 from api.models import fields
-from api.models.models import LAWMSimulation, LAWMResult
+from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegionResult
 
 
 class VariableFloatSerializerField(serializers.Field):
@@ -31,18 +32,42 @@ class ResultSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMe
     """
 
     class Meta:
-        model = LAWMResult
-        exclude = ["simulation", "id"]
+        model = LAWMYearResult
+        exclude = ["region_result", "id"]
 
 
-class SimulationDetailSerializer(serializers.ModelSerializer):
-    results   = ResultSerializer(many=True, read_only=True)
-    variables = serializers.SerializerMethodField('get_variables_information')
+class RegionResultSerializer(serializers.ModelSerializer):
+    simulation = serializers.HyperlinkedIdentityField(view_name="api:simulation-detail")
+    region     = serializers.ReadOnlyField(source='region.name')
+    variables  = serializers.SerializerMethodField('get_variables_information')
+    results    = ResultSerializer(many=True, read_only=True, source='year_results')
 
     # noinspection PyMethodMayBeStatic
     def get_variables_information(self, obj):
         vars_info = obj.get_variables_information()
         return vars_info
+
+    class Meta:
+        model = LAWMRegionResult
+        exclude = ["id"]
+
+
+class SimulationDetailSerializer(serializers.HyperlinkedModelSerializer):
+    url     = serializers.HyperlinkedIdentityField(view_name="api:simulation-detail")
+    regions = serializers.SerializerMethodField('get_regions_urls')
+
+    def get_regions_urls(self, obj):
+        regions_urls = {
+            reg_res.region_name: self.get_url_from_region_result(reg_res)
+            for reg_res in obj.region_results.all()
+        }
+        return regions_urls
+
+    @staticmethod
+    def get_url_from_region_result(reg_res):
+        args = [reg_res.simulation_id, reg_res.region_name]
+        url = reverse("api:regionresult-detail", args=args)
+        return url
 
     class Meta:
         model = LAWMSimulation

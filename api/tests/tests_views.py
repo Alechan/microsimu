@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from api.models.models import LAWMSimulation, LAWMResult
+from api.models.models import LAWMSimulation, LAWMYearResult
 from api.serializers import SimulationListSerializer, SimulationDetailSerializer
 from api.tests.api_test_mixin import ApiTestMixin
 

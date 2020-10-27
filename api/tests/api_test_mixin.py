@@ -1,14 +1,33 @@
 from datetime import datetime, timedelta
 
-from api.models.models import LAWMSimulation, LAWMResult
+from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegion, LAWMRegionResult
 
 
-class ApiTestMixin:
+class TestDatabaseTree:
+    def __init__(self):
+        self.simu    = LAWMSimulation.objects.create()
+        self.region_1 = LAWMRegion.objects.create(name=f"region_1")
+        self.region_2 = LAWMRegion.objects.create(name=f"region_2")
+        self.reg_res_s1_r1 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_1)
+        self.reg_res_s1_r2 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_2)
+        self.year_results_reg_1 = self.create_year_results(self.reg_res_s1_r1, n_years=2)
+        self.year_results_reg_2 = self.create_year_results(self.reg_res_s1_r2, n_years=2)
+
+    @classmethod
+    def create_year_results(cls, region_result, n_years):
+        year_results = []
+        for i_y in range(n_years):
+            year = 1960 + i_y
+            creation_kwargs = cls.get_year_result_creation_kwargs(region_result, year=year)
+            y_res = LAWMYearResult.objects.create(**creation_kwargs)
+            year_results.append(y_res)
+        return year_results
+
     @staticmethod
-    def get_result_creation_kwargs(simulation):
+    def get_year_result_creation_kwargs(region_result, year=1960):
         return {
-            "simulation": simulation,
-            "year"      : 1960,
+            "region_result": region_result,
+            "year"      : year,
             "pop"       : 123,
             "popr"      : 124,
             "exlife"    : 125,
@@ -56,23 +75,27 @@ class ApiTestMixin:
 
         }
 
+class ApiTestMixin:
+    @classmethod
+    def create_full_simulation_db_tree(cls):
+        return TestDatabaseTree()
+
+    @staticmethod
+    def get_year_result_creation_kwargs(region_result, year):
+        return TestDatabaseTree.get_year_result_creation_kwargs(region_result, year)
+
     @staticmethod
     def create_simple_db_simulation(pop_values):
         simu = LAWMSimulation.objects.create()
-        result_kwargs = ApiTestMixin.get_result_creation_kwargs(simu)
+        result_kwargs = ApiTestMixin.get_year_result_creation_kwargs(simu)
         results = []
         for val in pop_values:
             # Create a new result with different year and pop, but the other variables stay the same
             result_kwargs["pop"] = val
             result_kwargs["year"] = result_kwargs["year"] + 1
-            res = LAWMResult.objects.create(**result_kwargs)
+            res = LAWMYearResult.objects.create(**result_kwargs)
             results.append(res)
         return simu, results
-
-    @staticmethod
-    def get_lawm_results_from_ids(ids):
-        lawm_results = LAWMResult.objects.filter(pk__in=ids)
-        return lawm_results
 
     def assert_is_later_and_close(self, after_time_iso, before_time_iso):
         self.assertGreater(after_time_iso, before_time_iso)
