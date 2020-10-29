@@ -27,6 +27,6 @@ class LAWMSimulationTest(TestCase, ApiTestMixin):
 
         expected_region_results = [self.region_result_region_1, self.region_result_region_2]
 
-        self.assertEqual(len(actual_region_results), len(expected_region_results))
+        self.assert_length_equal(actual_region_results, expected_region_results)
         self.assertEqual(expected_region_results[0], actual_region_results[0])
         self.assertEqual(expected_region_results[1], actual_region_results[1])

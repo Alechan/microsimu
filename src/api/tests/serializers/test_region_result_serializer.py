@@ -36,7 +36,7 @@ class RegionResultSerializerTest(test.TestCase, ApiTestMixin):
 
     def test_serializer_returns_variables(self):
         variables = self.data["variables"]
-        self.assertEqual(len(variables), 44)
+        self.assert_has_length(variables, 44)
         self.assertEqual(
             variables["pop"],
             Population.info_as_dict()

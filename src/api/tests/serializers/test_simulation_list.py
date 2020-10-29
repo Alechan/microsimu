@@ -38,7 +38,7 @@ class SimulationListSerializerTest(test.TestCase, ApiTestMixin):
         serializer = SimulationListSerializer(simus, many=True, context={'request': None})
 
         data = serializer.data
-        self.assertEqual(len(data), 1)
+        self.assert_has_length(data, 1)
         self.assertEqual(data[0]["url"], f"/test_path/{simu.id}/")
 
     def test_list_serializer_many_simulations_returns_correct_time(self):

@@ -105,3 +105,11 @@ class ApiTestMixin:
         max_timedelta = timedelta(seconds=10)
         if actual_timedelta > max_timedelta:
             self.fail(f"The expected time {expected_time} is not close to the actual time {actual_time}.")
+
+    def assert_length_equal(self, first, second):
+        if len(first) != len(second):
+            self.fail(f"The first had length {len(first)} but the second had length {len(second)}")
+
+    def assert_has_length(self, collection, length):
+        if len(collection) != length:
+            self.fail(f"The collection had length {len(collection)} but it was expected to be {length}")
