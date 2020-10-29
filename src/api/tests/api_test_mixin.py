@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegion, LAWMRegionResult
+from microsimu.settings import BASE_DIR
 
 
 class TestDatabaseTree:
@@ -76,8 +77,12 @@ class TestDatabaseTree:
         }
 
 class ApiTestMixin:
-    @classmethod
-    def create_full_simulation_db_tree(cls):
+    @staticmethod
+    def get_migrations_csvs_path():
+        return BASE_DIR / "api" / "migrations" / "csvs"
+
+    @staticmethod
+    def create_full_simulation_db_tree():
         return TestDatabaseTree()
 
     @staticmethod
@@ -105,3 +110,16 @@ class ApiTestMixin:
         max_timedelta = timedelta(seconds=10)
         if actual_timedelta > max_timedelta:
             self.fail(f"The expected time {expected_time} is not close to the actual time {actual_time}.")
+
+    def assert_have_equal_length(self, first, second):
+        if len(first) != len(second):
+            self.fail(f"The first had length {len(first)} but the second had length {len(second)}")
+
+    def assert_has_length(self, collection, length):
+        if len(collection) != length:
+            self.fail(f"The collection had length {len(collection)} but it was expected to be {length}")
+
+    def assert_equal_values_for_attributes(self, first, second, attributes):
+        for attr in attributes:
+            self.assertEqual(getattr(first, attr), getattr(second, attr))
+

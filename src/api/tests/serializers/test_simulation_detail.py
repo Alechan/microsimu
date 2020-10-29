@@ -54,6 +54,6 @@ class SimulationDetailSerializerTest(test.TestCase, ApiTestMixin):
     def test_serializer_returns_regions(self):
         simu_id = self.simu.id
         regions = self.data["regions"]
-        self.assertEqual(len(regions), 2)
+        self.assert_has_length(regions, 2)
         self.assertEqual(regions[self.region_1.name], f"/test_path/{simu_id}/{self.region_1.name}/")
         self.assertEqual(regions[self.region_2.name], f"/test_path/{simu_id}/{self.region_2.name}/")
