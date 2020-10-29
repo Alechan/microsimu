@@ -27,7 +27,6 @@ def create_year_results(LAWMYearResult, region_result, objects_to_save, df_regio
         year_result_creation_kwargs = map_series_to_year_result_creation_kwargs(y_series)
         year_result_creation_kwargs["region_result"] = region_result
         year_result = create_new_object(LAWMYearResult, year_result_creation_kwargs, objects_to_save)
-        objects_to_save.append(year_result)
 
 
 # noinspection PyPep8Naming
