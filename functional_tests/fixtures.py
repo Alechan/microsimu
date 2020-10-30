@@ -19,15 +19,18 @@ def wait_for_api(session_scoped_container_getter):
     """
     request_session = get_request_session()
 
-    service_url = get_service_url(session_scoped_container_getter)
-    assert request_session.get(service_url), "The service is not up or the root url is not valid."
-    return request_session, service_url
-
-
-def get_service_url(container_getter):
-    service = container_getter.get(container_name).network_info[0]
+    container = session_scoped_container_getter.get(container_name)
+    service = container.network_info[0]
     api_url = f"http://{service.hostname}:{service.host_port}/"
-    return api_url
+    if not request_session.get(api_url):
+        base_msg = f"The service is not up or the root url is not valid."
+        url      = f"The url used was {api_url}"
+        service_hostname       = f"service.hostname: {service.hostname}"
+        service_host_port      = f"service.host_port: {service.host_port}"
+        service_container_port = f"service.container_port: {service.container_port}"
+        error_msg = "\n".join([base_msg, url, service_hostname, service_host_port, service_container_port])
+        assert False, error_msg
+    return request_session, api_url
 
 
 def get_request_session():
