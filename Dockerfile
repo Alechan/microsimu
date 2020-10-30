@@ -2,6 +2,8 @@ FROM python:3.8.3-buster
 
 WORKDIR /usr/src
 
+# PYTHONDONTWRITEBYTECODE: Prevents Python from writing pyc files to disc (equivalent to python -B option)
+# PYTHONUNBUFFERED: Prevents Python from buffering stdout and stderr (equivalent to python -u option)
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
