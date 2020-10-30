@@ -39,7 +39,7 @@ class ResultSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMe
 
 
 class RegionResultSerializer(serializers.ModelSerializer):
-    simulation = serializers.HyperlinkedIdentityField(view_name="api:simulation-detail")
+    simulation = serializers.HyperlinkedRelatedField(view_name="api:simulation-detail", read_only=True)
     region     = serializers.ReadOnlyField(source='region.name')
     variables  = serializers.SerializerMethodField('get_variables_information')
     results    = ResultSerializer(many=True, read_only=True, source='year_results')
