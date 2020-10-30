@@ -16,6 +16,7 @@ class ApiViewsTest(APITestCase, ApiTestMixin):
         cls.simu_1 = db_tree_1.simu
         cls.simu_2 = db_tree_2.simu
         cls.region_result_s1_r1 = db_tree_1.region_result_r1
+        cls.request_factory = RequestFactory()
 
     def test_simulations_list_calls_correct_serializer(self):
         all_simus = LAWMSimulation.objects.all()
@@ -23,7 +24,7 @@ class ApiViewsTest(APITestCase, ApiTestMixin):
         url = reverse("api:simulations")
         response = self.client.get(url)
 
-        context = {'request': RequestFactory().get(url)}
+        context = {'request': self.request_factory.get(url)}
 
         serializer = SimulationListSerializer(all_simus, many=True, context=context)
 
@@ -35,7 +36,7 @@ class ApiViewsTest(APITestCase, ApiTestMixin):
         url = reverse("api:simulation-detail", args=[simu_id])
         response = self.client.get(url)
 
-        context = {'request': RequestFactory().get(url)}
+        context = {'request': self.request_factory.get(url)}
 
         serializer = SimulationDetailSerializer(self.simu_1, context=context)
 
@@ -48,7 +49,7 @@ class ApiViewsTest(APITestCase, ApiTestMixin):
         url = reverse("api:regionresult-detail", args=[simu_id, region_result_id])
         response = self.client.get(url)
 
-        context = {'request': RequestFactory().get(url)}
+        context = {'request': self.request_factory.get(url)}
 
         serializer = RegionResultSerializer(self.region_result_s1_r1, context=context)
 
