@@ -76,10 +76,10 @@ class TestDatabaseTree:
 
         }
 
+
 class ApiTestMixin:
-    @staticmethod
-    def get_migrations_csvs_path():
-        return BASE_DIR / "api" / "migrations" / "csvs"
+    BASE_SERVER_URL     = 'http://testserver'
+    MIGRATIONS_CSV_PATH = BASE_DIR / "api" / "migrations" / "csvs"
 
     @staticmethod
     def create_full_simulation_db_tree():

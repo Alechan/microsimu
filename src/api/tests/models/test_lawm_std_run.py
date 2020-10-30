@@ -10,10 +10,10 @@ class LAWMRegionTest(TestCase, ApiTestMixin):
 
     @classmethod
     def setUpTestData(cls):
-        developed_csv_path = cls.get_migrations_csvs_path() / "fortran_std_developed.csv"
-        la_csv_path        = cls.get_migrations_csvs_path() / "fortran_std_la.csv"
-        africa_csv_path    = cls.get_migrations_csvs_path() / "fortran_std_africa.csv"
-        asia_csv_path      = cls.get_migrations_csvs_path() / "fortran_std_asia.csv"
+        developed_csv_path = cls.MIGRATIONS_CSV_PATH / "fortran_std_developed.csv"
+        la_csv_path        = cls.MIGRATIONS_CSV_PATH / "fortran_std_la.csv"
+        africa_csv_path    = cls.MIGRATIONS_CSV_PATH / "fortran_std_africa.csv"
+        asia_csv_path      = cls.MIGRATIONS_CSV_PATH / "fortran_std_asia.csv"
         cls.regions_dfs = [
             ["developed"   , pandas.read_csv(developed_csv_path)],
             ["latinamerica", pandas.read_csv(la_csv_path)],

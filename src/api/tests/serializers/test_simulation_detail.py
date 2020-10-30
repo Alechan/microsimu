@@ -1,7 +1,7 @@
 
 from django import test
-from django.test import override_settings
-from django.urls import path, include
+from django.test import override_settings, RequestFactory
+from django.urls import path, include, reverse
 from django.utils import timezone
 
 from api.models.models import LAWMSimulation
@@ -27,7 +27,9 @@ class SimulationDetailSerializerTest(test.TestCase, ApiTestMixin):
         cls.simu = db_tree.simu
         cls.region_1 = db_tree.region_1
         cls.region_2 = db_tree.region_2
-        serializer = SimulationDetailSerializer(cls.simu, context={'request': None})
+        url = reverse("api:simulation-detail", args=[cls.simu.id])
+        context = {'request': RequestFactory().get(url)}
+        serializer = SimulationDetailSerializer(cls.simu, context=context)
         cls.data = serializer.data
 
     def test_serializer_returns_correct_fields(self):
@@ -36,9 +38,10 @@ class SimulationDetailSerializerTest(test.TestCase, ApiTestMixin):
 
         self.assertEqual(expected_fields_names, actual_fields_names)
 
-    def test_serializer_returns_correct_id(self):
+    def test_serializer_returns_correct_url(self):
         simu_id = self.simu.id
-        self.assertEqual(self.data["url"], f"/test_path/{simu_id}/")
+        expected_url = f"{self.BASE_SERVER_URL}/test_path/{simu_id}/"
+        self.assertEqual(self.data["url"], expected_url)
 
     def test_serializer_returns_correct_time(self):
         before_creation_time_iso = timezone.localtime().isoformat()
@@ -55,5 +58,5 @@ class SimulationDetailSerializerTest(test.TestCase, ApiTestMixin):
         simu_id = self.simu.id
         regions = self.data["regions"]
         self.assert_has_length(regions, 2)
-        self.assertEqual(regions[self.region_1.name], f"/test_path/{simu_id}/{self.region_1.name}/")
-        self.assertEqual(regions[self.region_2.name], f"/test_path/{simu_id}/{self.region_2.name}/")
+        self.assertEqual(regions[self.region_1.name], f"{self.BASE_SERVER_URL}/test_path/{simu_id}/{self.region_1.name}/")
+        self.assertEqual(regions[self.region_2.name], f"{self.BASE_SERVER_URL}/test_path/{simu_id}/{self.region_2.name}/")
