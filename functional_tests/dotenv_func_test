@@ -1,0 +1,9 @@
+envkey_DEBUG=0
+envkey_SECRET_KEY=a_secret_key
+envkey_DJANGO_ALLOWED_HOSTS=*
+envkey_SQL_ENGINE=django.db.backends.postgresql
+envkey_SQL_DATABASE=microsimu_prod
+envkey_SQL_USER=funct_test_user
+envkey_SQL_PASSWORD=plsdonthack
+envkey_SQL_HOST=db
+envkey_SQL_PORT=5432
