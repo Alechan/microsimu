@@ -24,8 +24,27 @@ jobs:
       run: python manage.py test
     - name: Install functional tests dependencies
       run: pip install -r requirements-functional-tests.txt
+    - name: Copy functional tests .env.prod file. Dont' worry, the values are used only for functional tests
+      run: |
+        ls functional_tests
+        echo "------"
+        cp functional_tests/dotenv_func_test ./.env.prod
+        cp functional_tests/dotenv_db_func_test ./.env.db.prod
+    - name: Start the containers
+      run: |
+        docker-compose up -d --build
+        docker-compose logs > docker-compose-logs.txt
+    - name: Upload docker compose logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: docker-compose-logs.txt
+        path: docker-compose-logs.txt
+    - name: Migrate
+      run: docker-compose exec -T web python manage.py migrate --noinput
     - name: Run functional tests
-      run: python -m pytest functional_tests
+      run: python -m pytest --docker-compose-no-build --use-running-containers functional_tests
+    - name: Stop the containers
+      run: docker-compose down
 
       
       
