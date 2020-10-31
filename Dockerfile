@@ -1,6 +1,9 @@
 FROM python:3.8.3-buster
 
-WORKDIR /usr/src
+# Create user
+RUN useradd --create-home --shell /bin/bash microsimu
+ENV APP_HOME=/home/microsimu
+WORKDIR $APP_HOME
 
 # PYTHONDONTWRITEBYTECODE: Prevents Python from writing pyc files to disc (equivalent to python -B option)
 # PYTHONUNBUFFERED: Prevents Python from buffering stdout and stderr (equivalent to python -u option)
@@ -17,3 +20,5 @@ COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY ./src .
+
+USER microsimu
