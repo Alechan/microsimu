@@ -4,11 +4,11 @@ services:
   web:
     build: .
     command: gunicorn microsimu.wsgi:application --bind 0.0.0.0:8000
-    ports:
-      - 8000:8000
+    expose:
+      - 8000
     volumes:
       - ./.env.prod:/home/microsimu/.env.prod
-      - ./staticfiles:/home/microsimu/staticfiles
+      - static_volume:/home/microsimu/staticfiles
     depends_on:
       - db
   db:
@@ -17,5 +17,14 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env.db.prod
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/microsimu/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
 volumes:
   postgres_data:
+  static_volume:
