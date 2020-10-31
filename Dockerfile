@@ -21,4 +21,8 @@ RUN pip install -r requirements.txt
 
 COPY ./src .
 
+ENV STATIC_FILES_PATH=$APP_HOME/staticfiles
+RUN mkdir $STATIC_FILES_PATH
+RUN chown microsimu:microsimu $STATIC_FILES_PATH
+VOLUME $STATIC_FILES_PATH
 USER microsimu
