@@ -7,6 +7,7 @@ LAWM_OUTPUT_VARIABLES = {
     'urbanr', 'rlfd_4', 'rend', 'sepopr', 'chmor', 'educr', '_0_5', 'fert', 'perxfl', 'gnpd_4'
 }
 
+
 def test_simulations_paths(wait_for_api):
     """
     Test that we can follow the urls returned by /simulations/ endpoint
@@ -19,8 +20,8 @@ def test_simulations_paths(wait_for_api):
     # I want to know what simulations results are currently available
     simulations_url = urljoin(api_url, "/api/simulations/")
     simulations_raw = request_session.get(simulations_url)
-    assert simulations_raw.status_code
-    simulations= simulations_raw.json()
+    assert simulations_raw
+    simulations = simulations_raw.json()
     # The microservice should always at least have the LAWM standard run
     assert len(simulations) >= 1
     # I expect the list view of the first simulation to have the following fields
