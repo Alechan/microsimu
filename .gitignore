@@ -1,5 +1,6 @@
 # Sensitive files
 **/.env.prod
+**/.env.db.prod
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

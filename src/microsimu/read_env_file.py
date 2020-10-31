@@ -11,5 +11,3 @@ if not os.path.isfile(DEV_ENV_FILE_PATH):
     raise EnvironmentError("Please provide a .env.dev file or a .env.prod file.")
 
 load_dotenv(env_file)
-
-pass
