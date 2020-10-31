@@ -5,7 +5,7 @@ from urllib3.util.retry import Retry
 
 pytest_plugins = ["docker_compose"]
 
-container_name = "web"
+container_name = "nginx"
 
 
 @pytest.fixture(scope="session")
