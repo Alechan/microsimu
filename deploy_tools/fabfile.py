@@ -23,7 +23,7 @@ def _get_latest_source(git_repo, branch):
 
 
 def _docker_compose_down():
-    run('docker-compose down')
+    run('docker-compose down --remove-orphans')
 
 
 def _docker_compose_up():
