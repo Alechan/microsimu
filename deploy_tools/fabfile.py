@@ -27,7 +27,7 @@ def _docker_compose_down():
 
 
 def _docker_compose_up():
-    run('docker-compose --build -d')
+    run('docker-compose up --build -d')
 
 
 def _update_static_files():
