@@ -1,0 +1,9 @@
+DEBUG=0
+SECRET_KEY=a_secret_key
+DJANGO_ALLOWED_HOSTS=*
+SQL_ENGINE=django.db.backends.postgresql
+SQL_DATABASE=microsimu_func_test
+SQL_USER=funct_test_user
+SQL_PASSWORD=plsdonthack
+SQL_HOST=db
+SQL_PORT=5432

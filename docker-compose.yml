@@ -3,6 +3,28 @@ version: '3.7'
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn microsimu.wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - 8000
+    volumes:
+      - ./.env.prod:/home/microsimu/.env.prod
+      - static_volume:/home/microsimu/staticfiles
+    depends_on:
+      - db
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.db.prod
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/microsimu/staticfiles
     ports:
-      - 8000:8000
+      - 1337:80
+    depends_on:
+      - web
+volumes:
+  postgres_data:
+  static_volume:

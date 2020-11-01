@@ -1,3 +1,10 @@
+# Sensitive files
+**/.env.prod
+**/.env.db.prod
+
+# Django static files
+/staticfiles/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
