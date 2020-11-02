@@ -1,0 +1,19 @@
+{% extends "rest_framework/base.html" %}
+{% load static %}
+
+{% block title %} MicroSimu {% endblock %}
+
+{% block branding %}
+    <a class='navbar-brand' rel="nofollow" href='https://github.com/Alechan/microsimu'>
+        MicroSimu
+    </a>
+{% endblock %}
+
+
+{% block bootstrap_theme %}
+    {# More at https://bootswatch.com/3/ (Django Rest Framework uses Bootstrap 3) #}
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap_darkly.min.css' %}" type="text/css">
+{% endblock %}
+
+{% block bootstrap_navbar_variant %}navbar-default{% endblock %}
+
