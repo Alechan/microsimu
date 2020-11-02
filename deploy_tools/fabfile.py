@@ -7,7 +7,6 @@ def deploy(git_repo, branch, server_username):
     run(f'mkdir -p {site_folder}')
     with cd(site_folder):
         _get_latest_source(git_repo, branch)
-        _docker_compose_down()
         _docker_compose_up()
         _update_static_files()
         _update_database()
@@ -22,17 +21,13 @@ def _get_latest_source(git_repo, branch):
     run(f'git pull origin {branch}')
 
 
-def _docker_compose_down():
-    run('docker-compose down --remove-orphans')
-
-
 def _docker_compose_up():
     run('docker-compose up --build -d')
 
 
-def _update_static_files():
-    run('docker-compose exec -T web python manage.py migrate --noinput')
-
-
 def _update_database():
+        run('docker-compose exec -T web python manage.py migrate --noinput')
+
+
+def _update_static_files():
     run('docker-compose exec -T web python manage.py collectstatic --noinput')
