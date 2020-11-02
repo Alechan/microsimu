@@ -6,8 +6,9 @@ from api import views
 app_name = "api"
 
 urlpatterns = [
-    path(''                                            , RedirectView.as_view(url='simulations/')),
-    path('simulations/'                                , views.simulations_list    , name="simulations"),
-    path('simulations/<int:pk>/'                       , views.simulations_detail  , name='simulation-detail'),
-    path('simulations/<int:simu_pk>/<str:region_name>/', views.region_result_detail, name='regionresult-detail'),
+    path(''                                            , views.ApiRoot.as_view()            , name="api_root"),
+    path('simulations/'                                , views.SimulationList.as_view()     , name="simulations"),
+    path('simulations/<int:pk>/'                       , views.SimulationDetail.as_view()   , name='simulation-detail'),
+    path('simulations/<int:simu_pk>/<str:region_name>/', views.RegionResultDetail.as_view() , name='regionresult-detail'),
 ]
+
