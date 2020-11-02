@@ -1,3 +1,4 @@
+from datetime import timezone, datetime
 from urllib.parse import urljoin
 
 LAWM_OUTPUT_VARIABLES = {
@@ -6,6 +7,9 @@ LAWM_OUTPUT_VARIABLES = {
     'gnpd_2', '_11_70', 'grmor', 'eapopr', 'gnp', 'turbh', 'gnpd_3', 'capt', 'houser', 'capd_1', 'gnpxc', '_6_17',
     'urbanr', 'rlfd_4', 'rend', 'sepopr', 'chmor', 'educr', '_0_5', 'fert', 'perxfl', 'gnpd_4'
 }
+
+SIMULATE_ENDPOINT_URL    = "/api/simulate/"
+SIMULATIONS_ENDPOINT_URL = "/api/simulations/"
 
 
 def test_simulations_paths(wait_for_api):
@@ -18,10 +22,7 @@ def test_simulations_paths(wait_for_api):
     request_session, api_url = wait_for_api
     # As a user of the API,
     # I want to know what simulations results are currently available
-    simulations_url = urljoin(api_url, "/api/simulations/")
-    simulations_raw = request_session.get(simulations_url)
-    assert simulations_raw
-    simulations = simulations_raw.json()
+    simulations = get_simulations_from_api(api_url, request_session)
     # The microservice should always at least have the LAWM standard run
     assert len(simulations) >= 1
     # I expect the list view of the first simulation to have the following fields
@@ -74,3 +75,46 @@ def test_simulations_paths(wait_for_api):
         regions_to_iterate.remove(region_name)
     # Assert I iterated through all regions
     assert len(regions_to_iterate) == 0
+
+
+def test_simulations_post(wait_for_api):
+    """
+    Test that simulation runs can be triggered correctly
+
+    :param wait_for_api: a fixture defined in fixtures.py
+    :return:
+    """
+    request_session, api_url = wait_for_api
+    # Get the simulations to know how many were there were before
+    simulations = get_simulations_from_api(api_url, request_session)
+    # As a user of the API,
+    # I want to be able to trigger simulations run with user defined parameters
+    simulations_url = urljoin(api_url, SIMULATE_ENDPOINT_URL)
+    before_creation_time = datetime.now(timezone.utc)
+    response = request_session.post(simulations_url, {"simulation_stop": 2001}, allow_redirects=False)
+    after_creation_time = datetime.now(timezone.utc)
+    expected_status_code = 302
+    assert response.status_code         == expected_status_code
+    # I expect that the redirect takes me to the detail of this simulation
+    expected_new_simu_id = len(simulations) + 1
+    expected_redirect_relative_url = f"{SIMULATIONS_ENDPOINT_URL}{expected_new_simu_id}/"
+    assert response.headers['Location'] == expected_redirect_relative_url
+    # I follow the redirect and get the new simulation detail data
+    redirections = list(request_session.resolve_redirects(response, response.request))
+    assert len(redirections) == 1
+    new_simu_detail = redirections[0].json()
+    # I expect that the new simulation was created with the right creation time
+    created_time_iso = new_simu_detail["created"]
+    created_time_datetime = datetime.fromisoformat(created_time_iso)
+    assert before_creation_time <= created_time_datetime <= after_creation_time
+    # I expect that the new simulation shows the parameters I set
+
+
+def get_simulations_from_api(api_url, request_session):
+    simulations_url = urljoin(api_url, SIMULATIONS_ENDPOINT_URL)
+    simulations_raw = request_session.get(simulations_url)
+    assert simulations_raw
+    simulations = simulations_raw.json()
+    return simulations
+
+

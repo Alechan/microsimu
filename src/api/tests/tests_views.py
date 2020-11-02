@@ -1,13 +1,12 @@
 from django.test import RequestFactory
 from django.urls import reverse
-from rest_framework.reverse import reverse as drf_reverse
 from rest_framework import status
+from rest_framework.reverse import reverse as drf_reverse
 from rest_framework.test import APITestCase
 
 from api.models.models import LAWMSimulation
 from api.serializers import SimulationListSerializer, SimulationDetailSerializer, RegionResultSerializer
 from api.tests.api_test_mixin import ApiTestMixin
-from api.views import ApiRoot
 
 
 class ApiViewsTest(APITestCase, ApiTestMixin):
@@ -31,7 +30,8 @@ class ApiRootEndpointTest(ApiViewsTest):
 
     def test_api_root_returns_correct_links(self):
         expected_data = {
-            "simulations":  drf_reverse('api:simulations', request=self.request),
+            "simulations": drf_reverse('api:simulations', request=self.request),
+            "simulate"   : drf_reverse('api:simulate'   , request=self.request),
         }
         self.assertEqual(expected_data, self.response.data)
 
@@ -50,7 +50,7 @@ class ApiRootEndpointTest(ApiViewsTest):
             self.assertIn(url, actual_description)
 
 
-class SimulationsEndpointsTest(ApiViewsTest):
+class SimulationsEndpointsGETTest(ApiViewsTest):
     def test_simulations_list_calls_correct_serializer(self):
         all_simus = LAWMSimulation.objects.all()
 
@@ -75,6 +75,21 @@ class SimulationsEndpointsTest(ApiViewsTest):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
+
+
+class SimulationsEndpointsPOSTTest(ApiViewsTest):
+    def setUp(self):
+        self.all_simus_before = list(LAWMSimulation.objects.all())
+        url = reverse("api:simulate")
+        self.response = self.client.post(url)
+
+    def test_simulations_list_POST_triggers_new_simulation(self):
+        new_simu = LAWMSimulation.objects.last()
+        expected_all_simus_after = self.all_simus_before + [new_simu]
+        actual_all_simus_after   = list(LAWMSimulation.objects.all())
+
+        self.assertEqual(self.response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(expected_all_simus_after, actual_all_simus_after)
 
 
 class RegionsEndpointsTest(ApiViewsTest):

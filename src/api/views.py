@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -35,7 +35,8 @@ class ApiRoot(APIView):
     @staticmethod
     def get(request, format=None):
         return Response({
-            'simulations'   : reverse('api:simulations', request=request, format=format),
+            'simulations' : reverse('api:simulations', request=request, format=format),
+            'simulate'    : reverse('api:simulate', request=request, format=format),
         })
 
     def get_view_name(self):
@@ -57,6 +58,13 @@ class ApiRoot(APIView):
             simu_1_africa_url=self.request.build_absolute_uri(reverse("api:regionresult-detail", args=[1, "africa"])),
         )
         return description
+
+
+class Simulate(APIView):
+    @staticmethod
+    def post(request):
+        simu = LAWMSimulation.objects.create()
+        return redirect('api:simulation-detail', pk=simu.id)
 
 
 class SimulationList(APIView):
