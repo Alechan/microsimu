@@ -85,22 +85,25 @@ def test_simulations_post(wait_for_api):
     :return:
     """
     request_session, api_url = wait_for_api
+    simulations_url = urljoin(api_url, SIMULATE_ENDPOINT_URL)
+    # As a user of the API,
+    # I want to get the parameters of a model
+    get_response_simulate = request_session.get(simulations_url)
+    assert get_response_simulate
     # Get the simulations to know how many were there were before
     simulations = get_simulations_from_api(api_url, request_session)
-    # As a user of the API,
     # I want to be able to trigger simulations run with user defined parameters
-    simulations_url = urljoin(api_url, SIMULATE_ENDPOINT_URL)
     before_creation_time = datetime.now(timezone.utc)
-    response = request_session.post(simulations_url, {"simulation_stop": 2001}, allow_redirects=False)
+    get_response_simulate = request_session.post(simulations_url, {"simulation_stop": 2001}, allow_redirects=False)
     after_creation_time = datetime.now(timezone.utc)
     expected_status_code = 302
-    assert response.status_code         == expected_status_code
+    assert get_response_simulate.status_code         == expected_status_code
     # I expect that the redirect takes me to the detail of this simulation
     expected_new_simu_id = len(simulations) + 1
     expected_redirect_relative_url = f"{SIMULATIONS_ENDPOINT_URL}{expected_new_simu_id}/"
-    assert response.headers['Location'] == expected_redirect_relative_url
+    assert get_response_simulate.headers['Location'] == expected_redirect_relative_url
     # I follow the redirect and get the new simulation detail data
-    redirections = list(request_session.resolve_redirects(response, response.request))
+    redirections = list(request_session.resolve_redirects(get_response_simulate, get_response_simulate.request))
     assert len(redirections) == 1
     new_simu_detail = redirections[0].json()
     # I expect that the new simulation was created with the right creation time

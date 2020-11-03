@@ -50,7 +50,7 @@ class ApiRootEndpointTest(ApiViewsTest):
             self.assertIn(url, actual_description)
 
 
-class SimulationsEndpointsGETTest(ApiViewsTest):
+class SimulationsTest(ApiViewsTest):
     def test_simulations_list_calls_correct_serializer(self):
         all_simus = LAWMSimulation.objects.all()
 
@@ -77,18 +77,24 @@ class SimulationsEndpointsGETTest(ApiViewsTest):
         self.assertEqual(response.data, serializer.data)
 
 
-class SimulationsEndpointsPOSTTest(ApiViewsTest):
+class SimulateTest(ApiViewsTest):
     def setUp(self):
         self.all_simus_before = list(LAWMSimulation.objects.all())
-        url = reverse("api:simulate")
-        self.response = self.client.post(url)
+        self.url = reverse("api:simulate")
 
-    def test_simulations_list_POST_triggers_new_simulation(self):
+    def test_simulate_GET_returns_model_parameters(self):
+        get_response = self.client.get(self.url)
+
+        self.assertEqual(get_response.status_code, status.HTTP_200_OK)
+
+    def test_simulate_POST_triggers_new_simulation(self):
+        post_response = self.client.post(self.url)
+
         new_simu = LAWMSimulation.objects.last()
         expected_all_simus_after = self.all_simus_before + [new_simu]
         actual_all_simus_after   = list(LAWMSimulation.objects.all())
 
-        self.assertEqual(self.response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(post_response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(expected_all_simus_after, actual_all_simus_after)
 
 

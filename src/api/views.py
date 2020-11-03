@@ -66,6 +66,10 @@ class Simulate(APIView):
         simu = LAWMSimulation.objects.create()
         return redirect('api:simulation-detail', pk=simu.id)
 
+    @staticmethod
+    def get(request):
+        return Response({})
+
 
 class SimulationList(APIView):
     """
