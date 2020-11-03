@@ -16,11 +16,11 @@ class LAWMSimulationTest(TestCase, ApiTestMixin):
     def test_created_time_is_automatically_set_to_now(self):
         # *) timezone.now() uses UTC and not the timezone set in django's settings.py
         # *) django stores dates in UTC and the serializer uses the timezone from settings.py
-        time_before_creation = timezone.now()
+        before_creation_time = timezone.now()
         simulation = LAWMSimulation.objects.create()
-        time_after_creation = timezone.now()
-        self.assertGreater(simulation.created, time_before_creation)
-        self.assertGreater(time_after_creation, simulation.created)
+        after_creation_time = timezone.now()
+        self.assertGreater(simulation.created, before_creation_time)
+        self.assertGreater(after_creation_time, simulation.created)
 
     def test_regions_attribute_returns_correct_regions(self):
         actual_region_results = self.simu.region_results.all()
