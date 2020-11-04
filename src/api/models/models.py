@@ -1,6 +1,5 @@
-from django.db import models
-
-from api.models.fields import VariableFloatField
+from api.models.fields import *
+from api.std_lib.lawm.parameters import *
 from api.std_lib.lawm.variables import *
 
 
@@ -88,3 +87,47 @@ class LAWMYearResult(models.Model):
     
     class Meta:
         unique_together = ('region_result', 'year')
+
+
+class GeneralParameters(models.Model):
+    simulation_stop      = ParameterIntegerField(model_parameter=SimulationStop     , null=False, blank=True)
+    optimization_start   = ParameterIntegerField(model_parameter=OptimizationStart  , null=False, blank=True)
+    payments_equilibrium = ParameterIntegerField(model_parameter=PaymentsEquilibrium, null=False, blank=True)
+    fertilizer_cost      = ParameterFloatField(model_parameter=FertilizerCost     , null=False, blank=True)
+    weight_constraint_1  = ParameterFloatField(model_parameter=WeightConstraint1  , null=False, blank=True)
+    weight_constraint_2  = ParameterFloatField(model_parameter=WeightConstraint2  , null=False, blank=True)
+    weight_constraint_3  = ParameterFloatField(model_parameter=WeightConstraint3  , null=False, blank=True)
+    weight_constraint_4  = ParameterFloatField(model_parameter=WeightConstraint4  , null=False, blank=True)
+    weight_constraint_5  = ParameterFloatField(model_parameter=WeightConstraint5  , null=False, blank=True)
+    weight_constraint_6  = ParameterFloatField(model_parameter=WeightConstraint6  , null=False, blank=True)
+    weight_constraint_7  = ParameterFloatField(model_parameter=WeightConstraint7  , null=False, blank=True)
+    weight_constraint_8  = ParameterFloatField(model_parameter=WeightConstraint8  , null=False, blank=True)
+    weight_constraint_9  = ParameterFloatField(model_parameter=WeightConstraint9  , null=False, blank=True)
+    weight_constraint_10 = ParameterFloatField(model_parameter=WeightConstraint10 , null=False, blank=True)
+    weight_constraint_11 = ParameterFloatField(model_parameter=WeightConstraint11 , null=False, blank=True)
+    weight_constraint_12 = ParameterFloatField(model_parameter=WeightConstraint12 , null=False, blank=True)
+    weight_constraint_13 = ParameterFloatField(model_parameter=WeightConstraint13 , null=False, blank=True)
+    weight_constraint_14 = ParameterFloatField(model_parameter=WeightConstraint14 , null=False, blank=True)
+    weight_constraint_15 = ParameterFloatField(model_parameter=WeightConstraint15 , null=False, blank=True)
+    weight_constraint_16 = ParameterFloatField(model_parameter=WeightConstraint16 , null=False, blank=True)
+    weight_constraint_17 = ParameterFloatField(model_parameter=WeightConstraint17 , null=False, blank=True)
+    weight_constraint_18 = ParameterFloatField(model_parameter=WeightConstraint18 , null=False, blank=True)
+    weight_constraint_19 = ParameterFloatField(model_parameter=WeightConstraint19 , null=False, blank=True)
+    weight_constraint_20 = ParameterFloatField(model_parameter=WeightConstraint20 , null=False, blank=True)
+    weight_constraint_21 = ParameterFloatField(model_parameter=WeightConstraint21 , null=False, blank=True)
+    weight_constraint_22 = ParameterFloatField(model_parameter=WeightConstraint22 , null=False, blank=True)
+    weight_constraint_23 = ParameterFloatField(model_parameter=WeightConstraint23 , null=False, blank=True)
+    weight_constraint_24 = ParameterFloatField(model_parameter=WeightConstraint24 , null=False, blank=True)
+    weight_constraint_25 = ParameterFloatField(model_parameter=WeightConstraint25 , null=False, blank=True)
+    weight_constraint_26 = ParameterFloatField(model_parameter=WeightConstraint26 , null=False, blank=True)
+
+
+class LAWMRunParameters(models.Model):
+    general_parameters = models.ForeignKey(GeneralParameters, related_name="run_parameters", null=False, on_delete=models.CASCADE)
+    simulation         = models.ForeignKey(LAWMSimulation   , related_name="run_parameters", null=False, on_delete=models.CASCADE)
+
+
+class RegionalParameters(models.Model):
+    run_parameters = models.ForeignKey(LAWMRunParameters, related_name="regional_parameters", null=False, on_delete=models.CASCADE)
+    region     = models.ForeignKey(LAWMRegion       , related_name="regional_parameters", null=False, on_delete=models.CASCADE)
+    CALMX = models.IntegerField(null=False, blank=True, default=42)

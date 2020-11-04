@@ -21,7 +21,7 @@ class LAWMYearResultTest(TestCase, ApiTestMixin):
         except django.db.utils.IntegrityError:
             pass
 
-    def test_all_attributes_are_readable_and_casted_to_variables(self):
+    def test_all_attributes_are_readable_and_casted_to_lawm_variables(self):
         y_res = self.year_1960_result
         var_values = self.year_1960_result_creation_kwargs
 
