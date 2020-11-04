@@ -19,7 +19,19 @@ class CastOnAssignDescriptor(object):
         obj.__dict__[self.field.name] = self.field.to_python(value)
 
 
-class VariableFloatField(models.FloatField):
+class CustomLAWMFieldMixin:
+    def contribute_to_class(self, cls, name, **kwargs):
+        """
+        Fix to call "to_python" on _every_ assignment to the field. For example,
+        when calling "MyModel.objects.create(custom_field=323.32)" so the instance
+        return has the "custom_field" attribute returned by "to_python" method instead of
+        "323.32".
+        """
+        super().contribute_to_class(cls, name, **kwargs)
+        setattr(cls, name, CastOnAssignDescriptor(self))
+
+
+class VariableFloatFieldMixin(CustomLAWMFieldMixin, models.FloatField):
     """
     A float field that is linked to a specific variable from a model.
     """
@@ -60,13 +72,26 @@ class VariableFloatField(models.FloatField):
         kwargs['model_variable'] = self.model_variable
         return name, path, args, kwargs
 
-    def contribute_to_class(self, cls, name, **kwargs):
-        """
-        Fix to call "to_python" on _every_ assignment to the field. For example,
-        when calling "MyModel.objects.create(custom_field=323.32)" so the instance
-        return has the "custom_field" attribute returned by "to_python" method instead of
-        "323.32".
-        """
-        super().contribute_to_class(cls, name, **kwargs)
-        setattr(cls, name, CastOnAssignDescriptor(self))
 
+class ParameterIntegerFieldMixin(CustomLAWMFieldMixin, models.IntegerField):
+    """
+    An integer field that is linked to a specific parameter from a model.
+    """
+    def __init__(self, model_parameter, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.model_parameter = model_parameter
+
+    def to_python(self, value):
+        return self.model_parameter(value)
+
+    def get_prep_value(self, value):
+        # Try to get the value if it's a ModelVariable
+        return value.value
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+        kwargs['model_parameter'] = self.model_parameter
+        return name, path, args, kwargs
+
+
+# integer_param = ParameterIntegerField(model_parameter=CustomParameter)
