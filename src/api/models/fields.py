@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class CastOnAssignDescriptor(object):
     """
     A property descriptor which ensures that `field.to_python()` is called on _every_ assignment to the field.
@@ -82,16 +83,19 @@ class ParameterIntegerFieldMixin(CustomLAWMFieldMixin, models.IntegerField):
         self.model_parameter = model_parameter
 
     def to_python(self, value):
+        if isinstance(value, self.model_parameter):
+            return value
+
+        if value is None:
+            return value
+
         return self.model_parameter(value)
 
     def get_prep_value(self, value):
-        # Try to get the value if it's a ModelVariable
+        # Try to get the value if it's a ModelParameter
         return value.value
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
         kwargs['model_parameter'] = self.model_parameter
         return name, path, args, kwargs
-
-
-# integer_param = ParameterIntegerField(model_parameter=CustomParameter)

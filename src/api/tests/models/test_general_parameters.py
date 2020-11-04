@@ -5,6 +5,10 @@ from api.tests.api_test_mixin import ApiTestMixin
 
 
 class LAWMGeneralParametersTest(TestCase, ApiTestMixin):
+    def setUpTestData(cls):
+        db_tree = cls.create_full_simulation_db_tree()
+        cls.general_parameters = db_tree.general_parameters
+
     def test_default_values_are_set_when_none_provided(self):
         gen_params = GeneralParameters.objects.create()
         self.assertEqual(gen_params.KSTOP, 42)

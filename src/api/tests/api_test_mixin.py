@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
-from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegion, LAWMRegionResult
+from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegion, LAWMRegionResult, GeneralParameters, \
+    LAWMRunParameters
 from microsimu.settings import BASE_DIR
 
 
@@ -13,6 +14,12 @@ class TestDatabaseTree:
         self.region_result_r2 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_2)
         self.year_results_reg_1 = self.create_year_results(self.region_result_r1, n_years=2)
         self.year_results_reg_2 = self.create_year_results(self.region_result_r2, n_years=2)
+        self.general_parameters  = GeneralParameters.objects.create(KSTOP=2001)
+        self.run_parameters      = LAWMRunParameters.objects.create(
+            general_parameters=self.general_parameters,
+            simulation=self.simu
+        )
+        # self.regional_parameters = assert False
 
     @classmethod
     def create_year_results(cls, region_result, n_years):
