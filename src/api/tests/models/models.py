@@ -4,7 +4,7 @@ from typing import Any
 from django.db import models
 
 from api.std_lib.lawm import variables, parameters
-from api.models.fields import VariableFloatFieldMixin, ParameterIntegerFieldMixin
+from api.models.fields import VariableFloatField, ParameterIntegerField, ParameterFloatField
 
 
 @dataclass
@@ -18,18 +18,24 @@ class CustomVariable(variables.ModelVariable):
 
 
 class DjangoModelWithVariableFields(models.Model):
-    float_var = VariableFloatFieldMixin(model_variable=CustomVariable)
+    float_var = VariableFloatField(model_variable=CustomVariable)
 
 
 @dataclass
 class CustomParameter(parameters.ModelParameter):
     value         : Any
-    default_value : Any = 42
+    default       : int = 5
+    minimum       : int = 1
+    maximum       : int = 10
     name          : str = "The name"
     fortran_name  : str = "The fortran name"
     unit          : str = "The unit"
     description   : str = "The description"
 
 
-class DjangoModelWithParameterFields(models.Model):
-    integer_param = ParameterIntegerFieldMixin(model_parameter=CustomParameter)
+class IntegerParameterFieldDjangoModel(models.Model):
+    integer_param = ParameterIntegerField(model_parameter=CustomParameter)
+
+
+class FloatParameterFieldDjangoModel(models.Model):
+    float_param = ParameterFloatField(model_parameter=CustomParameter)

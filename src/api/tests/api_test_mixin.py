@@ -14,7 +14,7 @@ class TestDatabaseTree:
         self.region_result_r2 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_2)
         self.year_results_reg_1 = self.create_year_results(self.region_result_r1, n_years=2)
         self.year_results_reg_2 = self.create_year_results(self.region_result_r2, n_years=2)
-        self.general_parameters  = GeneralParameters.objects.create(KSTOP=2001)
+        self.general_parameters  = GeneralParameters.objects.create(simulation_stop=2001)
         self.run_parameters      = LAWMRunParameters.objects.create(
             general_parameters=self.general_parameters,
             simulation=self.simu
@@ -95,19 +95,6 @@ class ApiTestMixin:
     @staticmethod
     def get_year_result_creation_kwargs(region_result, year):
         return TestDatabaseTree.get_year_result_creation_kwargs(region_result, year)
-
-    @staticmethod
-    def create_simple_db_simulation(pop_values):
-        simu = LAWMSimulation.objects.create()
-        result_kwargs = ApiTestMixin.get_year_result_creation_kwargs(simu)
-        results = []
-        for val in pop_values:
-            # Create a new result with different year and pop, but the other variables stay the same
-            result_kwargs["pop"] = val
-            result_kwargs["year"] = result_kwargs["year"] + 1
-            res = LAWMYearResult.objects.create(**result_kwargs)
-            results.append(res)
-        return simu, results
 
     def assert_is_later_and_close(self, after_time_iso, before_time_iso):
         self.assertGreater(after_time_iso, before_time_iso)
