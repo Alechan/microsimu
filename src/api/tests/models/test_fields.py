@@ -1,3 +1,5 @@
+import django
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from api.tests.models.models import *
@@ -58,6 +60,24 @@ class ParameterIntegerFieldTest(TestCase):
         actual_model_parameter = model_created.integer_param
 
         self.assertEqual(actual_model_parameter, expected_model_parameter)
+
+    def test_max_validator_is_automatically_generated(self):
+        value = 11
+        invalid_model = IntegerParameterFieldDjangoModel(integer_param=value)
+        try:
+            invalid_model.full_clean()
+            self.fail("Creating 2 regions with same name should raise an error.")
+        except ValidationError:
+            pass
+
+    def test_min_validator_is_automatically_generated(self):
+        value = 0
+        invalid_model = IntegerParameterFieldDjangoModel(integer_param=value)
+        try:
+            invalid_model.full_clean()
+            self.fail("Creating 2 regions with same name should raise an error.")
+        except ValidationError:
+            pass
 
 
 class ParameterFloatFieldTest(TestCase):

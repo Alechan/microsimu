@@ -90,7 +90,7 @@ class LAWMYearResult(models.Model):
 
 
 class GeneralParameters(models.Model):
-    simulation_stop      = ParameterIntegerField(model_parameter=SimulationStop          , null=False, blank=True)
+    simulation_stop      = ParameterIntegerField(model_parameter=SimulationStop     , null=False, blank=True)
     optimization_start   = ParameterIntegerField(model_parameter=OptimizationStart  , null=False, blank=True)
     payments_equilibrium = ParameterIntegerField(model_parameter=PaymentsEquilibrium, null=False, blank=True)
     fertilizer_cost      = ParameterFloatField(model_parameter=FertilizerCost     , null=False, blank=True)

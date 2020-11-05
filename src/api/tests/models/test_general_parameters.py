@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from api.models.models import GeneralParameters
@@ -47,3 +48,13 @@ class LAWMGeneralParametersTest(TestCase, ApiTestMixin):
     def test_default_values_can_be_overridden(self):
         gen_params = GeneralParameters.objects.create(simulation_stop=2)
         self.assertEqual(gen_params.simulation_stop, SimulationStop(2))
+
+    def test_validators_are_automatically_added(self):
+        # TODO: add tests for each LAWM parameter
+        value = 1959
+        invalid_params = GeneralParameters.objects.create(simulation_stop=value)
+        try:
+            invalid_params.full_clean()
+            self.fail("An error should've been raised but wasn't.")
+        except ValidationError:
+            pass

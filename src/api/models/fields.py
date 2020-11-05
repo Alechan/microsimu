@@ -1,4 +1,7 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from api.models.validators import MaxValueParameterValidator, MinValueParameterValidator
 
 
 class CastOnAssignDescriptor(object):
@@ -86,10 +89,21 @@ class BaseParameterField(CustomLAWMFieldMixin, models.IntegerField):
     The base field for which al parameter fields will subclassify
     """
     def __init__(self, model_parameter, *args, **kwargs):
-        kwargs["default"] = model_parameter.default
+        kwargs["default"]    = model_parameter.default
+        kwargs["validators"] = self.get_validators(model_parameter)
         super().__init__(*args, **kwargs)
         self.model_component       = model_parameter
         self.model_component_kwarg = "model_parameter"
+
+    @staticmethod
+    def get_validators(model_parameter):
+        # Only add validators of their max or min are not None
+        validators = []
+        if model_parameter.maximum:
+            validators.append(MaxValueParameterValidator(model_parameter.maximum))
+        if model_parameter.minimum:
+            validators.append(MinValueParameterValidator(model_parameter.minimum))
+        return validators
 
 
 class ParameterIntegerField(BaseParameterField):
