@@ -14,9 +14,3 @@ class LAWMRunParametersTest(TestCase, ApiTestMixin):
         expected_simu = self.simu
         actual_simu   = self.run_parameters.simulation
         self.assertEqual(expected_simu, actual_simu)
-
-    def test_CAMBIAME_EL_NOMBRE(self):
-        self.fail("Ver si faltan tests acá")
-
-
-

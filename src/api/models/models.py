@@ -122,14 +122,11 @@ class GeneralParameters(models.Model):
     weight_constraint_26 = ParameterFloatField(model_parameter=WeightConstraint26 , null=False, blank=True)
 
 
-# ADAPTAME
 class LAWMRunParameters(models.Model):
     general_parameters = models.ForeignKey(GeneralParameters, related_name="run_parameters", null=False, on_delete=models.CASCADE)
     simulation         = models.ForeignKey(LAWMSimulation   , related_name="run_parameters", null=False, on_delete=models.CASCADE)
 
 
-
-# ADAPTAME
 class RegionalParameters(models.Model):
     run_parameters = models.ForeignKey(LAWMRunParameters, related_name="regional_parameters", null=False, on_delete=models.CASCADE)
     region     = models.ForeignKey(LAWMRegion       , related_name="regional_parameters", null=False, on_delete=models.CASCADE)
