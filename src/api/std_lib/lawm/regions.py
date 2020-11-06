@@ -1,7 +1,4 @@
 from dataclasses import dataclass
-from typing import Any
-
-from api.std_lib.lawm.base_parameter import ModelGeneralParameter
 
 
 @dataclass
@@ -27,3 +24,6 @@ class Africa(Region):
 @dataclass
 class Asia(Region):
     name: str = "asia"
+
+
+DEFAULT_REGIONS = [Developed, Latinamerica, Africa, Asia]

@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from api.models.models import LAWMRunParameters, GeneralParameters, RegionalParameters
+from api.models.models import LAWMRunParameters, GeneralParameters, RegionalParameters, LAWMRegion
+from api.std_lib.lawm.regions import DEFAULT_REGIONS
 from api.tests.api_test_mixin import ApiTestMixin
 
 

@@ -75,7 +75,14 @@ class SimulateViewSet(mixins.CreateModelMixin,
     serializer_class = RunParametersSerializer
 
     def get_object(self):
-        return self.get_queryset()[0]
+        """
+        For the "parameters default example", use a memory-only object
+        :return:
+        """
+        assert False, "Cambiar acá por el classmethod del serializer y no del db model"
+        default_params = LAWMRunParameters.as_dict_with_defaults()
+
+        return default_params
 
 
 class SimulationList(APIView):

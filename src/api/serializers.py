@@ -106,12 +106,33 @@ class SimulationListSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class GeneralParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+
+    @classmethod
+    def default_values_data(cls):
+        default_values = GeneralParameters.new_with_defaults()
+        serializer = GeneralParametersSerializer(default_values)
+        return serializer.data
+
     class Meta:
         model = GeneralParameters
         exclude = ["id"]
 
 
-class RegionalParametersListSerializer(serializers.ListSerializer):
+class RegionalParametersManySerializer(serializers.ListSerializer):
+    """
+    Serializes to a dict of {region:data-region} instead of a list of [data]
+    """
+    @classmethod
+    def default_values_data(cls):
+        reg_params_per_region = RegionalParameters.new_in_memory_with_defaults_all_regions()
+        all_reg_params        = reg_params_per_region.values()
+        serializer = RegionalParametersSerializer(many=True)
+        # I have to use the "to_representation" because when called in isolation with "many=True",
+        # the data returned doesn't call "to_representation" but when used as a nested serializer,
+        # it does call "to_representation"
+        data = serializer.to_representation(all_reg_params)
+        return data
+
     def to_representation(self, data):
         """
         From python objects to primitive types (int, float, dict, list)
@@ -143,7 +164,7 @@ class RegionalParametersSerializer(serializers.ModelSerializer, metaclass=Result
     class Meta:
         model = RegionalParameters
         exclude = ["id", "run_parameters"]
-        list_serializer_class = RegionalParametersListSerializer
+        list_serializer_class = RegionalParametersManySerializer
 
 
 class RunParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
@@ -177,4 +198,11 @@ class RunParametersSerializer(serializers.ModelSerializer, metaclass=ResultSeria
     class Meta:
         model = LAWMRunParameters
         exclude = ["id", "general_parameters"]
+
+    @classmethod
+    def default_values_data(cls):
+        return {
+            "general" : GeneralParametersSerializer.default_values_data(),
+            "regional": RegionalParametersManySerializer.default_values_data(),
+        }
 

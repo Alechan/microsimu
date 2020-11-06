@@ -25,8 +25,8 @@ class SimulationDetailSerializerTest(test.TestCase, ApiTestMixin):
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()
         cls.simu = db_tree.simu
-        cls.region_1 = db_tree.region_1
-        cls.region_2 = db_tree.region_2
+        cls.region_1 = db_tree.region_africa
+        cls.region_2 = db_tree.region_developed
         url = reverse("api:simulation-detail", args=[cls.simu.id])
         context = {'request': RequestFactory().get(url)}
         serializer = SimulationDetailSerializer(cls.simu, context=context)
