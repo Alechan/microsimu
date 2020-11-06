@@ -113,6 +113,7 @@ class SimulateTest(ApiViewsTest):
 
         self.assertEqual(post_response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(expected_all_simus_after, actual_all_simus_after)
+        self.fail("haceme")
 
     def test_simulate_OPTIONS_returns_correct_metadata(self):
         serializer = RunParametersSerializer()

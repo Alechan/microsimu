@@ -42,7 +42,7 @@ class RegionalParametersTest(TestCase, ApiTestMixin):
             self.fail("An error should've been raised but wasn't.")
         except ValidationError as e:
             actual_error_dict = e.error_dict
-            expected_error_keys = {"region", "max_calories"}
+            expected_error_keys = {"max_calories"}
             actual_error_keys = actual_error_dict.keys()
             self.assertEqual(expected_error_keys, actual_error_keys)
             actual_max_calories_errors = actual_error_dict["max_calories"]
@@ -77,6 +77,7 @@ class RegionalParametersTest(TestCase, ApiTestMixin):
     @staticmethod
     def get_creation_kwargs_with_overflowed_max_calories():
         run_parameters = LAWMRunParameters()
+        # Uses the standard run region so depends on it
         region = LAWMRegion(name="developed")
         partial_creation_kwargs = RegionalParameters.get_defaults_for_region(region.name)
         partial_creation_kwargs["max_calories"] = 99999
