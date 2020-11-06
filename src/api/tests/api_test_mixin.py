@@ -1,16 +1,19 @@
 from datetime import datetime, timedelta
 
 from api.models.models import *
+from api.std_lib.lawm.regions import Africa, Latinamerica, Developed, Asia
 from microsimu.settings import BASE_DIR
 
 
 class TestDatabaseTree:
     def __init__(self):
         self.simu    = LAWMSimulation.objects.create()
-        self.region_1 = LAWMRegion.objects.get_or_create(name="africa")[0]
-        self.region_2 = LAWMRegion.objects.get_or_create(name="developed")[0]
-        self.region_result_r1 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_1)
-        self.region_result_r2 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_2)
+        self.region_africa = LAWMRegion.objects.get_or_create(name=Africa.name)[0]
+        self.region_asia = LAWMRegion.objects.get_or_create(name=Asia.name)[0]
+        self.region_developed = LAWMRegion.objects.get_or_create(name=Developed.name)[0]
+        self.region_la = LAWMRegion.objects.get_or_create(name=Latinamerica.name)[0]
+        self.region_result_r1 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_africa)
+        self.region_result_r2 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_developed)
         self.year_results_reg_1 = self.create_year_results(self.region_result_r1, n_years=2)
         self.year_results_reg_2 = self.create_year_results(self.region_result_r2, n_years=2)
         self.general_parameters  = GeneralParameters.objects.create(simulation_stop=2001)
@@ -18,7 +21,16 @@ class TestDatabaseTree:
             general_parameters=self.general_parameters,
             simulation=self.simu
         )
-        self.regional_parameters_developed = RegionalParameters.new_with_defaults_for_region(self.run_parameters, self.region_1)
+        self.regional_parameters_developed = RegionalParameters.new_with_defaults_for_region(self.run_parameters, self.region_developed)
+        self.regional_parameters_latinamerica = RegionalParameters.new_with_defaults_for_region(self.run_parameters, self.region_la)
+        self.regional_parameters_africa = RegionalParameters.new_with_defaults_for_region(self.run_parameters, self.region_africa)
+        self.regional_parameters_asia = RegionalParameters.new_with_defaults_for_region(self.run_parameters, self.region_asia)
+        self.all_reg_params = [
+            self.regional_parameters_developed,
+            self.regional_parameters_latinamerica,
+            self.regional_parameters_africa,
+            self.regional_parameters_asia,
+        ]
 
     @classmethod
     def create_year_results(cls, region_result, n_years):
@@ -118,12 +130,44 @@ class ApiTestMixin:
 
     def assert_dicts_equal(self, first, second, **kwargs):
         # If they are not dicts, use the default assertEqual
-        if not (isinstance(first, dict) and isinstance(second, dict)):
-            self.fail("One of the arguments wasn't a dict.")
+        self.assert_both_are_dicts(first, second)
 
         # They are both dicts, use step by step comparison
         # noinspection PyTypeChecker
         self.assertEqual(first.keys(), second.keys())
         for key in first:
-            self.assertEqual(first[key], second[key], **kwargs)
+            first_value = first[key]
+            second_value = second[key]
+            # self.assertEqual(first_value, second_value, **kwargs)
+            try:
+                self.assert_both_are_dicts(first_value, second_value)
+                self.assert_dicts_equal(first_value, second_value)
+            except AssertionError:
+                self.assertEqual(first_value, second_value, **kwargs)
+
+    def assert_both_are_dicts(self, first, second):
+        first_is_dict = isinstance(first, dict)
+        second_is_dict = isinstance(second, dict)
+        if not (first_is_dict and second_is_dict):
+            if not first_is_dict:
+                self.fail("The first argument wasn't a dict.")
+            else:
+                self.fail("The second argument wasn't a dict.")
+
+    def assert_equal_in_memory_django_models(self, first, second):
+        """
+        Assert that both in-memory objects are equal (no PK or similar taken into consideration)
+        """
+        first_values  = self.get_django_model_dict_values(first)
+        second_values = self.get_django_model_dict_values(second)
+        self.assertEqual(first_values, second_values)
+
+    @staticmethod
+    def get_django_model_dict_values(obj):
+        return  [(k, v) for k, v in obj.__dict__.items() if k != '_state']
+
+    def assert_not_empty(self, collection):
+        not_empty = len(collection) > 0
+        if not not_empty:
+            self.fail("The collection is empty.")
 

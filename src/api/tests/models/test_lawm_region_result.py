@@ -13,7 +13,7 @@ class LAWMRegionResultTest(TestCase, ApiTestMixin):
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()
         cls.simu   = db_tree.simu
-        cls.region_1  = db_tree.region_1
+        cls.region_1  = db_tree.region_africa
         cls.region_result_region_1 = db_tree.region_result_r1
         cls.region_result_region_2 = db_tree.region_result_r2
         cls.year_results_reg_1 = db_tree.year_results_reg_1

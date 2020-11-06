@@ -13,7 +13,7 @@ class LAWMGeneralParametersTest(TestCase, ApiTestMixin):
         cls.general_parameters = db_tree.general_parameters
 
     def test_default_values_are_set_when_none_provided(self):
-        gen_params = GeneralParameters.objects.create()
+        gen_params = GeneralParameters()
         self.assertEqual(gen_params.simulation_stop     , SimulationStop(2000))
         self.assertEqual(gen_params.optimization_start  , OptimizationStart(1980))
         self.assertEqual(gen_params.payments_equilibrium, PaymentsEquilibrium(2000))

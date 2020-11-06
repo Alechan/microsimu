@@ -1,6 +1,7 @@
 from api.models.fields import *
 from api.std_lib.lawm.general_parameters import *
 from api.std_lib.lawm.regional_parameters import *
+from api.std_lib.lawm.regions import DEFAULT_REGIONS
 
 from api.std_lib.lawm.variables import *
 
@@ -130,6 +131,13 @@ class GeneralParameters(models.Model):
         extra_info_dict = {f.name : f.get_metadata() for f in relevant_fields}
         return extra_info_dict
 
+    @classmethod
+    def new_with_defaults(cls):
+        """
+        Instantiates the object but DOESN'T save to DB
+        """
+        return GeneralParameters()
+
 
 class LAWMRunParameters(models.Model):
     general_parameters = models.ForeignKey(GeneralParameters, related_name="run_parameters", null=False, on_delete=models.CASCADE)
@@ -163,11 +171,24 @@ class RegionalParameters(models.Model):
     max_sec_5_gnp_propor    = ParameterFloatField(model_parameter   = MaxCapitalGoodsGNPProportion   , null=False , blank=True)
 
     @classmethod
+    def new_in_memory_with_defaults_all_regions(cls):
+        """
+        Returns a dict of {region_name:obj} with obj being in-memory objects
+        (PK references invalid) for each region
+        """
+        run_parameters = LAWMRunParameters()
+        db_regions = [LAWMRegion(name=reg.name) for reg in DEFAULT_REGIONS]
+        defaults_per_region = {}
+        for reg in db_regions:
+            reg_params = RegionalParameters.new_with_defaults_for_region(run_parameters, reg)
+            region_name = reg.name
+            defaults_per_region[region_name] = reg_params
+        return defaults_per_region
+
+    @classmethod
     def new_with_defaults_for_region(cls, run_parameters, region):
         """
         Instantiates the object but DOESN'T save to DB
-        :param region_name:
-        :return: a python object not saved to DB
         """
         region_name = region.name
         partial_creation_kwargs = cls.get_defaults_for_region(region_name)
@@ -192,3 +213,4 @@ class RegionalParameters(models.Model):
 
     class Meta:
         unique_together = ('run_parameters', 'region')
+

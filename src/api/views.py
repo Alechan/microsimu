@@ -74,8 +74,9 @@ class SimulateViewSet(mixins.CreateModelMixin,
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = RunParametersSerializer
 
-    def get_object(self):
-        return self.get_queryset()[0]
+    def retrieve(self, request, *args, **kwargs):
+        default_params = RunParametersSerializer.default_values_data()
+        return Response(default_params)
 
 
 class SimulationList(APIView):

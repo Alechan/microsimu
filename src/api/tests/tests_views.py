@@ -96,13 +96,21 @@ class SimulateTest(ApiViewsTest):
     def setUp(self):
         self.all_simus_before = list(LAWMSimulation.objects.all())
         self.url = reverse("api:simulate")
+        self.get_response = self.client.get(self.url)
+        self.get_json = self.get_response.json()
+        self.expected_fields = {"general", "regional"}
 
-    def test_simulate_GET_returns_model_parameters(self):
-        get_response = self.client.get(self.url)
+    def test_simulate_GET_returns_correct_status(self):
+        self.assertEqual(self.get_response.status_code, status.HTTP_200_OK)
 
-        expected_fields = {}
-        self.assertEqual(get_response.status_code, status.HTTP_200_OK)
-        self.fail("haceme")
+    def test_simulate_GET_returns_correct_fields(self):
+        actual_fields = self.get_json.keys()
+        self.assertEqual(self.expected_fields, actual_fields)
+
+    def test_simulate_GET_returns_non_empty_nested_dicts(self):
+        for field in self.expected_fields:
+            sub_dict = self.get_json[field]
+            self.assert_not_empty(sub_dict)
 
     def test_simulate_POST_triggers_new_simulation(self):
         post_response = self.client.post(self.url)
@@ -113,6 +121,7 @@ class SimulateTest(ApiViewsTest):
 
         self.assertEqual(post_response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(expected_all_simus_after, actual_all_simus_after)
+        self.fail("haceme")
 
     def test_simulate_OPTIONS_returns_correct_metadata(self):
         serializer = RunParametersSerializer()
