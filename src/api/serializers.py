@@ -1,10 +1,9 @@
-from urllib import request
-
-from rest_framework import serializers
 from django.urls import reverse
+from rest_framework import serializers
 
 from api.models import fields
-from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegionResult
+from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegionResult, GeneralParameters, RegionalParameters, \
+    LAWMRunParameters
 
 
 class VariableFloatSerializerField(serializers.Field):
@@ -16,6 +15,24 @@ class VariableFloatSerializerField(serializers.Field):
         return float(value.value)
 
 
+class ParameterFloatSerializerField(serializers.Field):
+    """
+    Serializer field targeting custom ParameterFloatField
+    """
+
+    def to_representation(self, value):
+        return float(value.value)
+
+
+class ParameterIntegerSerializerField(serializers.Field):
+    """
+    Serializer field targeting custom ParameterFloatField
+    """
+
+    def to_representation(self, value):
+        return int(value.value)
+
+
 class ResultSerializerMetaClass(type(serializers.ModelSerializer)):
     """
     Metaclass to override class variables set in Django REST Framework ModelSerializer
@@ -24,7 +41,9 @@ class ResultSerializerMetaClass(type(serializers.ModelSerializer)):
     def __new__(cls, clsname, bases, attrs):
         # noinspection PyTypeChecker
         super_new = super().__new__(cls, clsname, bases, attrs)
-        super_new.serializer_field_mapping[fields.VariableFloatField] = VariableFloatSerializerField
+        super_new.serializer_field_mapping[fields.VariableFloatField]    = VariableFloatSerializerField
+        super_new.serializer_field_mapping[fields.ParameterFloatField]   = ParameterFloatSerializerField
+        super_new.serializer_field_mapping[fields.ParameterIntegerField] = ParameterIntegerSerializerField
         return super_new
 
 
@@ -84,3 +103,78 @@ class SimulationListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = LAWMSimulation
         fields = ["url", "created"]
+
+
+class GeneralParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+    class Meta:
+        model = GeneralParameters
+        exclude = ["id"]
+
+
+class RegionalParametersListSerializer(serializers.ListSerializer):
+    def to_representation(self, data):
+        """
+        From python objects to primitive types (int, float, dict, list)
+        (the inverse of to_internal_value)
+        :param data: the python objects
+        :return: a dictionary of primitive types
+        """
+        data_list = super().to_representation(data)
+        data_dict = {}
+        for reg_params in data_list:
+            region_name = reg_params["region"]
+            params = reg_params.copy()
+            del params["region"]
+            data_dict[region_name] = params
+        return data_dict
+
+    def to_internal_value(self, data):
+        """
+        From  primitive types (int, float, dict, list) to python objects
+        (the inverse of to_representation)
+        :param data: a dictionary of primitive types
+        :return: the python objects
+        """
+        data_list = [value | {"region":key} for key, value in data.items()]
+        return super().to_internal_value(data_list)
+
+
+class RegionalParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+    class Meta:
+        model = RegionalParameters
+        exclude = ["id", "run_parameters"]
+        list_serializer_class = RegionalParametersListSerializer
+
+
+class RunParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+    general  = GeneralParametersSerializer(source="general_parameters")
+    regional = RegionalParametersSerializer(many=True, source="regional_parameters")
+
+    def create(self, validated_data):
+        """
+        Override creation because we have nested serializers and DRF can't handle automatic creation
+        in this case.
+
+        :param validated_data: a dict of validated data to be used to initialize Django model objects
+        :return:
+        """
+        general_parameters = GeneralParameters.objects.create(**validated_data["general_parameters"])
+        run_parameters = LAWMRunParameters.objects.create(general_parameters=general_parameters)
+        for reg_params in validated_data["regional_parameters"]:
+            regional_parameters = RegionalParameters.objects.create(
+                run_parameters=run_parameters,
+                **reg_params
+            )
+        return run_parameters
+
+    def get_metadata(self):
+        """
+        Get fields metadata to inform the user about their defaults, max, min, etc
+        :return:
+        """
+        return self.Meta.model.get_metadata()
+
+    class Meta:
+        model = LAWMRunParameters
+        exclude = ["id", "general_parameters"]
+

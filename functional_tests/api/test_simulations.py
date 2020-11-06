@@ -90,6 +90,9 @@ def test_simulations_post(wait_for_api):
     # I want to get the parameters of a model
     get_response_simulate = request_session.get(simulations_url)
     assert get_response_simulate
+    parameters = get_response_simulate.json()
+    all_params_names = parameters.keys()
+    assert len(all_params_names) > 0
     # Get the simulations to know how many were there were before
     simulations = get_simulations_from_api(api_url, request_session)
     # I want to be able to trigger simulations run with user defined parameters

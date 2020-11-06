@@ -1,11 +1,16 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
+from rest_framework import mixins
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
-from api.models.models import LAWMSimulation
-from api.serializers import SimulationListSerializer, SimulationDetailSerializer, RegionResultSerializer
+from api.models.models import LAWMSimulation, LAWMRunParameters
+from api.serializers import SimulationListSerializer, SimulationDetailSerializer, RegionResultSerializer, \
+    RunParametersSerializer
+from api.endpoint_metadata import DescriptiveFieldsMetadater
+from api.std_lib.lawm.regions import Africa
 
 
 class ApiRoot(APIView):
@@ -55,20 +60,22 @@ class ApiRoot(APIView):
         description = base_description.format(
             simulations_url  =self.request.build_absolute_uri(reverse("api:simulations")),
             simu_1_url       =self.request.build_absolute_uri(reverse("api:simulation-detail", args=[1])),
-            simu_1_africa_url=self.request.build_absolute_uri(reverse("api:regionresult-detail", args=[1, "africa"])),
+            simu_1_africa_url=self.request.build_absolute_uri(reverse("api:regionresult-detail", args=[1, Africa.name])),
         )
         return description
 
 
-class Simulate(APIView):
-    @staticmethod
-    def post(request):
-        simu = LAWMSimulation.objects.create()
-        return redirect('api:simulation-detail', pk=simu.id)
+class SimulateViewSet(mixins.CreateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      GenericViewSet):
+    metadata_class = DescriptiveFieldsMetadater
+    queryset = LAWMRunParameters.objects.all()
+    # Permissions
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = RunParametersSerializer
 
-    @staticmethod
-    def get(request):
-        return Response({})
+    def get_object(self):
+        return self.get_queryset()[0]
 
 
 class SimulationList(APIView):
