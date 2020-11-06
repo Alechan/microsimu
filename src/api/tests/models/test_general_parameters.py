@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from api.models.models import GeneralParameters
-from api.std_lib.lawm.parameters import *
+from api.std_lib.lawm.general_parameters import *
 from api.tests.api_test_mixin import ApiTestMixin
 
 
@@ -58,3 +58,41 @@ class LAWMGeneralParametersTest(TestCase, ApiTestMixin):
             self.fail("An error should've been raised but wasn't.")
         except ValidationError:
             pass
+
+    def test_get_metadata_returns_correct_information(self):
+        expected_metadata = {
+            "simulation_stop"     : SimulationStop.info_as_dict(),
+            "optimization_start"  : OptimizationStart.info_as_dict(),
+            "payments_equilibrium": PaymentsEquilibrium.info_as_dict(),
+            "fertilizer_cost"     : FertilizerCost.info_as_dict(),
+            "weight_constraint_1" : WeightConstraint1.info_as_dict(),
+            "weight_constraint_2" : WeightConstraint2.info_as_dict(),
+            "weight_constraint_3" : WeightConstraint3.info_as_dict(),
+            "weight_constraint_4" : WeightConstraint4.info_as_dict(),
+            "weight_constraint_5" : WeightConstraint5.info_as_dict(),
+            "weight_constraint_6" : WeightConstraint6.info_as_dict(),
+            "weight_constraint_7" : WeightConstraint7.info_as_dict(),
+            "weight_constraint_8" : WeightConstraint8.info_as_dict(),
+            "weight_constraint_9" : WeightConstraint9.info_as_dict(),
+            "weight_constraint_10": WeightConstraint10.info_as_dict(),
+            "weight_constraint_11": WeightConstraint11.info_as_dict(),
+            "weight_constraint_12": WeightConstraint12.info_as_dict(),
+            "weight_constraint_13": WeightConstraint13.info_as_dict(),
+            "weight_constraint_14": WeightConstraint14.info_as_dict(),
+            "weight_constraint_15": WeightConstraint15.info_as_dict(),
+            "weight_constraint_16": WeightConstraint16.info_as_dict(),
+            "weight_constraint_17": WeightConstraint17.info_as_dict(),
+            "weight_constraint_18": WeightConstraint18.info_as_dict(),
+            "weight_constraint_19": WeightConstraint19.info_as_dict(),
+            "weight_constraint_20": WeightConstraint20.info_as_dict(),
+            "weight_constraint_21": WeightConstraint21.info_as_dict(),
+            "weight_constraint_22": WeightConstraint22.info_as_dict(),
+            "weight_constraint_23": WeightConstraint23.info_as_dict(),
+            "weight_constraint_24": WeightConstraint24.info_as_dict(),
+            "weight_constraint_25": WeightConstraint25.info_as_dict(),
+            "weight_constraint_26": WeightConstraint26.info_as_dict(),
+        }
+        actual_metadata = GeneralParameters.get_metadata()
+
+        self.assertEqual(expected_metadata, actual_metadata)
+

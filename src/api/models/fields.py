@@ -88,13 +88,6 @@ class BaseParameterField(CustomLAWMFieldMixin, models.IntegerField):
     """
     The base field for which al parameter fields will subclassify
     """
-    def __init__(self, model_parameter, *args, **kwargs):
-        kwargs["default"]    = model_parameter.default
-        kwargs["validators"] = self.get_validators(model_parameter)
-        super().__init__(*args, **kwargs)
-        self.model_component       = model_parameter
-        self.model_component_kwarg = "model_parameter"
-
     @staticmethod
     def get_validators(model_parameter):
         # Only add validators of their max or min are not None
@@ -103,7 +96,35 @@ class BaseParameterField(CustomLAWMFieldMixin, models.IntegerField):
             validators.append(MaxValueParameterValidator(model_parameter.maximum))
         if model_parameter.minimum:
             validators.append(MinValueParameterValidator(model_parameter.minimum))
+            dict()
         return validators
+
+    def __init__(self, model_parameter, use_parameter_default=False, *args, **kwargs):
+        if use_parameter_default:
+            kwargs["default"]    = model_parameter.default
+        kwargs["validators"] = self.get_validators(model_parameter)
+        super().__init__(*args, **kwargs)
+        self.model_component       = model_parameter
+        self.model_component_kwarg = "model_parameter"
+
+    def get_metadata(self):
+        """
+        Get metadata for this field (default, max, min, etc) in primitive type form
+        :return:
+        """
+        return self.model_component.info_as_dict()
+
+    def get_defaults_per_region(self):
+
+        try:
+            defaults_per_region = dict(self.model_component.default)
+        except TypeError:
+            raise TypeError("Trying to get the regional defaults of a non regional parameter.")
+        return defaults_per_region
+
+    def get_defaults_for_region(self, region_name):
+        defaults_per_region = self.get_defaults_per_region()
+        return defaults_per_region[region_name]
 
 
 class ParameterIntegerField(BaseParameterField):
@@ -113,6 +134,7 @@ class ParameterIntegerField(BaseParameterField):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.primitive_type        = int
+
 
 
 class ParameterFloatField(BaseParameterField):

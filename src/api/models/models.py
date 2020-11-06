@@ -1,5 +1,7 @@
 from api.models.fields import *
-from api.std_lib.lawm.parameters import *
+from api.std_lib.lawm.general_parameters import *
+from api.std_lib.lawm.regional_parameters import *
+
 from api.std_lib.lawm.variables import *
 
 
@@ -90,44 +92,103 @@ class LAWMYearResult(models.Model):
 
 
 class GeneralParameters(models.Model):
-    simulation_stop      = ParameterIntegerField(model_parameter=SimulationStop     , null=False, blank=True)
-    optimization_start   = ParameterIntegerField(model_parameter=OptimizationStart  , null=False, blank=True)
-    payments_equilibrium = ParameterIntegerField(model_parameter=PaymentsEquilibrium, null=False, blank=True)
-    fertilizer_cost      = ParameterFloatField(model_parameter=FertilizerCost     , null=False, blank=True)
-    weight_constraint_1  = ParameterFloatField(model_parameter=WeightConstraint1  , null=False, blank=True)
-    weight_constraint_2  = ParameterFloatField(model_parameter=WeightConstraint2  , null=False, blank=True)
-    weight_constraint_3  = ParameterFloatField(model_parameter=WeightConstraint3  , null=False, blank=True)
-    weight_constraint_4  = ParameterFloatField(model_parameter=WeightConstraint4  , null=False, blank=True)
-    weight_constraint_5  = ParameterFloatField(model_parameter=WeightConstraint5  , null=False, blank=True)
-    weight_constraint_6  = ParameterFloatField(model_parameter=WeightConstraint6  , null=False, blank=True)
-    weight_constraint_7  = ParameterFloatField(model_parameter=WeightConstraint7  , null=False, blank=True)
-    weight_constraint_8  = ParameterFloatField(model_parameter=WeightConstraint8  , null=False, blank=True)
-    weight_constraint_9  = ParameterFloatField(model_parameter=WeightConstraint9  , null=False, blank=True)
-    weight_constraint_10 = ParameterFloatField(model_parameter=WeightConstraint10 , null=False, blank=True)
-    weight_constraint_11 = ParameterFloatField(model_parameter=WeightConstraint11 , null=False, blank=True)
-    weight_constraint_12 = ParameterFloatField(model_parameter=WeightConstraint12 , null=False, blank=True)
-    weight_constraint_13 = ParameterFloatField(model_parameter=WeightConstraint13 , null=False, blank=True)
-    weight_constraint_14 = ParameterFloatField(model_parameter=WeightConstraint14 , null=False, blank=True)
-    weight_constraint_15 = ParameterFloatField(model_parameter=WeightConstraint15 , null=False, blank=True)
-    weight_constraint_16 = ParameterFloatField(model_parameter=WeightConstraint16 , null=False, blank=True)
-    weight_constraint_17 = ParameterFloatField(model_parameter=WeightConstraint17 , null=False, blank=True)
-    weight_constraint_18 = ParameterFloatField(model_parameter=WeightConstraint18 , null=False, blank=True)
-    weight_constraint_19 = ParameterFloatField(model_parameter=WeightConstraint19 , null=False, blank=True)
-    weight_constraint_20 = ParameterFloatField(model_parameter=WeightConstraint20 , null=False, blank=True)
-    weight_constraint_21 = ParameterFloatField(model_parameter=WeightConstraint21 , null=False, blank=True)
-    weight_constraint_22 = ParameterFloatField(model_parameter=WeightConstraint22 , null=False, blank=True)
-    weight_constraint_23 = ParameterFloatField(model_parameter=WeightConstraint23 , null=False, blank=True)
-    weight_constraint_24 = ParameterFloatField(model_parameter=WeightConstraint24 , null=False, blank=True)
-    weight_constraint_25 = ParameterFloatField(model_parameter=WeightConstraint25 , null=False, blank=True)
-    weight_constraint_26 = ParameterFloatField(model_parameter=WeightConstraint26 , null=False, blank=True)
+    simulation_stop      = ParameterIntegerField(model_parameter=SimulationStop     , use_parameter_default=True, null=False, blank=True)
+    optimization_start   = ParameterIntegerField(model_parameter=OptimizationStart  , use_parameter_default=True, null=False, blank=True)
+    payments_equilibrium = ParameterIntegerField(model_parameter=PaymentsEquilibrium, use_parameter_default=True, null=False, blank=True)
+    fertilizer_cost      = ParameterFloatField(model_parameter=FertilizerCost       , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_1  = ParameterFloatField(model_parameter=WeightConstraint1    , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_2  = ParameterFloatField(model_parameter=WeightConstraint2    , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_3  = ParameterFloatField(model_parameter=WeightConstraint3    , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_4  = ParameterFloatField(model_parameter=WeightConstraint4    , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_5  = ParameterFloatField(model_parameter=WeightConstraint5    , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_6  = ParameterFloatField(model_parameter=WeightConstraint6    , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_7  = ParameterFloatField(model_parameter=WeightConstraint7    , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_8  = ParameterFloatField(model_parameter=WeightConstraint8    , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_9  = ParameterFloatField(model_parameter=WeightConstraint9    , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_10 = ParameterFloatField(model_parameter=WeightConstraint10   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_11 = ParameterFloatField(model_parameter=WeightConstraint11   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_12 = ParameterFloatField(model_parameter=WeightConstraint12   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_13 = ParameterFloatField(model_parameter=WeightConstraint13   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_14 = ParameterFloatField(model_parameter=WeightConstraint14   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_15 = ParameterFloatField(model_parameter=WeightConstraint15   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_16 = ParameterFloatField(model_parameter=WeightConstraint16   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_17 = ParameterFloatField(model_parameter=WeightConstraint17   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_18 = ParameterFloatField(model_parameter=WeightConstraint18   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_19 = ParameterFloatField(model_parameter=WeightConstraint19   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_20 = ParameterFloatField(model_parameter=WeightConstraint20   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_21 = ParameterFloatField(model_parameter=WeightConstraint21   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_22 = ParameterFloatField(model_parameter=WeightConstraint22   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_23 = ParameterFloatField(model_parameter=WeightConstraint23   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_24 = ParameterFloatField(model_parameter=WeightConstraint24   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_25 = ParameterFloatField(model_parameter=WeightConstraint25   , use_parameter_default=True, null=False, blank=True)
+    weight_constraint_26 = ParameterFloatField(model_parameter=WeightConstraint26   , use_parameter_default=True, null=False, blank=True)
+
+    @classmethod
+    def get_metadata(cls):
+        all_fields      = cls._meta.get_fields()
+        relevant_fields = [f for f in all_fields if isinstance(f, BaseParameterField)]
+        extra_info_dict = {f.name : f.get_metadata() for f in relevant_fields}
+        return extra_info_dict
 
 
 class LAWMRunParameters(models.Model):
     general_parameters = models.ForeignKey(GeneralParameters, related_name="run_parameters", null=False, on_delete=models.CASCADE)
     simulation         = models.ForeignKey(LAWMSimulation   , related_name="run_parameters", null=False, on_delete=models.CASCADE)
 
+    @classmethod
+    def get_metadata(cls):
+        return {
+            "general" : GeneralParameters.get_metadata(),
+            "regional": RegionalParameters.get_metadata(),
+        }
+
 
 class RegionalParameters(models.Model):
-    run_parameters = models.ForeignKey(LAWMRunParameters, related_name="regional_parameters", null=False, on_delete=models.CASCADE)
-    region     = models.ForeignKey(LAWMRegion       , related_name="regional_parameters", null=False, on_delete=models.CASCADE)
-    CALMX = models.IntegerField(null=False, blank=True, default=42)
+    run_parameters = models.ForeignKey(LAWMRunParameters, related_name="regional_parameters", null=False, blank=True, on_delete=models.CASCADE)
+    region         = models.ForeignKey(LAWMRegion       , related_name="regional_parameters", null=False, blank=True, on_delete=models.CASCADE)
+    max_calories            = ParameterFloatField(model_parameter   = MaxCalories                     , null=False , blank=True)
+    max_build_cost          = ParameterFloatField(model_parameter   = MaxBuildCost                   , null=False , blank=True)
+    tech_prog_coeff_1       = ParameterFloatField(model_parameter   = TechProgressCoefficient1       , null=False , blank=True)
+    tech_prog_coeff_2       = ParameterFloatField(model_parameter   = TechProgressCoefficient2       , null=False , blank=True)
+    tech_prog_coeff_3       = ParameterFloatField(model_parameter   = TechProgressCoefficient3       , null=False , blank=True)
+    tech_prog_coeff_4       = ParameterFloatField(model_parameter   = TechProgressCoefficient4       , null=False , blank=True)
+    tech_prog_coeff_5       = ParameterFloatField(model_parameter   = TechProgressCoefficient5       , null=False , blank=True)
+    tech_prog_stop          = ParameterFloatField(model_parameter   = TechProgressStop               , null=False , blank=True)
+    years_building_cost_eq  = ParameterIntegerField(model_parameter = YearsForBuildingCostEquality   , null=False , blank=True)
+    years_housing_level_eq  = ParameterIntegerField(model_parameter = YearsForHousingLevelEquality   , null=False , blank=True)
+    desired_food_stock      = ParameterFloatField(model_parameter   = DesiredFoodStock               , null=False , blank=True)
+    years_space_p_person_eq = ParameterIntegerField(model_parameter = YearsForSpacePerPersonEquality , null=False , blank=True)
+    max_space_p_person      = ParameterFloatField(model_parameter   = MaxSpacePerPerson              , null=False , blank=True)
+    desired_space_p_person  = ParameterFloatField(model_parameter   = DesiredSpacePerPerson          , null=False , blank=True)
+    max_sec_5_gnp_propor    = ParameterFloatField(model_parameter   = MaxCapitalGoodsGNPProportion   , null=False , blank=True)
+
+    @classmethod
+    def new_with_defaults_for_region(cls, run_parameters, region):
+        """
+        Instantiates the object but DOESN'T save to DB
+        :param region_name:
+        :return: a python object not saved to DB
+        """
+        region_name = region.name
+        partial_creation_kwargs = cls.get_defaults_for_region(region_name)
+        creation_kwargs = partial_creation_kwargs.copy()
+        creation_kwargs["run_parameters"] = run_parameters
+        creation_kwargs["region"]         = region
+        return cls(**creation_kwargs)
+
+    @classmethod
+    def get_defaults_for_region(cls, region_name):
+        all_fields = cls._meta.get_fields()
+        relevant_fields = [f for f in all_fields if isinstance(f, BaseParameterField)]
+        partial_creation_kwargs = {f.name: f.get_defaults_for_region(region_name) for f in relevant_fields}
+        return partial_creation_kwargs
+
+    @classmethod
+    def get_metadata(cls):
+        all_fields      = cls._meta.get_fields()
+        relevant_fields = [f for f in all_fields if isinstance(f, BaseParameterField)]
+        extra_info_dict = {f.name : f.get_metadata() for f in relevant_fields}
+        return extra_info_dict
+
+    class Meta:
+        unique_together = ('run_parameters', 'region')

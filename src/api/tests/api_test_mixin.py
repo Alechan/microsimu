@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta
 
-from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegion, LAWMRegionResult, GeneralParameters, \
-    LAWMRunParameters
+from api.models.models import *
 from microsimu.settings import BASE_DIR
 
 
 class TestDatabaseTree:
     def __init__(self):
         self.simu    = LAWMSimulation.objects.create()
-        self.region_1 = LAWMRegion.objects.get_or_create(name=f"region_1")[0]
-        self.region_2 = LAWMRegion.objects.get_or_create(name=f"region_2")[0]
+        self.region_1 = LAWMRegion.objects.get_or_create(name="africa")[0]
+        self.region_2 = LAWMRegion.objects.get_or_create(name="developed")[0]
         self.region_result_r1 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_1)
         self.region_result_r2 = LAWMRegionResult.objects.create(simulation=self.simu, region=self.region_2)
         self.year_results_reg_1 = self.create_year_results(self.region_result_r1, n_years=2)
@@ -19,7 +18,7 @@ class TestDatabaseTree:
             general_parameters=self.general_parameters,
             simulation=self.simu
         )
-        # self.regional_parameters = assert False
+        self.regional_parameters_developed = RegionalParameters.new_with_defaults_for_region(self.run_parameters, self.region_1)
 
     @classmethod
     def create_year_results(cls, region_result, n_years):
@@ -116,4 +115,15 @@ class ApiTestMixin:
     def assert_equal_values_for_attributes(self, first, second, attributes):
         for attr in attributes:
             self.assertEqual(getattr(first, attr), getattr(second, attr))
+
+    def assert_dicts_equal(self, first, second, **kwargs):
+        # If they are not dicts, use the default assertEqual
+        if not (isinstance(first, dict) and isinstance(second, dict)):
+            self.fail("One of the arguments wasn't a dict.")
+
+        # They are both dicts, use step by step comparison
+        # noinspection PyTypeChecker
+        self.assertEqual(first.keys(), second.keys())
+        for key in first:
+            self.assertEqual(first[key], second[key], **kwargs)
 

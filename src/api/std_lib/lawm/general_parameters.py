@@ -1,46 +1,11 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Any
 
-
-@dataclass
-class ModelParameter:
-    """
-    A class representing parameters of a model. By convention, each subclass
-    (like SimulationStop(ModelParameter) should
-      1. Put 'value: Any' first in the list of attributes
-      2. For each of the other attributes (name, fortran_name, etc) it should specify
-         its type again (str) and a default value. For example, 'name : str = "Population"
-      3. Even though it's not necessary for correct execution, subclassify this class to
-         point the reader to this description.
-     """
-    value       : Any
-    default     : Any
-    minimum     : Any
-    maximum     : Any
-    name        : str
-    fortran_name: str
-    unit        : str
-    description : str
-
-    @classmethod
-    def info_as_dict(cls):
-        """
-        Returns the variable information excluding the value attribute
-
-        :return: a dictionary such as {name:"Population", "unit":"persons",...} - {"value": 423}
-        """
-        # Create an instance that with any value
-        # noinspection PyArgumentList
-        instance = cls(1)
-        # Call the official dataclass asdict
-        base_dict = asdict(instance)
-        # Remove the value key
-        del base_dict["value"]
-        return base_dict
+from api.std_lib.lawm.base_parameter import ModelGeneralParameter
 
 
 @dataclass
-class SimulationStop:
+class SimulationStop(ModelGeneralParameter):
     value       : Any
     default     : int = 2000
     minimum     : int = 1990
@@ -52,7 +17,7 @@ class SimulationStop:
 
 
 @dataclass
-class OptimizationStart:
+class OptimizationStart(ModelGeneralParameter):
     value       : Any
     default     : int = 1980
     minimum     : int = 1980
@@ -64,7 +29,7 @@ class OptimizationStart:
 
 
 @dataclass
-class PaymentsEquilibrium:
+class PaymentsEquilibrium(ModelGeneralParameter):
     value       : Any
     default     : int = 2000
     minimum     : int = 1990
@@ -77,7 +42,7 @@ class PaymentsEquilibrium:
 
 
 @dataclass
-class FertilizerCost:
+class FertilizerCost(ModelGeneralParameter):
     value       : Any
     default     : float = 769230.8
     minimum     : float = 1
@@ -89,7 +54,7 @@ class FertilizerCost:
 
 
 @dataclass
-class WeightConstraint1:
+class WeightConstraint1(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -101,7 +66,7 @@ class WeightConstraint1:
 
 
 @dataclass
-class WeightConstraint2:
+class WeightConstraint2(ModelGeneralParameter):
     value       : Any
     default     : float = 8.0
     minimum     : float = 2
@@ -113,7 +78,7 @@ class WeightConstraint2:
 
 
 @dataclass
-class WeightConstraint3:
+class WeightConstraint3(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -125,7 +90,7 @@ class WeightConstraint3:
 
 
 @dataclass
-class WeightConstraint4:
+class WeightConstraint4(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -137,7 +102,7 @@ class WeightConstraint4:
 
 
 @dataclass
-class WeightConstraint5:
+class WeightConstraint5(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -149,7 +114,7 @@ class WeightConstraint5:
 
 
 @dataclass
-class WeightConstraint6:
+class WeightConstraint6(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -161,7 +126,7 @@ class WeightConstraint6:
 
 
 @dataclass
-class WeightConstraint7:
+class WeightConstraint7(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
     minimum     : float = 2
@@ -174,7 +139,7 @@ class WeightConstraint7:
 
 
 @dataclass
-class WeightConstraint8:
+class WeightConstraint8(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
     minimum     : float = 2
@@ -186,7 +151,7 @@ class WeightConstraint8:
 
 
 @dataclass
-class WeightConstraint9:
+class WeightConstraint9(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -198,7 +163,7 @@ class WeightConstraint9:
 
 
 @dataclass
-class WeightConstraint10:
+class WeightConstraint10(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -211,7 +176,7 @@ class WeightConstraint10:
 
 
 @dataclass
-class WeightConstraint11:
+class WeightConstraint11(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -223,7 +188,7 @@ class WeightConstraint11:
 
 
 @dataclass
-class WeightConstraint12:
+class WeightConstraint12(ModelGeneralParameter):
     value       : Any
     default     : float = 2.0
     minimum     : float = 2
@@ -236,7 +201,7 @@ class WeightConstraint12:
 
 
 @dataclass
-class WeightConstraint13:
+class WeightConstraint13(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
     minimum     : float = 2
@@ -249,7 +214,7 @@ class WeightConstraint13:
 
 
 @dataclass
-class WeightConstraint14:
+class WeightConstraint14(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
     minimum     : float = 2
@@ -261,7 +226,7 @@ class WeightConstraint14:
 
 
 @dataclass
-class WeightConstraint15:
+class WeightConstraint15(ModelGeneralParameter):
     value       : Any
     default     : float = 7.0
     minimum     : float = 2
@@ -274,7 +239,7 @@ class WeightConstraint15:
 
 
 @dataclass
-class WeightConstraint16:
+class WeightConstraint16(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
     minimum     : float = 2
@@ -286,7 +251,7 @@ class WeightConstraint16:
 
 
 @dataclass
-class WeightConstraint17:
+class WeightConstraint17(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
     minimum     : float = 2
@@ -298,7 +263,7 @@ class WeightConstraint17:
 
 
 @dataclass
-class WeightConstraint18:
+class WeightConstraint18(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
     minimum     : float = 2
@@ -310,7 +275,7 @@ class WeightConstraint18:
 
 
 @dataclass
-class WeightConstraint19:
+class WeightConstraint19(ModelGeneralParameter):
     value       : Any
     default     : float = 8.0
     minimum     : float = 2
@@ -322,7 +287,7 @@ class WeightConstraint19:
 
 
 @dataclass
-class WeightConstraint20:
+class WeightConstraint20(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -334,7 +299,7 @@ class WeightConstraint20:
 
 
 @dataclass
-class WeightConstraint21:
+class WeightConstraint21(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
     minimum     : float = 2
@@ -346,7 +311,7 @@ class WeightConstraint21:
 
 
 @dataclass
-class WeightConstraint22:
+class WeightConstraint22(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -358,7 +323,7 @@ class WeightConstraint22:
 
 
 @dataclass
-class WeightConstraint23:
+class WeightConstraint23(ModelGeneralParameter):
     value       : Any
     default     : float = 8.0
     minimum     : float = 2
@@ -370,7 +335,7 @@ class WeightConstraint23:
 
 
 @dataclass
-class WeightConstraint24:
+class WeightConstraint24(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
     minimum     : float = 2
@@ -382,7 +347,7 @@ class WeightConstraint24:
 
 
 @dataclass
-class WeightConstraint25:
+class WeightConstraint25(ModelGeneralParameter):
     value       : Any
     default     : float = 2.0
     minimum     : float = 2
@@ -395,7 +360,7 @@ class WeightConstraint25:
 
 
 @dataclass
-class WeightConstraint26:
+class WeightConstraint26(ModelGeneralParameter):
     value       : Any
     default     : float = 1.0
     minimum     : float = 2

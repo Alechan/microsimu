@@ -3,6 +3,7 @@ from django.test import TestCase
 
 from api.migrations.csvs.from_fortran_names_mapper import map_series_to_year_result_creation_kwargs, from_fortran_dict
 from api.models.models import LAWMSimulation, LAWMYearResult
+from api.std_lib.lawm.regions import Developed, Latinamerica, Africa, Asia
 from api.tests.api_test_mixin import ApiTestMixin
 
 
@@ -15,10 +16,10 @@ class LAWMRegionTest(TestCase, ApiTestMixin):
         africa_csv_path    = cls.MIGRATIONS_CSV_PATH / "fortran_std_africa.csv"
         asia_csv_path      = cls.MIGRATIONS_CSV_PATH / "fortran_std_asia.csv"
         cls.regions_dfs = [
-            ["developed"   , pandas.read_csv(developed_csv_path)],
-            ["latinamerica", pandas.read_csv(la_csv_path)],
-            ["africa"      , pandas.read_csv(africa_csv_path)],
-            ["asia"        , pandas.read_csv(asia_csv_path)],
+            [Developed.name   , pandas.read_csv(developed_csv_path)],
+            [Latinamerica.name, pandas.read_csv(la_csv_path)],
+            [Africa.name      , pandas.read_csv(africa_csv_path)],
+            [Asia.name        , pandas.read_csv(asia_csv_path)],
         ]
 
     def test_first_simulation_corresponds_to_std_run(self):

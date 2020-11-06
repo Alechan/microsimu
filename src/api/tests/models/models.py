@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from typing import Any
 
-from django.db import models
-
-from api.std_lib.lawm import variables, parameters
-from api.models.fields import VariableFloatField, ParameterIntegerField, ParameterFloatField
+import api.std_lib.lawm.base_parameter
+from api.models.fields import *
+from api.std_lib.lawm import variables
 
 
 @dataclass
@@ -22,7 +21,7 @@ class DjangoModelWithVariableFields(models.Model):
 
 
 @dataclass
-class CustomParameter(parameters.ModelParameter):
+class CustomGeneralParameter(api.std_lib.lawm.base_parameter.ModelGeneralParameter):
     value         : Any
     default       : int = 5
     minimum       : int = 1
@@ -34,8 +33,19 @@ class CustomParameter(parameters.ModelParameter):
 
 
 class IntegerParameterFieldDjangoModel(models.Model):
-    integer_param = ParameterIntegerField(model_parameter=CustomParameter)
+    integer_param = ParameterIntegerField(model_parameter=CustomGeneralParameter, use_parameter_default=True)
 
 
 class FloatParameterFieldDjangoModel(models.Model):
-    float_param = ParameterFloatField(model_parameter=CustomParameter)
+    float_param = ParameterFloatField(model_parameter=CustomGeneralParameter, use_parameter_default=True)
+
+@dataclass
+class CustomRegionalParameter(api.std_lib.lawm.base_parameter.ModelGeneralParameter):
+    value         : Any
+    default       : dict  = (("developed", 3200), ("latinamerica", 3000), ("africa", 3000), ("asia", 3000))
+    minimum       : int = 1
+    maximum       : int = 10
+    name          : str = "The name"
+    fortran_name  : str = "The fortran name"
+    unit          : str = "The unit"
+    description   : str = "The description"

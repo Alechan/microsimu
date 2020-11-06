@@ -84,3 +84,8 @@ STATICFILES_DIRS = [
 # CSRF
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE    = True
+
+# DRF's configuration
+REST_FRAMEWORK = {
+    'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata'
+}
