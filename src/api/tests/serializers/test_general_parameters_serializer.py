@@ -10,6 +10,6 @@ class GeneralParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
         gen_params = GeneralParameters.new_with_defaults()
         expected_data = GeneralParametersSerializer(gen_params).data
 
-        actual_data = GeneralParametersSerializer.default_values_data()
+        actual_data = GeneralParametersSerializer.get_default_serialized_data()
 
         self.assert_dicts_equal(expected_data, actual_data)

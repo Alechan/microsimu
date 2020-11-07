@@ -108,7 +108,7 @@ class SimulationListSerializer(serializers.HyperlinkedModelSerializer):
 class GeneralParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
 
     @classmethod
-    def default_values_data(cls):
+    def get_default_serialized_data(cls):
         default_values = GeneralParameters.new_with_defaults()
         serializer = GeneralParametersSerializer(default_values)
         return serializer.data
@@ -123,7 +123,7 @@ class ManyRegionalParametersSerializer(serializers.ListSerializer):
     Serializes to a dict of {region:data-region} instead of a list of [data]
     """
     @classmethod
-    def default_values_data(cls):
+    def get_default_serialized_data(cls):
         reg_params_per_region = RegionalParameters.new_in_memory_with_defaults_all_regions()
         all_reg_params        = reg_params_per_region.values()
         serializer = RegionalParametersSerializer(many=True)
@@ -171,15 +171,27 @@ class RunParametersSerializer(serializers.ModelSerializer, metaclass=ResultSeria
     general  = GeneralParametersSerializer(source="general_parameters")
     regional = RegionalParametersSerializer(many=True, source="regional_parameters")
 
-    # def __init__(self, instance, *args, **kwargs):
-    #     if not instance:
-    #     super().__init__(instance, *args, **kwargs)
+    class Meta:
+        model = LAWMRunParameters
+        exclude = ["id", "general_parameters", "simulation"]
+
+    @property
+    def data(self):
+        """
+        Hack to "force" the initial data shown in the HTML "free type form"
+        :return:
+        """
+        if not self.instance:
+            data = self.get_default_serialized_data()
+        else:
+            data = super().data
+        return data
 
     @classmethod
-    def default_values_data(cls):
+    def get_default_serialized_data(cls):
         return {
-            "general" : GeneralParametersSerializer.default_values_data(),
-            "regional": ManyRegionalParametersSerializer.default_values_data(),
+            "general" : GeneralParametersSerializer.get_default_serialized_data(),
+            "regional": ManyRegionalParametersSerializer.get_default_serialized_data(),
         }
 
     def create(self, validated_data):
@@ -205,8 +217,3 @@ class RunParametersSerializer(serializers.ModelSerializer, metaclass=ResultSeria
         :return:
         """
         return self.Meta.model.get_metadata()
-
-    class Meta:
-        model = LAWMRunParameters
-        exclude = ["id", "general_parameters"]
-

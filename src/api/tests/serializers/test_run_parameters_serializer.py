@@ -1,6 +1,6 @@
 from django import test
 
-from api.models.models import GeneralParameters, LAWMRunParameters, RegionalParameters
+from api.models.models import GeneralParameters, LAWMRunParameters, RegionalParameters, LAWMSimulation
 from api.serializers import RunParametersSerializer, GeneralParametersSerializer, RegionalParametersSerializer, \
     ManyRegionalParametersSerializer
 from api.tests.api_test_mixin import MicroSimuTestMixin
@@ -15,13 +15,38 @@ class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
         serializer = RunParametersSerializer(cls.run_parameters)
         cls.data = serializer.data
 
-    def test_serializer_class_method_returns_correct_default_values_serialized(self):
+    def test_when_instance_is_provided_the_data_returned_should_be_correct(self):
+        value = 2323
+        simu = LAWMSimulation.objects.create()
+        general_parameters = GeneralParameters.objects.create(simulation_stop=value)
+        run_parameters = LAWMRunParameters.objects.create(simulation=simu, general_parameters=general_parameters)
+
+        expected_gen_params_data = GeneralParametersSerializer.get_default_serialized_data()
+        expected_gen_params_data["simulation_stop"] = value
+
         expected_run_params_data = {
-            "general" : GeneralParametersSerializer.default_values_data(),
-            "regional": ManyRegionalParametersSerializer.default_values_data(),
+            "general": expected_gen_params_data,
+            "regional": {}
         }
 
-        actual_run_params_data = RunParametersSerializer.default_values_data()
+        actual_run_params_data = RunParametersSerializer(run_parameters).data
+
+        self.assert_dicts_equal(expected_run_params_data, actual_run_params_data)
+
+    def test_serializer_is_initialized_with_default_data_when_none_provided(self):
+        expected_run_params_data = RunParametersSerializer.get_default_serialized_data()
+
+        actual_run_params_data = RunParametersSerializer().data
+
+        self.assert_dicts_equal(expected_run_params_data, actual_run_params_data)
+
+    def test_serializer_class_method_returns_correct_default_values_serialized(self):
+        expected_run_params_data = {
+            "general" : GeneralParametersSerializer.get_default_serialized_data(),
+            "regional": ManyRegionalParametersSerializer.get_default_serialized_data(),
+        }
+
+        actual_run_params_data = RunParametersSerializer.get_default_serialized_data()
 
         self.assert_dicts_equal(expected_run_params_data, actual_run_params_data)
 
