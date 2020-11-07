@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from api.models.models import GeneralParameters
+from api.models.models import LAWMGeneralParameters
 from api.std_lib.lawm.general_parameters import *
 from api.tests.api_test_mixin import MicroSimuTestMixin
 
@@ -13,7 +13,7 @@ class LAWMGeneralParametersTest(TestCase, MicroSimuTestMixin):
         cls.general_parameters = db_tree.general_parameters
 
     def test_default_values_are_set_when_none_provided(self):
-        gen_params = GeneralParameters()
+        gen_params = LAWMGeneralParameters()
         self.assertEqual(gen_params.simulation_stop     , SimulationStop(2000))
         self.assertEqual(gen_params.optimization_start  , OptimizationStart(1980))
         self.assertEqual(gen_params.payments_equilibrium, PaymentsEquilibrium(2000))
@@ -46,13 +46,13 @@ class LAWMGeneralParametersTest(TestCase, MicroSimuTestMixin):
         self.assertEqual(gen_params.weight_constraint_26, WeightConstraint26(1.0))
 
     def test_default_values_can_be_overridden(self):
-        gen_params = GeneralParameters.objects.create(simulation_stop=2)
+        gen_params = LAWMGeneralParameters.objects.create(simulation_stop=2)
         self.assertEqual(gen_params.simulation_stop, SimulationStop(2))
 
     def test_validators_are_automatically_added(self):
         # TODO: add tests for each LAWM parameter
         value = 1959
-        invalid_params = GeneralParameters.objects.create(simulation_stop=value)
+        invalid_params = LAWMGeneralParameters.objects.create(simulation_stop=value)
         try:
             invalid_params.full_clean()
             self.fail("An error should've been raised but wasn't.")
@@ -92,7 +92,7 @@ class LAWMGeneralParametersTest(TestCase, MicroSimuTestMixin):
             "weight_constraint_25": WeightConstraint25.info_as_dict(),
             "weight_constraint_26": WeightConstraint26.info_as_dict(),
         }
-        actual_metadata = GeneralParameters.get_metadata()
+        actual_metadata = LAWMGeneralParameters.get_metadata()
 
         self.assertEqual(expected_metadata, actual_metadata)
 

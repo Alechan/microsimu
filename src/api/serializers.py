@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import serializers
 
 from api.models import fields
-from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegionResult, GeneralParameters, RegionalParameters, \
+from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegionResult, LAWMGeneralParameters, LAWMRegionalParameters, \
     LAWMRunParameters
 
 
@@ -109,12 +109,12 @@ class GeneralParametersSerializer(serializers.ModelSerializer, metaclass=ResultS
 
     @classmethod
     def get_default_serialized_data(cls):
-        default_values = GeneralParameters.new_with_defaults()
+        default_values = LAWMGeneralParameters.new_with_defaults()
         serializer = GeneralParametersSerializer(default_values)
         return serializer.data
 
     class Meta:
-        model = GeneralParameters
+        model = LAWMGeneralParameters
         exclude = ["id"]
 
 
@@ -124,7 +124,7 @@ class ManyRegionalParametersSerializer(serializers.ListSerializer):
     """
     @classmethod
     def get_default_serialized_data(cls):
-        reg_params_per_region = RegionalParameters.new_in_memory_with_defaults_all_regions()
+        reg_params_per_region = LAWMRegionalParameters.new_in_memory_with_defaults_all_regions()
         all_reg_params        = reg_params_per_region.values()
         serializer = RegionalParametersSerializer(many=True)
         # I have to use the "to_representation" because when called in isolation with "many=True",
@@ -162,7 +162,7 @@ class ManyRegionalParametersSerializer(serializers.ListSerializer):
 
 class RegionalParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
     class Meta:
-        model = RegionalParameters
+        model = LAWMRegionalParameters
         exclude = ["id", "run_parameters"]
         list_serializer_class = ManyRegionalParametersSerializer
 
@@ -202,10 +202,10 @@ class RunParametersSerializer(serializers.ModelSerializer, metaclass=ResultSeria
         :param validated_data: a dict of validated data to be used to initialize Django model objects
         :return:
         """
-        general_parameters = GeneralParameters.objects.create(**validated_data["general_parameters"])
+        general_parameters = LAWMGeneralParameters.objects.create(**validated_data["general_parameters"])
         run_parameters = LAWMRunParameters.objects.create(general_parameters=general_parameters)
         for reg_params in validated_data["regional_parameters"]:
-            regional_parameters = RegionalParameters.objects.create(
+            regional_parameters = LAWMRegionalParameters.objects.create(
                 run_parameters=run_parameters,
                 **reg_params
             )

@@ -1,6 +1,6 @@
 from django import test
 
-from api.models.models import RegionalParameters
+from api.models.models import LAWMRegionalParameters
 from api.serializers import RegionalParametersSerializer
 from api.tests.api_test_mixin import MicroSimuTestMixin
 
@@ -12,7 +12,7 @@ class RegionalParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
         cls.reg_params_developed = db_tree.regional_parameters_developed
         serializer = RegionalParametersSerializer(cls.reg_params_developed)
         cls.data = serializer.data
-        all_fields = {field.name for field in RegionalParameters._meta.get_fields()}
+        all_fields = {field.name for field in LAWMRegionalParameters._meta.get_fields()}
         cls.expected_fields = all_fields - {"id", "run_parameters"}
 
     def test_returns_correct_fields(self):

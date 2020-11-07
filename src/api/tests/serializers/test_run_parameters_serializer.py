@@ -1,6 +1,6 @@
 from django import test
 
-from api.models.models import GeneralParameters, LAWMRunParameters, RegionalParameters, LAWMSimulation
+from api.models.models import LAWMGeneralParameters, LAWMRunParameters, LAWMRegionalParameters, LAWMSimulation
 from api.serializers import RunParametersSerializer, GeneralParametersSerializer, RegionalParametersSerializer, \
     ManyRegionalParametersSerializer
 from api.tests.api_test_mixin import MicroSimuTestMixin
@@ -18,7 +18,7 @@ class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
     def test_when_instance_is_provided_the_data_returned_should_be_correct(self):
         value = 2323
         simu = LAWMSimulation.objects.create()
-        general_parameters = GeneralParameters.objects.create(simulation_stop=value)
+        general_parameters = LAWMGeneralParameters.objects.create(simulation_stop=value)
         run_parameters = LAWMRunParameters.objects.create(simulation=simu, general_parameters=general_parameters)
 
         expected_gen_params_data = GeneralParametersSerializer.get_default_serialized_data()
@@ -54,7 +54,7 @@ class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
     def get_expected_serialized_data_for_regional_params(db_regions, run_parameters):
         expected_reg_params_data = {}
         for reg in db_regions:
-            reg_params = RegionalParameters.new_with_defaults_for_region(run_parameters, reg)
+            reg_params = LAWMRegionalParameters.new_with_defaults_for_region(run_parameters, reg)
             reg_params_data = RegionalParametersSerializer(reg_params).data
             del reg_params_data["region"]
             region_name = reg.name
@@ -63,7 +63,7 @@ class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
 
     @staticmethod
     def get_serialized_data_for_general_params():
-        gen_params = GeneralParameters.new_with_defaults()
+        gen_params = LAWMGeneralParameters.new_with_defaults()
         expected_gen_params_data = GeneralParametersSerializer(gen_params).data
         return expected_gen_params_data
 

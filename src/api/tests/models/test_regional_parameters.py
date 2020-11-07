@@ -1,17 +1,28 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from api.models.models import RegionalParameters, LAWMRunParameters, LAWMRegion
+from api.models.models import LAWMRegionalParameters, LAWMRunParameters, LAWMRegion
 from api.std_lib.lawm.regional_parameters import *
 from api.std_lib.lawm.regions import Developed
 from api.tests.api_test_mixin import MicroSimuTestMixin, DEFAULT_REGIONS
 
 
 class RegionalParametersTest(TestCase, MicroSimuTestMixin):
+    def test_new_in_memory_objects_for_all_doesnt_modify_the_db(self):
+        expected_db_reg_params_per_region = LAWMRegionalParameters.objects.all()
+
+        _ = LAWMRegionalParameters.new_in_memory_with_defaults_all_regions()
+
+        actual_db_reg_params_per_region = LAWMRegionalParameters.objects.all()
+
+        self.assert_have_equal_length(expected_db_reg_params_per_region, actual_db_reg_params_per_region)
+        for first_obj, second_obj in zip(expected_db_reg_params_per_region, actual_db_reg_params_per_region):
+            self.assertEqual(first_obj, second_obj)
+
     def test_new_in_memory_objects_for_all_regions_works(self):
         expected_developed_defaults, _, _ = self.get_developed_region_defaults()
 
-        actual_reg_params_per_region = RegionalParameters.new_in_memory_with_defaults_all_regions()
+        actual_reg_params_per_region = LAWMRegionalParameters.new_in_memory_with_defaults_all_regions()
 
         actual_regions = actual_reg_params_per_region.keys()
         self.assert_has_length(actual_regions, len(DEFAULT_REGIONS))
@@ -42,7 +53,7 @@ class RegionalParametersTest(TestCase, MicroSimuTestMixin):
     def get_developed_region_defaults(self):
         run_parameters = LAWMRunParameters()
         region = LAWMRegion(name="developed")
-        dev_defaults = RegionalParameters.new_with_defaults_for_region(run_parameters, region)
+        dev_defaults = LAWMRegionalParameters.new_with_defaults_for_region(run_parameters, region)
         return dev_defaults, region, run_parameters
 
     def test_validators_are_automatically_added(self):
@@ -50,7 +61,7 @@ class RegionalParametersTest(TestCase, MicroSimuTestMixin):
 
         overflowed_max_calories_creation_kwargs = self.get_creation_kwargs_with_overflowed_max_calories()
 
-        gen_params = RegionalParameters(**overflowed_max_calories_creation_kwargs)
+        gen_params = LAWMRegionalParameters(**overflowed_max_calories_creation_kwargs)
         try:
             gen_params.full_clean()
             self.fail("An error should've been raised but wasn't.")
@@ -84,7 +95,7 @@ class RegionalParametersTest(TestCase, MicroSimuTestMixin):
             "desired_space_p_person" : DesiredSpacePerPerson.info_as_dict(),
             "max_sec_5_gnp_propor"   : MaxCapitalGoodsGNPProportion.info_as_dict(),
         }
-        actual_metadata = RegionalParameters.get_metadata()
+        actual_metadata = LAWMRegionalParameters.get_metadata()
 
         self.assertEqual(expected_metadata, actual_metadata)
 
@@ -93,7 +104,7 @@ class RegionalParametersTest(TestCase, MicroSimuTestMixin):
         run_parameters = LAWMRunParameters()
         # Uses the standard run region so depends on it
         region = LAWMRegion(name="developed")
-        partial_creation_kwargs = RegionalParameters.get_defaults_for_region(region.name)
+        partial_creation_kwargs = LAWMRegionalParameters.get_default_values_for_region(region.name)
         partial_creation_kwargs["max_calories"] = 99999
 
         creation_kwargs = partial_creation_kwargs.copy()
