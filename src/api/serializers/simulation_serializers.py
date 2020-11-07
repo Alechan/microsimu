@@ -2,6 +2,7 @@ from django.urls import reverse
 from rest_framework import serializers
 
 from api.models.models import LAWMSimulation
+from api.serializers.parameters_serializers import RunParametersSerializer
 
 
 class SimulationListSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,7 +16,11 @@ class SimulationListSerializer(serializers.HyperlinkedModelSerializer):
 class SimulationDetailSerializer(serializers.HyperlinkedModelSerializer):
     url        = serializers.HyperlinkedIdentityField(view_name="api:simulation-detail")
     regions    = serializers.SerializerMethodField('get_regions_urls')
-    # parameters = RunParametersSerializer('get_regions_urls')
+    parameters = RunParametersSerializer(source="run_parameters")
+
+    class Meta:
+        model = LAWMSimulation
+        fields = ["created", "url", "regions", "parameters"]
 
     def get_regions_urls(self, obj):
         request = self.context['request']
@@ -31,7 +36,3 @@ class SimulationDetailSerializer(serializers.HyperlinkedModelSerializer):
         relative_url = reverse("api:regionresult-detail", args=args)
         absolute_url = request.build_absolute_uri(relative_url)
         return absolute_url
-
-    class Meta:
-        model = LAWMSimulation
-        fields = '__all__'
