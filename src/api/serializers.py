@@ -118,7 +118,7 @@ class GeneralParametersSerializer(serializers.ModelSerializer, metaclass=ResultS
         exclude = ["id"]
 
 
-class RegionalParametersManySerializer(serializers.ListSerializer):
+class ManyRegionalParametersSerializer(serializers.ListSerializer):
     """
     Serializes to a dict of {region:data-region} instead of a list of [data]
     """
@@ -164,12 +164,23 @@ class RegionalParametersSerializer(serializers.ModelSerializer, metaclass=Result
     class Meta:
         model = RegionalParameters
         exclude = ["id", "run_parameters"]
-        list_serializer_class = RegionalParametersManySerializer
+        list_serializer_class = ManyRegionalParametersSerializer
 
 
 class RunParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
     general  = GeneralParametersSerializer(source="general_parameters")
     regional = RegionalParametersSerializer(many=True, source="regional_parameters")
+
+    # def __init__(self, instance, *args, **kwargs):
+    #     if not instance:
+    #     super().__init__(instance, *args, **kwargs)
+
+    @classmethod
+    def default_values_data(cls):
+        return {
+            "general" : GeneralParametersSerializer.default_values_data(),
+            "regional": ManyRegionalParametersSerializer.default_values_data(),
+        }
 
     def create(self, validated_data):
         """
@@ -198,11 +209,4 @@ class RunParametersSerializer(serializers.ModelSerializer, metaclass=ResultSeria
     class Meta:
         model = LAWMRunParameters
         exclude = ["id", "general_parameters"]
-
-    @classmethod
-    def default_values_data(cls):
-        return {
-            "general" : GeneralParametersSerializer.default_values_data(),
-            "regional": RegionalParametersManySerializer.default_values_data(),
-        }
 
