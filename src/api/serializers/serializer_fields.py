@@ -19,10 +19,15 @@ class ParameterFloatSerializerField(serializers.Field):
         return float(value.value)
 
 
-class ParameterIntegerSerializerField(serializers.Field):
+class ParameterIntegerSerializerField(serializers.IntegerField):
     """
-    Serializer field targeting custom ParameterFloatField
+    Serializer field targeting custom ParameterIntegerField
     """
 
     def to_representation(self, value):
+        """
+        Convert the initial datatype into a primitive, serializable datatype.
+        :param value: 
+        :return: 
+        """
         return int(value.value)

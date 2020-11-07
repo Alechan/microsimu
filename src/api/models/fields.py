@@ -84,20 +84,10 @@ class VariableFloatField(CustomLAWMFieldMixin, models.FloatField):
         self.primitive_type        = float
 
 
-class BaseParameterField(CustomLAWMFieldMixin, models.IntegerField):
+class BaseParameterField(CustomLAWMFieldMixin, models.Field):
     """
     The base field for which al parameter fields will subclassify
     """
-    @staticmethod
-    def get_validators(model_parameter):
-        # Only add validators of their max or min are not None
-        validators = []
-        if model_parameter.maximum:
-            validators.append(MaxValueParameterValidator(model_parameter.maximum))
-        if model_parameter.minimum:
-            validators.append(MinValueParameterValidator(model_parameter.minimum))
-            dict()
-        return validators
 
     def __init__(self, model_parameter, use_parameter_default=False, *args, **kwargs):
         if use_parameter_default:
@@ -106,6 +96,17 @@ class BaseParameterField(CustomLAWMFieldMixin, models.IntegerField):
         super().__init__(*args, **kwargs)
         self.model_component       = model_parameter
         self.model_component_kwarg = "model_parameter"
+
+    @staticmethod
+    def get_validators(model_parameter):
+        # Only add validators if their max or min are not None
+        validators = []
+        if model_parameter.maximum:
+            validators.append(MaxValueParameterValidator(model_parameter.maximum))
+        if model_parameter.minimum:
+            validators.append(MinValueParameterValidator(model_parameter.minimum))
+            dict()
+        return validators
 
     def get_metadata(self):
         """
@@ -127,7 +128,7 @@ class BaseParameterField(CustomLAWMFieldMixin, models.IntegerField):
         return defaults_per_region[region_name]
 
 
-class ParameterIntegerField(BaseParameterField):
+class ParameterIntegerField(BaseParameterField, models.IntegerField):
     """
     An integer field that is linked to a specific parameter from a model.
     """
@@ -136,7 +137,7 @@ class ParameterIntegerField(BaseParameterField):
         self.primitive_type        = int
 
 
-class ParameterFloatField(BaseParameterField):
+class ParameterFloatField(BaseParameterField, models.FloatField):
     """
     An integer field that is linked to a specific parameter from a model.
     """
