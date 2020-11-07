@@ -3,10 +3,10 @@ from django.test import TestCase
 
 from api.models.models import GeneralParameters
 from api.std_lib.lawm.general_parameters import *
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
-class LAWMGeneralParametersTest(TestCase, ApiTestMixin):
+class LAWMGeneralParametersTest(TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()

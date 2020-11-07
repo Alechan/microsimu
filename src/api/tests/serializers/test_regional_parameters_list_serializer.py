@@ -1,12 +1,10 @@
 from django import test
 
-from api.models.models import GeneralParameters, RegionalParameters, LAWMRunParameters, LAWMRegion
-from api.serializers import GeneralParametersSerializer, RegionalParametersSerializer, RegionalParametersManySerializer
-from api.std_lib.lawm.regions import Developed
-from api.tests.api_test_mixin import ApiTestMixin
+from api.serializers import RegionalParametersSerializer, RegionalParametersManySerializer
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
-class RegionalParametersListSerializerTest(test.TestCase, ApiTestMixin):
+class RegionalParametersListSerializerTest(test.TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()

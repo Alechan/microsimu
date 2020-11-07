@@ -9,10 +9,10 @@ from api.serializers import SimulationListSerializer, SimulationDetailSerializer
     RunParametersSerializer
 
 from api.std_lib.lawm.regions import Africa
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
-class ApiViewsTest(APITestCase, ApiTestMixin):
+class ApiViewsTest(APITestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree_1 = cls.create_full_simulation_db_tree()

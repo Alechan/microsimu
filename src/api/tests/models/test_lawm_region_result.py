@@ -5,10 +5,10 @@ import django
 from django.test import TestCase
 
 from api.models.models import LAWMRegionResult
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
-class LAWMRegionResultTest(TestCase, ApiTestMixin):
+class LAWMRegionResultTest(TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()

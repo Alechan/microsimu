@@ -3,10 +3,10 @@ from django.test import TestCase
 
 from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegion, LAWMRegionResult
 from api.std_lib.lawm.variables import *
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
-class LAWMYearResultTest(TestCase, ApiTestMixin):
+class LAWMYearResultTest(TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()
