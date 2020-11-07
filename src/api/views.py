@@ -6,10 +6,10 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
+from api.endpoint_metadata import DescriptiveFieldsMetadater
 from api.models.models import LAWMSimulation, LAWMRunParameters
 from api.serializers import SimulationListSerializer, SimulationDetailSerializer, RegionResultSerializer, \
     RunParametersSerializer
-from api.endpoint_metadata import DescriptiveFieldsMetadater
 from api.std_lib.lawm.regions import Africa
 
 
