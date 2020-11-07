@@ -1,4 +1,4 @@
-FROM python:3.8.3-buster
+FROM python:3.9.0-buster
 
 # Create user
 RUN useradd --create-home --shell /bin/bash microsimu
