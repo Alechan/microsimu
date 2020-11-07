@@ -166,3 +166,8 @@ class ApiTestMixin:
     def get_django_model_dict_values(obj):
         return  [(k, v) for k, v in obj.__dict__.items() if k != '_state']
 
+    def assert_not_empty(self, collection):
+        not_empty = len(collection) > 0
+        if not not_empty:
+            self.fail("The collection is empty.")
+
