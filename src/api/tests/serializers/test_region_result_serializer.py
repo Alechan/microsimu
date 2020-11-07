@@ -2,7 +2,7 @@ from django import test
 from django.test import override_settings, RequestFactory
 from django.urls import path, include, reverse
 
-from api.serializers import RegionResultSerializer
+from api.serializers.results_serializers import RegionResultSerializer
 from api.std_lib.lawm.variables import Population
 from api.tests.api_test_mixin import MicroSimuTestMixin
 

@@ -8,8 +8,9 @@ from rest_framework.viewsets import GenericViewSet
 
 from api.endpoint_metadata import DescriptiveFieldsMetadater
 from api.models.models import LAWMSimulation, LAWMRunParameters
-from api.serializers import SimulationListSerializer, SimulationDetailSerializer, RegionResultSerializer, \
-    RunParametersSerializer
+from api.serializers.parameters_serializers import RunParametersSerializer
+from api.serializers.results_serializers import RegionResultSerializer
+from api.serializers.simulation_serializers import SimulationListSerializer, SimulationDetailSerializer
 from api.std_lib.lawm.regions import Africa
 
 

@@ -1,7 +1,7 @@
 from django import test
 
 from api.models.models import LAWMGeneralParameters
-from api.serializers import GeneralParametersSerializer
+from api.serializers.parameters_serializers import GeneralParametersSerializer
 from api.tests.api_test_mixin import MicroSimuTestMixin
 
 

@@ -5,7 +5,7 @@ from django.urls import path, include, reverse
 from django.utils import timezone
 
 from api.models.models import LAWMSimulation
-from api.serializers import SimulationListSerializer
+from api.serializers.simulation_serializers import SimulationListSerializer
 from api.tests.api_test_mixin import MicroSimuTestMixin
 
 # The hyperlinked serializer depends on the urls, so we need to specify the urls
@@ -56,7 +56,6 @@ class SimulationListSerializerTest(test.TestCase, MicroSimuTestMixin):
         data = serializer.data
         self.assert_has_length(data, 1)
         self.assertEqual(data[0]["url"], f"/test_path/{simu.id}/")
-
 
     @classmethod
     def get_serialized_simulations_data(cls, simus):

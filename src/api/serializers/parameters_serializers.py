@@ -1,111 +1,11 @@
-from django.urls import reverse
 from rest_framework import serializers
 
-from api.models import fields
-from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegionResult, LAWMGeneralParameters, LAWMRegionalParameters, \
+from api.models.models import LAWMGeneralParameters, LAWMRegionalParameters, \
     LAWMRunParameters
+from api.serializers.serializer_metaclass import MicroSimuSerializerMetaClass
 
 
-class VariableFloatSerializerField(serializers.Field):
-    """
-    Serializer field targeting custom VariableFloatField
-    """
-
-    def to_representation(self, value):
-        return float(value.value)
-
-
-class ParameterFloatSerializerField(serializers.Field):
-    """
-    Serializer field targeting custom ParameterFloatField
-    """
-
-    def to_representation(self, value):
-        return float(value.value)
-
-
-class ParameterIntegerSerializerField(serializers.Field):
-    """
-    Serializer field targeting custom ParameterFloatField
-    """
-
-    def to_representation(self, value):
-        return int(value.value)
-
-
-class ResultSerializerMetaClass(type(serializers.ModelSerializer)):
-    """
-    Metaclass to override class variables set in Django REST Framework ModelSerializer
-    class.
-    """
-    def __new__(cls, clsname, bases, attrs):
-        # noinspection PyTypeChecker
-        super_new = super().__new__(cls, clsname, bases, attrs)
-        super_new.serializer_field_mapping[fields.VariableFloatField]    = VariableFloatSerializerField
-        super_new.serializer_field_mapping[fields.ParameterFloatField]   = ParameterFloatSerializerField
-        super_new.serializer_field_mapping[fields.ParameterIntegerField] = ParameterIntegerSerializerField
-        return super_new
-
-
-class ResultSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
-    """
-    Serializes the instance's values into primitive types
-    """
-
-    class Meta:
-        model = LAWMYearResult
-        exclude = ["region_result", "id"]
-
-
-class RegionResultSerializer(serializers.ModelSerializer):
-    simulation = serializers.HyperlinkedRelatedField(view_name="api:simulation-detail", read_only=True)
-    region     = serializers.ReadOnlyField(source='region.name')
-    variables  = serializers.SerializerMethodField('get_variables_information')
-    results    = ResultSerializer(many=True, read_only=True, source='year_results')
-
-    # noinspection PyMethodMayBeStatic
-    def get_variables_information(self, obj):
-        vars_info = obj.get_variables_information()
-        return vars_info
-
-    class Meta:
-        model = LAWMRegionResult
-        exclude = ["id"]
-
-
-class SimulationDetailSerializer(serializers.HyperlinkedModelSerializer):
-    url     = serializers.HyperlinkedIdentityField(view_name="api:simulation-detail")
-    regions = serializers.SerializerMethodField('get_regions_urls')
-
-    def get_regions_urls(self, obj):
-        request = self.context['request']
-        regions_urls = {
-            reg_res.region_name: self.get_url_from_region_result(reg_res, request)
-            for reg_res in obj.region_results.all()
-        }
-        return regions_urls
-
-    @staticmethod
-    def get_url_from_region_result(reg_res, request):
-        args = [reg_res.simulation_id, reg_res.region_name]
-        relative_url = reverse("api:regionresult-detail", args=args)
-        absolute_url = request.build_absolute_uri(relative_url)
-        return absolute_url
-
-    class Meta:
-        model = LAWMSimulation
-        fields = '__all__'
-
-
-class SimulationListSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="api:simulation-detail")
-
-    class Meta:
-        model = LAWMSimulation
-        fields = ["url", "created"]
-
-
-class GeneralParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+class GeneralParametersSerializer(serializers.ModelSerializer, metaclass=MicroSimuSerializerMetaClass):
 
     @classmethod
     def get_default_serialized_data(cls):
@@ -156,18 +56,18 @@ class ManyRegionalParametersSerializer(serializers.ListSerializer):
         :param data: a dictionary of primitive types
         :return: the python objects
         """
-        data_list = [value | {"region":key} for key, value in data.items()]
+        data_list = [value | {"region": key} for key, value in data.items()]
         return super().to_internal_value(data_list)
 
 
-class RegionalParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+class RegionalParametersSerializer(serializers.ModelSerializer, metaclass=MicroSimuSerializerMetaClass):
     class Meta:
         model = LAWMRegionalParameters
         exclude = ["id", "run_parameters"]
         list_serializer_class = ManyRegionalParametersSerializer
 
 
-class RunParametersSerializer(serializers.ModelSerializer, metaclass=ResultSerializerMetaClass):
+class RunParametersSerializer(serializers.ModelSerializer, metaclass=MicroSimuSerializerMetaClass):
     general  = GeneralParametersSerializer(source="general_parameters")
     regional = RegionalParametersSerializer(many=True, source="regional_parameters")
 

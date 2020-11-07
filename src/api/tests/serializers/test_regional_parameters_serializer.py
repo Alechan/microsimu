@@ -1,7 +1,7 @@
 from django import test
 
 from api.models.models import LAWMRegionalParameters
-from api.serializers import RegionalParametersSerializer
+from api.serializers.parameters_serializers import RegionalParametersSerializer
 from api.tests.api_test_mixin import MicroSimuTestMixin
 
 

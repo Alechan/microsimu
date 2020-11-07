@@ -1,6 +1,6 @@
 from django import test
 
-from api.serializers import RegionalParametersSerializer, ManyRegionalParametersSerializer
+from api.serializers.parameters_serializers import RegionalParametersSerializer, ManyRegionalParametersSerializer
 from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
@@ -34,4 +34,3 @@ class RegionalParametersListSerializerTest(test.TestCase, MicroSimuTestMixin):
         actual_data = ManyRegionalParametersSerializer.get_default_serialized_data()
 
         self.assert_dicts_equal(expected_data, actual_data)
-

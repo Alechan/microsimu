@@ -1,8 +1,8 @@
 from django import test
 
 from api.models.models import LAWMGeneralParameters, LAWMRunParameters, LAWMRegionalParameters, LAWMSimulation
-from api.serializers import RunParametersSerializer, GeneralParametersSerializer, RegionalParametersSerializer, \
-    ManyRegionalParametersSerializer
+from api.serializers.parameters_serializers import RunParametersSerializer, GeneralParametersSerializer, \
+    ManyRegionalParametersSerializer, RegionalParametersSerializer
 from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
@@ -74,7 +74,3 @@ class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
         actual_metadata = uninitialized_serializer.get_metadata()
 
         self.assert_dicts_equal(expected_metadata, actual_metadata)
-
-
-
-
