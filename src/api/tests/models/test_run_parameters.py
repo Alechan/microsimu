@@ -2,10 +2,10 @@ from django.test import TestCase
 
 from api.models.models import LAWMRunParameters, GeneralParameters, RegionalParameters, LAWMRegion
 from api.std_lib.lawm.regions import DEFAULT_REGIONS
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
-class LAWMRunParametersTest(TestCase, ApiTestMixin):
+class LAWMRunParametersTest(TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()

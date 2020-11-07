@@ -4,10 +4,10 @@ from django.test import TestCase
 from api.models.models import RegionalParameters, LAWMRunParameters, LAWMRegion
 from api.std_lib.lawm.regional_parameters import *
 from api.std_lib.lawm.regions import Developed
-from api.tests.api_test_mixin import ApiTestMixin, DEFAULT_REGIONS
+from api.tests.api_test_mixin import MicroSimuTestMixin, DEFAULT_REGIONS
 
 
-class RegionalParametersTest(TestCase, ApiTestMixin):
+class RegionalParametersTest(TestCase, MicroSimuTestMixin):
     def test_new_in_memory_objects_for_all_regions_works(self):
         expected_developed_defaults, _, _ = self.get_developed_region_defaults()
 

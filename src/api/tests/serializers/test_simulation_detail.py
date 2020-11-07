@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from api.models.models import LAWMSimulation
 from api.serializers import SimulationDetailSerializer
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 # The hyperlinked serializer depends on the urls, so we need to specify the urls
 test_patterns = [
@@ -20,7 +20,7 @@ urlpatterns = [
 
 
 @override_settings(ROOT_URLCONF=__name__)
-class SimulationDetailSerializerTest(test.TestCase, ApiTestMixin):
+class SimulationDetailSerializerTest(test.TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()

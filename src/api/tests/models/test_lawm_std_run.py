@@ -4,10 +4,10 @@ from django.test import TestCase
 from api.migrations.csvs.from_fortran_names_mapper import map_series_to_year_result_creation_kwargs, from_fortran_dict
 from api.models.models import LAWMSimulation, LAWMYearResult
 from api.std_lib.lawm.regions import Developed, Latinamerica, Africa, Asia
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
-class LAWMRegionTest(TestCase, ApiTestMixin):
+class LAWMRegionTest(TestCase, MicroSimuTestMixin):
 
     @classmethod
     def setUpTestData(cls):

@@ -95,7 +95,7 @@ class TestDatabaseTree:
         }
 
 
-class ApiTestMixin:
+class MicroSimuTestMixin:
     BASE_SERVER_URL     = 'http://testserver'
     MIGRATIONS_CSV_PATH = BASE_DIR / "api" / "migrations" / "csvs"
 

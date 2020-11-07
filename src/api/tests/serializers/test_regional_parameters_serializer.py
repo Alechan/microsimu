@@ -2,10 +2,10 @@ from django import test
 
 from api.models.models import RegionalParameters
 from api.serializers import RegionalParametersSerializer
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
-class RegionalParametersSerializerTest(test.TestCase, ApiTestMixin):
+class RegionalParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()

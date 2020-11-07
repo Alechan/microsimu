@@ -1,10 +1,10 @@
 from django import test
 
 from api.serializers import ResultSerializer
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 
-class ResultSerializerTest(test.TestCase, ApiTestMixin):
+class ResultSerializerTest(test.TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()

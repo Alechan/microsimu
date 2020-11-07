@@ -4,7 +4,7 @@ from django.urls import path, include, reverse
 
 from api.serializers import RegionResultSerializer
 from api.std_lib.lawm.variables import Population
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.api_test_mixin import MicroSimuTestMixin
 
 test_patterns = [
     path('test_path/<int:pk>/'             , lambda request: None, name='simulation-detail'),
@@ -17,7 +17,7 @@ urlpatterns = [
 
 
 @override_settings(ROOT_URLCONF=__name__)
-class RegionResultSerializerTest(test.TestCase, ApiTestMixin):
+class RegionResultSerializerTest(test.TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()
