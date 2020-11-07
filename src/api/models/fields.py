@@ -136,7 +136,6 @@ class ParameterIntegerField(BaseParameterField):
         self.primitive_type        = int
 
 
-
 class ParameterFloatField(BaseParameterField):
     """
     An integer field that is linked to a specific parameter from a model.

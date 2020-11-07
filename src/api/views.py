@@ -75,7 +75,7 @@ class SimulateViewSet(mixins.CreateModelMixin,
     serializer_class = RunParametersSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        default_params = RunParametersSerializer.default_values_data()
+        default_params = RunParametersSerializer.get_default_serialized_data()
         return Response(default_params)
 
 

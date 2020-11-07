@@ -31,7 +31,7 @@ class RegionalParametersListSerializerTest(test.TestCase, MicroSimuTestMixin):
 
     def test_serializer_class_method_returns_correct_default_values_serialized(self):
         expected_data = self.data
-        actual_data = ManyRegionalParametersSerializer.default_values_data()
+        actual_data = ManyRegionalParametersSerializer.get_default_serialized_data()
 
         self.assert_dicts_equal(expected_data, actual_data)
 
