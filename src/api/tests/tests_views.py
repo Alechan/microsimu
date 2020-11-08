@@ -1,5 +1,3 @@
-from unittest import skip
-
 from django.test import RequestFactory
 from django.urls import reverse
 from rest_framework import status
@@ -12,7 +10,7 @@ from api.serializers.results_serializers import RegionResultSerializer
 from api.serializers.simulation_serializers import SimulationListSerializer, SimulationDetailSerializer
 
 from api.std_lib.lawm.regions import Africa
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class ApiViewsTest(APITestCase, MicroSimuTestMixin):
@@ -156,15 +154,22 @@ class SimulatePOSTTest(ApiViewsTest):
 
     def test_simulate_POST_with_valid_input_triggers_new_simulation(self):
         default_values = RunParametersSerializer.get_default_serialized_data()
+
         post_response = self.client.post(self.url, default_values, format="json")
 
         new_simu = LAWMSimulation.objects.last()
         expected_all_simus_after = self.all_simus_before + [new_simu]
         actual_all_simus_after   = list(LAWMSimulation.objects.all())
 
+        # Expect a 302 instead of 303 because browsers use the obsolete way
+        # https://stackoverflow.com/questions/5129076/after-a-post-should-i-do-a-302-or-a-303-redirect
         self.assertEqual(post_response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(expected_all_simus_after, actual_all_simus_after)
-        self.fail("haceme")
+        expected_redirect_url = reverse('api:simulation-detail', args=(new_simu.id,))
+        actual_redirect_url   = post_response.url
+        self.assertEqual(expected_redirect_url, actual_redirect_url)
+
+        self.assert_simu_equivalent_to_std_run(new_simu)
 
 
 class RegionsEndpointsTest(ApiViewsTest):

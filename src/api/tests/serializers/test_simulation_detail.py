@@ -7,7 +7,7 @@ from django.utils import timezone
 from api.models.models import LAWMSimulation
 from api.serializers.parameters_serializers import RunParametersSerializer
 from api.serializers.simulation_serializers import SimulationDetailSerializer
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 # The hyperlinked serializer depends on the urls, so we need to specify the urls
 test_patterns = [

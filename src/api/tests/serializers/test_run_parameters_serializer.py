@@ -3,7 +3,7 @@ from django import test
 from api.models.models import LAWMGeneralParameters, LAWMRunParameters, LAWMRegionalParameters, LAWMSimulation
 from api.serializers.parameters_serializers import RunParametersSerializer, GeneralParametersSerializer, \
     ManyRegionalParametersSerializer, RegionalParametersSerializer
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):

@@ -3,8 +3,8 @@ from django.test import TestCase
 
 from api.models.models import LAWMRegionalParameters, LAWMRunParameters, LAWMRegion
 from api.std_lib.lawm.regional_parameters import *
-from api.std_lib.lawm.regions import Developed
-from api.tests.api_test_mixin import MicroSimuTestMixin, DEFAULT_REGIONS
+from api.std_lib.lawm.regions import Developed, DEFAULT_REGIONS
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class RegionalParametersTest(TestCase, MicroSimuTestMixin):

@@ -3,7 +3,7 @@ from unittest import skip
 from django import test
 
 from api.serializers.serializer_fields import ParameterIntegerSerializerField
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class SerializerFieldsPostgresTest(test.TestCase, MicroSimuTestMixin):

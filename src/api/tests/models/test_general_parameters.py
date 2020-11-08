@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from api.models.models import LAWMGeneralParameters
 from api.std_lib.lawm.general_parameters import *
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class LAWMGeneralParametersTest(TestCase, MicroSimuTestMixin):
