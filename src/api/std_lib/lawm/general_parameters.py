@@ -11,7 +11,7 @@ class SimulationStop(ModelGeneralParameter):
     minimum     : int = 1990
     maximum     : int = 2050
     name        : str = "Simulation stop"
-    fortran_name: str = "KSTOP(IB)"
+    fortran_name: str = "KSTOP"
     unit        : str = "year"
     description : str = "The last year of the simulation."
 
@@ -23,7 +23,7 @@ class OptimizationStart(ModelGeneralParameter):
     minimum     : int = 1980
     maximum     : int = 2050
     name        : str = "Simulation stop"
-    fortran_name: str = "KPROJ(IB)"
+    fortran_name: str = "KPROJ"
     unit        : str = "year"
     description : str = "The year when the Optimization Phase should start."
 
@@ -35,7 +35,7 @@ class PaymentsEquilibrium(ModelGeneralParameter):
     minimum     : int = 1990
     maximum     : int = 2050
     name        : str = "Payments equilibrium"
-    fortran_name: str = "KTRADE(IB)"
+    fortran_name: str = "KTRADE"
     unit        : str = "year"
     description : str = "Year at which the balance of payments reaches the equilibrium (optimization_start <= " \
                         "BalanceOfPaymentsEquilibrium<= simulation_stop)."
@@ -48,7 +48,7 @@ class FertilizerCost(ModelGeneralParameter):
     minimum     : float = 1
     maximum     : float = None
     name        : str = "Fertilizer cost"
-    fortran_name: str = "FCOST(IB)"
+    fortran_name: str = "FCOST"
     unit        : str = "US$ per tonne"
     description : str = "Cost of one tonne of fertilizer"
 
