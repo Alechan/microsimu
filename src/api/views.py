@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -75,6 +76,15 @@ class SimulateViewSet(mixins.CreateModelMixin,
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = RunParametersSerializer
 
+    def create(self, request, *args, **kwargs):
+        """
+        The default method returns a response with the input data.
+        We want to redirect to the simulation detail of the new simulation.
+        """
+        _ = super().create(request, *args, **kwargs)
+        simu_id = self.new_simulation.id
+        return HttpResponseRedirect(reverse('api:simulation-detail', args=(simu_id,)))
+
     def retrieve(self, request, *args, **kwargs):
         default_params = RunParametersSerializer.get_default_serialized_data()
         return Response(default_params)
@@ -86,7 +96,8 @@ class SimulateViewSet(mixins.CreateModelMixin,
         """
         simu = LAWMSimulation.objects.create()
         serializer.save(simulation=simu)
-
+        # We have no other way of "passing" the new simulation to the "create" response
+        self.new_simulation = simu
 
 
 class SimulationList(APIView):
