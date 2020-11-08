@@ -95,37 +95,24 @@ class SimulationsTest(ApiViewsTest):
         self.assertEqual(response.data, serializer.data)
 
 
-class SimulateTest(ApiViewsTest):
+class SimulateNotPOSTTest(ApiViewsTest):
     def setUp(self):
-        self.all_simus_before = list(LAWMSimulation.objects.all())
         self.url = reverse("api:simulate")
         self.get_response = self.client.get(self.url)
         self.get_json = self.get_response.json()
-        self.expected_fields = {"general", "regional"}
+        self.expected_get_fields = {"general", "regional"}
 
     def test_simulate_GET_returns_correct_status(self):
         self.assertEqual(self.get_response.status_code, status.HTTP_200_OK)
 
     def test_simulate_GET_returns_correct_fields(self):
         actual_fields = self.get_json.keys()
-        self.assertEqual(self.expected_fields, actual_fields)
+        self.assertEqual(self.expected_get_fields, actual_fields)
 
     def test_simulate_GET_returns_non_empty_nested_dicts(self):
-        for field in self.expected_fields:
+        for field in self.expected_get_fields:
             sub_dict = self.get_json[field]
             self.assert_not_empty(sub_dict)
-
-    @skip("Simulate endpoint POST request not finished yet")
-    def test_simulate_POST_triggers_new_simulation(self):
-        post_response = self.client.post(self.url)
-
-        new_simu = LAWMSimulation.objects.last()
-        expected_all_simus_after = self.all_simus_before + [new_simu]
-        actual_all_simus_after   = list(LAWMSimulation.objects.all())
-
-        self.assertEqual(post_response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(expected_all_simus_after, actual_all_simus_after)
-        self.fail("haceme")
 
     def test_simulate_OPTIONS_returns_correct_metadata(self):
         serializer = RunParametersSerializer()
@@ -137,6 +124,30 @@ class SimulateTest(ApiViewsTest):
         expected_actions_post = metadater_class_used().get_serializer_info(serializer)
 
         self.assert_dicts_equal(actual_actions_post, expected_actions_post)
+
+
+class SimulatePOSTTest(ApiViewsTest):
+    def setUp(self):
+        self.all_simus_before = list(LAWMSimulation.objects.all())
+        self.url = reverse("api:simulate")
+        self.expected_fields = {"general", "regional"}
+
+    def test_simulate_POST_without_input_returns_error(self):
+        post_response = self.client.post(self.url)
+        self.assertEqual(post_response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_simulate_POST_with_input_triggers_new_simulation(self):
+        default_values = RunParametersSerializer.get_default_serialized_data()
+        post_response = self.client.post(self.url, default_values, format="json")
+
+        new_simu = LAWMSimulation.objects.last()
+        expected_all_simus_after = self.all_simus_before + [new_simu]
+        actual_all_simus_after   = list(LAWMSimulation.objects.all())
+
+        self.assertEqual(post_response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(expected_all_simus_after, actual_all_simus_after)
+        self.fail("haceme")
+
 
 
 class RegionsEndpointsTest(ApiViewsTest):
