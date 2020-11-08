@@ -11,7 +11,7 @@ class MaxCalories(ModelRegionalParameter):
     minimum       : float = 2600.0
     maximum       : float = 3200.0
     name          : str   = "Max calories"
-    fortran_name  : str   = "COSMAX(IB)"
+    fortran_name  : str   = "CALMX(IB)"
     unit          : str   = "calories per day per person"
     description   : str   = "Maximum consumption of calories per day per person"
 
