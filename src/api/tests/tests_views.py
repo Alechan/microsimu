@@ -136,7 +136,25 @@ class SimulatePOSTTest(ApiViewsTest):
         post_response = self.client.post(self.url)
         self.assertEqual(post_response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_simulate_POST_with_input_triggers_new_simulation(self):
+    def test_simulate_POST_with_invalid_input_returns_validators_messages(self):
+        expected_response_json = {'general': {
+            'simulation_stop': ['Ensure this value is less than or equal to 2050. Send an OPTIONS request'
+                                ' for more information.']
+        }}
+        expected_status_code = status.HTTP_400_BAD_REQUEST
+
+        default_values = RunParametersSerializer.get_default_serialized_data()
+        invalid_values = default_values.copy()
+        invalid_values["general"]["simulation_stop"] = 9999
+
+        post_response = self.client.post(self.url, default_values, format="json")
+        actual_status_code = post_response.status_code
+        actual_response_json = post_response.json()
+
+        self.assertEqual(expected_status_code, actual_status_code)
+        self.assert_dicts_equal(expected_response_json, actual_response_json)
+
+    def test_simulate_POST_with_valid_input_triggers_new_simulation(self):
         default_values = RunParametersSerializer.get_default_serialized_data()
         post_response = self.client.post(self.url, default_values, format="json")
 

@@ -57,7 +57,8 @@ class RegionalParametersTest(TestCase, MicroSimuTestMixin):
         return dev_defaults, region, run_parameters
 
     def test_validators_are_automatically_added(self):
-        expected_max_calories_error_message = 'Ensure this value is less than or equal to 3200.0.'
+        expected_max_calories_error_message = 'Ensure this value is less than or equal to 3200.0. Send an OPTIONS ' \
+                                              'request for more information.'
 
         overflowed_max_calories_creation_kwargs = self.get_creation_kwargs_with_overflowed_max_calories()
 
