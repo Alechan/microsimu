@@ -103,7 +103,10 @@ class RunParametersSerializer(serializers.ModelSerializer, metaclass=MicroSimuSe
         :return:
         """
         general_parameters = LAWMGeneralParameters.objects.create(**validated_data["general_parameters"])
-        run_parameters = LAWMRunParameters.objects.create(general_parameters=general_parameters)
+        run_parameters = LAWMRunParameters.objects.create(
+            simulation=validated_data["simulation"],
+            general_parameters=general_parameters,
+        )
         for reg_params in validated_data["regional_parameters"]:
             regional_parameters = LAWMRegionalParameters.objects.create(
                 run_parameters=run_parameters,

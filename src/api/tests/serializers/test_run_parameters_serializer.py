@@ -50,6 +50,41 @@ class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
 
         self.assert_dicts_equal(expected_run_params_data, actual_run_params_data)
 
+    def test_uninitialized_serializer_returns_correct_fields_metadata(self):
+        expected_metadata = LAWMRunParameters.get_metadata()
+
+        uninitialized_serializer = RunParametersSerializer()
+        actual_metadata = uninitialized_serializer.get_metadata()
+
+        self.assert_dicts_equal(expected_metadata, actual_metadata)
+
+    def test_with_valid_inputs_saves_to_db_correctly(self):
+        expected_simulation_stop = 2005
+        expected_general_parameters = LAWMGeneralParameters(simulation_stop=expected_simulation_stop)
+        all_default_reg_params      = LAWMRegionalParameters.new_in_memory_with_defaults_all_regions()
+
+        simu = LAWMSimulation.objects.create()
+        data = RunParametersSerializer.get_default_serialized_data()
+        data["general"]["simulation_stop"] = expected_simulation_stop
+
+        serializer = RunParametersSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(simulation=simu)
+
+        actual_run_parameters     = simu.run_parameters
+        self.assertIsNotNone(actual_run_parameters)
+
+        actual_general_parameters = actual_run_parameters.general_parameters
+        self.assertIsNotNone(actual_general_parameters)
+        general_params_fields_to_ignore = ["id"]
+        self.assert_equal_in_memory_django_models(
+            expected_general_parameters,
+            actual_general_parameters,
+            general_params_fields_to_ignore
+        )
+
+        self.fail("terminame")
+
     @staticmethod
     def get_expected_serialized_data_for_regional_params(db_regions, run_parameters):
         expected_reg_params_data = {}
@@ -67,10 +102,3 @@ class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
         expected_gen_params_data = GeneralParametersSerializer(gen_params).data
         return expected_gen_params_data
 
-    def test_uninitialized_serializer_returns_correct_fields_metadata(self):
-        expected_metadata = LAWMRunParameters.get_metadata()
-
-        uninitialized_serializer = RunParametersSerializer()
-        actual_metadata = uninitialized_serializer.get_metadata()
-
-        self.assert_dicts_equal(expected_metadata, actual_metadata)
