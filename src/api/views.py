@@ -79,6 +79,15 @@ class SimulateViewSet(mixins.CreateModelMixin,
         default_params = RunParametersSerializer.get_default_serialized_data()
         return Response(default_params)
 
+    def perform_create(self, serializer):
+        """
+        Once the serializer has validated the data and is ready to de-serializer and save to
+        database, it will call this method to do it.
+        """
+        simu = LAWMSimulation.objects.create()
+        serializer.save(simulation=simu)
+
+
 
 class SimulationList(APIView):
     """

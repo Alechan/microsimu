@@ -60,12 +60,15 @@ class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
 
     def test_with_valid_inputs_saves_to_db_correctly(self):
         expected_simulation_stop = 2005
+        expected_developed_max_calories = 2600
         expected_general_parameters = LAWMGeneralParameters(simulation_stop=expected_simulation_stop)
-        all_default_reg_params      = LAWMRegionalParameters.new_in_memory_with_defaults_all_regions()
+        expected_all_regional_params      = LAWMRegionalParameters.new_in_memory_with_defaults_all_regions()
+        expected_all_regional_params["developed"].max_calories = 2600
 
         simu = LAWMSimulation.objects.create()
         data = RunParametersSerializer.get_default_serialized_data()
         data["general"]["simulation_stop"] = expected_simulation_stop
+        data["regional"]["developed"]["max_calories"] = expected_developed_max_calories
 
         serializer = RunParametersSerializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -83,7 +86,18 @@ class RunParametersSerializerTest(test.TestCase, MicroSimuTestMixin):
             general_params_fields_to_ignore
         )
 
-        self.fail("terminame")
+        actual_all_regional_params = actual_run_parameters.regional_parameters.all()
+        for reg_name in expected_all_regional_params:
+            expected_reg_params = expected_all_regional_params[reg_name]
+            actual_reg_params_qs   = actual_all_regional_params.filter(region__name=reg_name)
+            self.assert_has_length(actual_reg_params_qs, 1)
+            actual_reg_params = actual_reg_params_qs[0]
+            reg_params_fields_to_ignore = ["id", "run_parameters_id"]
+            self.assert_equal_in_memory_django_models(
+                expected_reg_params,
+                actual_reg_params,
+                reg_params_fields_to_ignore
+            )
 
     @staticmethod
     def get_expected_serialized_data_for_regional_params(db_regions, run_parameters):

@@ -167,7 +167,6 @@ class SimulatePOSTTest(ApiViewsTest):
         self.fail("haceme")
 
 
-
 class RegionsEndpointsTest(ApiViewsTest):
     def test_region_result_detail_calls_correct_serializer(self):
         simu_id          = self.simu_1.id
