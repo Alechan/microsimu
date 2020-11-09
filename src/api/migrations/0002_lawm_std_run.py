@@ -2,7 +2,7 @@ import pandas
 from django.db import migrations, transaction, IntegrityError
 
 from api.api_settings import LAWM_CSV_PER_REGION
-from api.migrations.csvs.from_fortran_names_mapper import map_series_to_year_result_creation_kwargs
+from api.migrations.helper.from_fortran_names_mapper import map_series_to_year_result_creation_kwargs
 from api.models.models import LAWMRegionalParameters as VOLATILE_LAWMRegionalParameters
 from api.std_lib.lawm.regions import *
 
