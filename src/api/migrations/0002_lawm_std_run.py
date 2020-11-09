@@ -47,8 +47,6 @@ def load_from_csv(apps, schema_editor):
         ["asia"        , pandas.read_csv(ASIA_CSV_PATH)],
     ]
 
-    all_region_names = [x[0] for x in regions_dfs]
-
     try:
         with transaction.atomic():
             objects_to_save = []
