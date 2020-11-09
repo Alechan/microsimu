@@ -1,19 +1,15 @@
-from pathlib import Path
-
+import pandas
 from django.db import migrations, transaction, IntegrityError
 
-import pandas
-
-from api.migrations.csvs.from_fortran_names_mapper import map_series_to_year_result_creation_kwargs
+from api.api_settings import LAWM_CSV_PER_REGION
+from api.migrations.helper.from_fortran_names_mapper import map_series_to_year_result_creation_kwargs
 from api.models.models import LAWMRegionalParameters as VOLATILE_LAWMRegionalParameters
+from api.std_lib.lawm.regions import *
 
-MIGRATIONS_PATH = Path(__file__).resolve().parent
-CSVS_PATH = MIGRATIONS_PATH / "csvs"
-
-DEVELOPED_CSV_PATH = CSVS_PATH / "fortran_std_developed.csv"
-LA_CSV_PATH        = CSVS_PATH / "fortran_std_la.csv"
-AFRICA_CSV_PATH    = CSVS_PATH / "fortran_std_africa.csv"
-ASIA_CSV_PATH      = CSVS_PATH / "fortran_std_asia.csv"
+DEVELOPED_CSV_PATH = LAWM_CSV_PER_REGION[Developed.name]
+LA_CSV_PATH        = LAWM_CSV_PER_REGION[Latinamerica.name]
+AFRICA_CSV_PATH    = LAWM_CSV_PER_REGION[Africa.name]
+ASIA_CSV_PATH      = LAWM_CSV_PER_REGION[Asia.name]
 
 
 def create_new_object(cls, kwargs, objects_to_save):

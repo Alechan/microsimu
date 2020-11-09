@@ -1,4 +1,4 @@
-from api.migrations.csvs.from_fortran_names_mapper import map_series_to_year_result_creation_kwargs, from_fortran_dict
+from api.migrations.helper.from_fortran_names_mapper import map_series_to_year_result_creation_kwargs, from_fortran_dict
 from api.models.models import LAWMRegionalParameters, LAWMGeneralParameters, LAWMYearResult
 from api.std_lib.lawm.regions import DEFAULT_REGIONS
 
