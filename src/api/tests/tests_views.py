@@ -1,4 +1,5 @@
-from unittest import skip
+from copy import deepcopy
+from unittest import skip, mock
 
 from django.test import RequestFactory
 from django.urls import reverse
@@ -6,12 +7,13 @@ from rest_framework import status
 from rest_framework.reverse import reverse as drf_reverse
 from rest_framework.test import APITestCase
 
-from api.models.models import LAWMSimulation
+from api.models.models import LAWMSimulation, LAWMRunParameters
 from api.serializers.parameters_serializers import RunParametersSerializer
 from api.serializers.results_serializers import RegionResultSerializer
 from api.serializers.simulation_serializers import SimulationListSerializer, SimulationDetailSerializer
 
 from api.std_lib.lawm.regions import Africa
+from api.std_lib.lawm.simulator.exceptions import ValidInputButSimulationError
 from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
@@ -127,10 +129,13 @@ class SimulateNotPOSTTest(ApiViewsTest):
 
 
 class SimulatePOSTTest(ApiViewsTest):
-    def setUp(self):
-        self.all_simus_before = list(LAWMSimulation.objects.all())
-        self.url = reverse("api:simulate")
-        self.expected_fields = {"general", "regional"}
+    @classmethod
+    def setUpTestData(cls):
+        cls.default_run_parameters = RunParametersSerializer.get_default_serialized_data()
+        cls.url = reverse("api:simulate")
+        cls.expected_fields = {"general", "regional"}
+        cls.all_simus_before          = list(LAWMSimulation.objects.all())
+        cls.all_run_parameters_before = list(LAWMRunParameters.objects.all())
 
     def test_simulate_POST_without_input_returns_error(self):
         post_response = self.client.post(self.url)
@@ -143,22 +148,18 @@ class SimulatePOSTTest(ApiViewsTest):
         }}
         expected_status_code = status.HTTP_400_BAD_REQUEST
 
-        default_values = RunParametersSerializer.get_default_serialized_data()
-        invalid_values = default_values.copy()
+        invalid_values = deepcopy(self.default_run_parameters)
         invalid_values["general"]["simulation_stop"] = 9999
 
-        post_response = self.client.post(self.url, default_values, format="json")
+        post_response = self.client.post(self.url, invalid_values, format="json")
         actual_status_code = post_response.status_code
         actual_response_json = post_response.json()
 
         self.assertEqual(expected_status_code, actual_status_code)
         self.assert_dicts_equal(expected_response_json, actual_response_json)
 
-    @skip(reason="Still need to add FORTRAN lawm exe")
     def test_simulate_POST_with_valid_input_triggers_new_simulation(self):
-        default_values = RunParametersSerializer.get_default_serialized_data()
-
-        post_response = self.client.post(self.url, default_values, format="json")
+        post_response = self.client.post(self.url, self.default_run_parameters, format="json")
 
         new_simu = LAWMSimulation.objects.last()
         expected_all_simus_after = self.all_simus_before + [new_simu]
@@ -173,6 +174,21 @@ class SimulatePOSTTest(ApiViewsTest):
         self.assertEqual(expected_redirect_url, actual_redirect_url)
 
         self.assert_simu_equivalent_to_std_run(new_simu)
+
+    @mock.patch('api.std_lib.lawm.simulator.fortran.lawm_fortran_simulator.LAWMFortranSimulator.simulate')
+    def test_simulate_POST_that_makes_simulation_return_an_error_returns_a_descriptive_message(self, mock_simulate):
+        mock_simulate.side_effect = ValidInputButSimulationError("The simulation raised an error")
+        expected_data = {"error": "The inputs were valid but the simulation still raised an error."}
+
+        post_response = self.client.post(self.url, self.default_run_parameters, format="json")
+        actual_data   = post_response.json()
+        actual_all_simus_after        = list(LAWMSimulation.objects.all())
+        actual_all_run_params_after   = list(LAWMRunParameters.objects.all())
+
+        self.assertEqual(status.HTTP_500_INTERNAL_SERVER_ERROR, post_response.status_code)
+        self.assert_dicts_equal(expected_data, actual_data)
+        self.assertEqual(self.all_simus_before, actual_all_simus_after)
+        self.assertEqual(self.all_run_parameters_before, actual_all_run_params_after)
 
 
 class RegionsEndpointsTest(ApiViewsTest):

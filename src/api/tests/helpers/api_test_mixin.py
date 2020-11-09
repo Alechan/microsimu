@@ -1,6 +1,6 @@
 import pandas
 
-from api.api_settings import LAWM_CSV_PER_REGION
+from api.settings_api import LAWM_CSV_PER_REGION
 from api.std_lib.lawm.regions import Africa, Latinamerica, Developed, Asia
 from api.tests.helpers.database_tree import TestDatabaseTree
 from api.tests.helpers.django_asserts_mixin import DjangoAssertsMixin

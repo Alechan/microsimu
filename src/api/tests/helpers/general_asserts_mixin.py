@@ -1,3 +1,4 @@
+import filecmp
 from datetime import datetime, timedelta
 
 
@@ -53,3 +54,14 @@ class GeneralAssertsMixin:
                 self.fail("The first argument wasn't a dict.")
             else:
                 self.fail("The second argument wasn't a dict.")
+
+    def assert_files_equal(self, first, second):
+        comparison = filecmp.cmp(first, second)
+        if not comparison:
+            self.fail(f"The files {first} and {second} are not equal")
+
+    def assert_dfs_equal(self, first, second):
+        bool_mask = first == second
+        all_true = bool_mask.all(axis=None)
+        if not all_true:
+            self.fail("The dfs are not equal")
