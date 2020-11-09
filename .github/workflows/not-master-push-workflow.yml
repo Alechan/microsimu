@@ -1,4 +1,4 @@
-name: Python package
+name: Secondary branch
 
 on:
   push:

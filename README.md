@@ -1,3 +1,3 @@
 # microsimu
 
-![python package](https://github.com/alechan/microsimu/workflows/python%20package/badge.svg)
+![Python package](https://github.com/Alechan/microsimu/workflows/Python%20package/badge.svg?branch=main&event=push)
