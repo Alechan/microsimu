@@ -1,21 +1,14 @@
-from unittest import skip
-
-from django.test import TestCase
-
 from api.models.models import LAWMRegion, MaxCalories, OptimizationStart
-from api.serializers.parameters_serializers import RunParametersSerializer
 from api.std_lib.lawm.general_parameters import SimulationStop, WeightConstraint1, WeightConstraint2, WeightConstraint3
 from api.std_lib.lawm.regional_parameters import TechProgressCoefficient1, TechProgressCoefficient2
 from api.std_lib.lawm.simulator.fortran.lawm_fortran_cfg_formatter import LAWMFortranCFGFormatter
+from api.std_lib.tests.lawm.simulators.base_fortran_test import BaseFortranTest
 from api.tests.helpers.general_asserts_mixin import GeneralAssertsMixin
 
 
-class LAWMFortranCFGFormatterTest(TestCase, GeneralAssertsMixin):
-    @classmethod
-    def setUpTestData(cls):
-        cls.expected_cfg_content = cls.get_std_run_cfg_content()
-        cls.validated_data = cls.get_POST_parameters_example()
-        cls.cfg_formatter = LAWMFortranCFGFormatter()
+class LAWMFortranCFGFormatterTest(BaseFortranTest, GeneralAssertsMixin):
+    def setUp(self):
+        self.cfg_formatter = LAWMFortranCFGFormatter()
 
     def test_flatten_general_params_lvl_1_returns_correct_object(self):
         input_dict = {
@@ -183,67 +176,3 @@ WTH
 
         self.assertEqual(self.expected_cfg_content, actual_cfg_content)
 
-    @staticmethod
-    def get_POST_parameters_example():
-        """
-        Return an example of the validated data of a valid POST request to "simulate
-        a model" endpoint
-        """
-        serialized_data = RunParametersSerializer.get_default_serialized_data()
-        serializer = RunParametersSerializer(data=serialized_data)
-        serializer.is_valid()
-        deserialized_data = serializer.validated_data
-        return deserialized_data
-    
-    @staticmethod
-    def get_std_run_cfg_content():
-        return \
-"""CALMX
-3200.0 3000.0 3000.0 3000.0
-COSMAX
-10.0 7.0 7.0 7.0
-FCOST
-769230.8
-GAMMA
-1.01 1.01 1.005 1.01 1.015
-1.01 1.01 1.005 1.01 1.015
-1.01 1.01 1.005 1.01 1.015
-1.01 1.01 1.005 1.01 1.015
-IAID
-F
-IPRIN
-0
-KPROJ
-1980
-KSTOP
-2000
-KTECST
-3000.0 3000.0 3000.0 3000.0
-KTRADE
-2000
-NHCGAP
-40 40 40 40
-NHIST
-0
-NQH34
-10 10 20 20
-NRESER
-365.0 365.0 365.0 365.0
-NSPGAP
-40 40 40 40
-SPAMAX
-30.0 30.0 30.0 30.0
-SPXPER
-30.0 10.0 7.0 7.0
-TRAID
-0.02
-UPTOIN
-0.25 0.25 0.25 0.25
-WTH
-6.0 8.0 6.0 6.0 6.0
-6.0 4.0 4.0 6.0 6.0
-6.0 2.0 4.0 4.0 7.0
-4.0 4.0 4.0 8.0 6.0
-4.0 6.0 8.0 6.0 2.0
-1.0 -1 -1 -1 -1
-"""
