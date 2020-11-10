@@ -86,6 +86,9 @@ STATICFILES_DIRS = [
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE    = True
 
+# Allow secure connection when header HTTP_X_FORWARDED_PROTO in request is set
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # DRF's configuration
 REST_FRAMEWORK = {
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
