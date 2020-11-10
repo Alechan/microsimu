@@ -41,6 +41,8 @@ jobs:
           path: docker-compose-logs.txt
       - name: Migrate
         run: docker-compose exec -T web python manage.py migrate --noinput
+      - name: Create test user
+        run: docker-compose exec -T web python manage.py createuser --username funct_test_user --password plsdonthack
       - name: Run functional tests
         run: python -m pytest --docker-compose-no-build --use-running-containers functional_tests
       - name: Stop the containers
