@@ -1,4 +1,4 @@
-FROM python:3.8.3-buster
+FROM python:3.9.0-buster
 
 # Create user
 RUN useradd --create-home --shell /bin/bash microsimu
@@ -19,7 +19,7 @@ RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY ./src .
+COPY --chown=microsimu:microsimu ./src .
 
 ENV STATIC_FILES_PATH=$APP_HOME/staticfiles
 RUN mkdir $STATIC_FILES_PATH

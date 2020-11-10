@@ -1,4 +1,4 @@
-DEBUG=0
+DEBUG=1
 SECRET_KEY=a_secret_key
 DJANGO_ALLOWED_HOSTS=*
 SQL_ENGINE=django.db.backends.postgresql

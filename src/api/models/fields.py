@@ -1,4 +1,8 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from api.models.validators import MaxValueParameterValidator, MinValueParameterValidator
+
 
 class CastOnAssignDescriptor(object):
     """
@@ -19,45 +23,43 @@ class CastOnAssignDescriptor(object):
         obj.__dict__[self.field.name] = self.field.to_python(value)
 
 
-class VariableFloatField(models.FloatField):
-    """
-    A float field that is linked to a specific variable from a model.
-    """
-    def __init__(self, model_variable, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.model_variable = model_variable
+class CustomLAWMFieldMixin:
+    # Should be set by subclasses
+    model_component       = None
+    model_component_kwarg = None
+    primitive_type        = None
 
     def from_db_value(self, value, expression, connection):
         if value is None:
             return value
-        return self.model_variable(value)
+        return self.model_component(value)
 
     def to_python(self, value):
-        if isinstance(value, self.model_variable):
+        if isinstance(value, self.model_component):
             return value
 
         if value is None:
             return value
 
-        return self.model_variable(value)
+        return self.model_component(value)
 
     def get_prep_value(self, value):
         try:
             # Try to get the value if it's a ModelVariable
             return value.value
         except AttributeError:
-            if isinstance(value, float):
+            if isinstance(value, self.primitive_type):
                 return value
             else:
                 # This code should be unreachable as the "contribute_to_class" method
                 #   should force the call to method "to_python" every time the field is
                 #   created or modified
-                raise AttributeError(f"This field expects a float or an instance of {self.model_variable} but it "
+                raise AttributeError(f"This field expects a float or an instance of {self.model_component} but it "
                                      f"received {value}.")
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        kwargs['model_variable'] = self.model_variable
+        kwargs[self.model_component_kwarg] = self.model_component
         return name, path, args, kwargs
 
     def contribute_to_class(self, cls, name, **kwargs):
@@ -70,3 +72,74 @@ class VariableFloatField(models.FloatField):
         super().contribute_to_class(cls, name, **kwargs)
         setattr(cls, name, CastOnAssignDescriptor(self))
 
+
+class VariableFloatField(CustomLAWMFieldMixin, models.FloatField):
+    """
+    A float field that is linked to a specific variable from a model.
+    """
+    def __init__(self, model_variable, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.model_component_kwarg = "model_variable"
+        self.model_component       = model_variable
+        self.primitive_type        = float
+
+
+class BaseParameterField(CustomLAWMFieldMixin, models.Field):
+    """
+    The base field for which al parameter fields will subclassify
+    """
+
+    def __init__(self, model_parameter, use_parameter_default=False, *args, **kwargs):
+        if use_parameter_default:
+            kwargs["default"]    = model_parameter.default
+        kwargs["validators"] = self.get_microsimu_validators(model_parameter)
+        super().__init__(*args, **kwargs)
+        self.model_component       = model_parameter
+        self.model_component_kwarg = "model_parameter"
+
+    @staticmethod
+    def get_microsimu_validators(model_parameter):
+        # Only add validators if their max or min are not None
+        validators = []
+        if model_parameter.maximum:
+            validators.append(MaxValueParameterValidator(model_parameter.maximum))
+        if model_parameter.minimum:
+            validators.append(MinValueParameterValidator(model_parameter.minimum))
+        return validators
+
+    def get_metadata(self):
+        """
+        Get metadata for this field (default, max, min, etc) in primitive type form
+        :return:
+        """
+        return self.model_component.info_as_dict()
+
+    def get_defaults_per_region(self):
+
+        try:
+            defaults_per_region = dict(self.model_component.default)
+        except TypeError:
+            raise TypeError("Trying to get the regional defaults of a non regional parameter.")
+        return defaults_per_region
+
+    def get_defaults_for_region(self, region_name):
+        defaults_per_region = self.get_defaults_per_region()
+        return defaults_per_region[region_name]
+
+
+class ParameterIntegerField(BaseParameterField, models.IntegerField):
+    """
+    An integer field that is linked to a specific parameter from a model.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.primitive_type        = int
+
+
+class ParameterFloatField(BaseParameterField, models.FloatField):
+    """
+    An integer field that is linked to a specific parameter from a model.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.primitive_type        = float

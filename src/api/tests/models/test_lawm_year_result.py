@@ -1,12 +1,12 @@
 import django
 from django.test import TestCase
 
-from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegion, LAWMRegionResult
+from api.models.models import LAWMYearResult
 from api.std_lib.lawm.variables import *
-from api.tests.api_test_mixin import ApiTestMixin
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
-class LAWMYearResultTest(TestCase, ApiTestMixin):
+class LAWMYearResultTest(TestCase, MicroSimuTestMixin):
     @classmethod
     def setUpTestData(cls):
         db_tree = cls.create_full_simulation_db_tree()
@@ -21,7 +21,7 @@ class LAWMYearResultTest(TestCase, ApiTestMixin):
         except django.db.utils.IntegrityError:
             pass
 
-    def test_all_attributes_are_readable_and_casted_to_variables(self):
+    def test_all_attributes_are_readable_and_casted_to_lawm_variables(self):
         y_res = self.year_1960_result
         var_values = self.year_1960_result_creation_kwargs
 
