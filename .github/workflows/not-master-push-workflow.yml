@@ -41,6 +41,8 @@ jobs:
           path: docker-compose-logs.txt
       - name: Migrate
         run: docker-compose exec -T web python manage.py migrate --noinput
+      - name: Run internal tests inside docker
+        run: docker-compose exec -T web python manage.py test --noinput
       - name: Create test user
         run: docker-compose exec -T web python manage.py createuser --username funct_test_user --password plsdonthack
       - name: Run functional tests
