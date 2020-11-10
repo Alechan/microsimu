@@ -1,0 +1,2 @@
+class ValidInputButSimulationError(Exception):
+    pass

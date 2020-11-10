@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "api",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -84,6 +85,9 @@ STATICFILES_DIRS = [
 # CSRF
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE    = True
+
+# Allow secure connection when header HTTP_X_FORWARDED_PROTO in request is set
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # DRF's configuration
 REST_FRAMEWORK = {

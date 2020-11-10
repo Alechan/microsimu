@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from api.models.models import LAWMSimulation, LAWMRegion, LAWMRegionResult
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class LAWMSimulationTest(TestCase, MicroSimuTestMixin):

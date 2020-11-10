@@ -11,7 +11,7 @@ class SimulationStop(ModelGeneralParameter):
     minimum     : int = 1990
     maximum     : int = 2050
     name        : str = "Simulation stop"
-    fortran_name: str = "KSTOP(IB)"
+    fortran_name: str = "KSTOP"
     unit        : str = "year"
     description : str = "The last year of the simulation."
 
@@ -23,7 +23,7 @@ class OptimizationStart(ModelGeneralParameter):
     minimum     : int = 1980
     maximum     : int = 2050
     name        : str = "Simulation stop"
-    fortran_name: str = "KPROJ(IB)"
+    fortran_name: str = "KPROJ"
     unit        : str = "year"
     description : str = "The year when the Optimization Phase should start."
 
@@ -35,7 +35,7 @@ class PaymentsEquilibrium(ModelGeneralParameter):
     minimum     : int = 1990
     maximum     : int = 2050
     name        : str = "Payments equilibrium"
-    fortran_name: str = "KTRADE(IB)"
+    fortran_name: str = "KTRADE"
     unit        : str = "year"
     description : str = "Year at which the balance of payments reaches the equilibrium (optimization_start <= " \
                         "BalanceOfPaymentsEquilibrium<= simulation_stop)."
@@ -48,7 +48,7 @@ class FertilizerCost(ModelGeneralParameter):
     minimum     : float = 1
     maximum     : float = None
     name        : str = "Fertilizer cost"
-    fortran_name: str = "FCOST(IB)"
+    fortran_name: str = "FCOST"
     unit        : str = "US$ per tonne"
     description : str = "Cost of one tonne of fertilizer"
 
@@ -57,7 +57,7 @@ class FertilizerCost(ModelGeneralParameter):
 class WeightConstraint1(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 1"
     fortran_name: str = "WTH(1)"
@@ -69,7 +69,7 @@ class WeightConstraint1(ModelGeneralParameter):
 class WeightConstraint2(ModelGeneralParameter):
     value       : Any
     default     : float = 8.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 2"
     fortran_name: str = "WTH(2)"
@@ -81,7 +81,7 @@ class WeightConstraint2(ModelGeneralParameter):
 class WeightConstraint3(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 3"
     fortran_name: str = "WTH(3)"
@@ -93,7 +93,7 @@ class WeightConstraint3(ModelGeneralParameter):
 class WeightConstraint4(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 4"
     fortran_name: str = "WTH(4)"
@@ -105,7 +105,7 @@ class WeightConstraint4(ModelGeneralParameter):
 class WeightConstraint5(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 5"
     fortran_name: str = "WTH(5)"
@@ -117,7 +117,7 @@ class WeightConstraint5(ModelGeneralParameter):
 class WeightConstraint6(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 6"
     fortran_name: str = "WTH(6)"
@@ -129,7 +129,7 @@ class WeightConstraint6(ModelGeneralParameter):
 class WeightConstraint7(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 7"
     fortran_name: str = "WTH(7)"
@@ -142,7 +142,7 @@ class WeightConstraint7(ModelGeneralParameter):
 class WeightConstraint8(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 8"
     fortran_name: str = "WTH(8)"
@@ -154,7 +154,7 @@ class WeightConstraint8(ModelGeneralParameter):
 class WeightConstraint9(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 9"
     fortran_name: str = "WTH(9)"
@@ -166,7 +166,7 @@ class WeightConstraint9(ModelGeneralParameter):
 class WeightConstraint10(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 10"
     fortran_name: str = "WTH(10)"
@@ -179,7 +179,7 @@ class WeightConstraint10(ModelGeneralParameter):
 class WeightConstraint11(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 11"
     fortran_name: str = "WTH(11)"
@@ -191,7 +191,7 @@ class WeightConstraint11(ModelGeneralParameter):
 class WeightConstraint12(ModelGeneralParameter):
     value       : Any
     default     : float = 2.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 12"
     fortran_name: str = "WTH(12)"
@@ -204,7 +204,7 @@ class WeightConstraint12(ModelGeneralParameter):
 class WeightConstraint13(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 13"
     fortran_name: str = "WTH(13)"
@@ -217,7 +217,7 @@ class WeightConstraint13(ModelGeneralParameter):
 class WeightConstraint14(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 14"
     fortran_name: str = "WTH(14)"
@@ -229,7 +229,7 @@ class WeightConstraint14(ModelGeneralParameter):
 class WeightConstraint15(ModelGeneralParameter):
     value       : Any
     default     : float = 7.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 15"
     fortran_name: str = "WTH(15)"
@@ -242,7 +242,7 @@ class WeightConstraint15(ModelGeneralParameter):
 class WeightConstraint16(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 16"
     fortran_name: str = "WTH(16)"
@@ -254,7 +254,7 @@ class WeightConstraint16(ModelGeneralParameter):
 class WeightConstraint17(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 17"
     fortran_name: str = "WTH(17)"
@@ -266,7 +266,7 @@ class WeightConstraint17(ModelGeneralParameter):
 class WeightConstraint18(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 18"
     fortran_name: str = "WTH(18)"
@@ -278,7 +278,7 @@ class WeightConstraint18(ModelGeneralParameter):
 class WeightConstraint19(ModelGeneralParameter):
     value       : Any
     default     : float = 8.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 19"
     fortran_name: str = "WTH(19)"
@@ -290,7 +290,7 @@ class WeightConstraint19(ModelGeneralParameter):
 class WeightConstraint20(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 20"
     fortran_name: str = "WTH(20)"
@@ -302,7 +302,7 @@ class WeightConstraint20(ModelGeneralParameter):
 class WeightConstraint21(ModelGeneralParameter):
     value       : Any
     default     : float = 4.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 21"
     fortran_name: str = "WTH(21)"
@@ -314,7 +314,7 @@ class WeightConstraint21(ModelGeneralParameter):
 class WeightConstraint22(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 22"
     fortran_name: str = "WTH(22)"
@@ -326,7 +326,7 @@ class WeightConstraint22(ModelGeneralParameter):
 class WeightConstraint23(ModelGeneralParameter):
     value       : Any
     default     : float = 8.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 23"
     fortran_name: str = "WTH(23)"
@@ -338,7 +338,7 @@ class WeightConstraint23(ModelGeneralParameter):
 class WeightConstraint24(ModelGeneralParameter):
     value       : Any
     default     : float = 6.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 24"
     fortran_name: str = "WTH(24)"
@@ -350,7 +350,7 @@ class WeightConstraint24(ModelGeneralParameter):
 class WeightConstraint25(ModelGeneralParameter):
     value       : Any
     default     : float = 2.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 25"
     fortran_name: str = "WTH(25)"
@@ -363,7 +363,7 @@ class WeightConstraint25(ModelGeneralParameter):
 class WeightConstraint26(ModelGeneralParameter):
     value       : Any
     default     : float = 1.0
-    minimum     : float = 2
+    minimum     : float = 1
     maximum     : float = 14
     name        : str = "Weight Constraint 26"
     fortran_name: str = "WTH(26)"

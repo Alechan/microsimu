@@ -1,7 +1,7 @@
 from django import test
 
-from api.serializers import ResultSerializer
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.serializers.results_serializers import ResultSerializer
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class ResultSerializerTest(test.TestCase, MicroSimuTestMixin):

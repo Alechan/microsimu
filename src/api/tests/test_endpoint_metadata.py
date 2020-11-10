@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from api.endpoint_metadata import DescriptiveFieldsMetadater
-from api.serializers import RunParametersSerializer
+from api.serializers.parameters_serializers import RunParametersSerializer
 
 
 class DescriptiveFieldsMetadataTest(TestCase):

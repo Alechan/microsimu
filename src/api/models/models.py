@@ -92,7 +92,7 @@ class LAWMYearResult(models.Model):
         unique_together = ('region_result', 'year')
 
 
-class GeneralParameters(models.Model):
+class LAWMGeneralParameters(models.Model):
     simulation_stop      = ParameterIntegerField(model_parameter=SimulationStop     , use_parameter_default=True, null=False, blank=True)
     optimization_start   = ParameterIntegerField(model_parameter=OptimizationStart  , use_parameter_default=True, null=False, blank=True)
     payments_equilibrium = ParameterIntegerField(model_parameter=PaymentsEquilibrium, use_parameter_default=True, null=False, blank=True)
@@ -136,22 +136,22 @@ class GeneralParameters(models.Model):
         """
         Instantiates the object but DOESN'T save to DB
         """
-        return GeneralParameters()
+        return LAWMGeneralParameters()
 
 
 class LAWMRunParameters(models.Model):
-    general_parameters = models.ForeignKey(GeneralParameters, related_name="run_parameters", null=False, on_delete=models.CASCADE)
-    simulation         = models.ForeignKey(LAWMSimulation   , related_name="run_parameters", null=False, on_delete=models.CASCADE)
+    general_parameters = models.OneToOneField(LAWMGeneralParameters, related_name="run_parameters", null=False, on_delete=models.CASCADE)
+    simulation         = models.OneToOneField(LAWMSimulation   , related_name="run_parameters", null=False, on_delete=models.CASCADE)
 
     @classmethod
     def get_metadata(cls):
         return {
-            "general" : GeneralParameters.get_metadata(),
-            "regional": RegionalParameters.get_metadata(),
+            "general" : LAWMGeneralParameters.get_metadata(),
+            "regional": LAWMRegionalParameters.get_metadata(),
         }
 
 
-class RegionalParameters(models.Model):
+class LAWMRegionalParameters(models.Model):
     run_parameters = models.ForeignKey(LAWMRunParameters, related_name="regional_parameters", null=False, blank=True, on_delete=models.CASCADE)
     region         = models.ForeignKey(LAWMRegion       , related_name="regional_parameters", null=False, blank=True, on_delete=models.CASCADE)
     max_calories            = ParameterFloatField(model_parameter   = MaxCalories                     , null=False , blank=True)
@@ -180,7 +180,7 @@ class RegionalParameters(models.Model):
         db_regions = [LAWMRegion(name=reg.name) for reg in DEFAULT_REGIONS]
         defaults_per_region = {}
         for reg in db_regions:
-            reg_params = RegionalParameters.new_with_defaults_for_region(run_parameters, reg)
+            reg_params = LAWMRegionalParameters.new_with_defaults_for_region(run_parameters, reg)
             region_name = reg.name
             defaults_per_region[region_name] = reg_params
         return defaults_per_region
@@ -191,14 +191,14 @@ class RegionalParameters(models.Model):
         Instantiates the object but DOESN'T save to DB
         """
         region_name = region.name
-        partial_creation_kwargs = cls.get_defaults_for_region(region_name)
+        partial_creation_kwargs = cls.get_default_values_for_region(region_name)
         creation_kwargs = partial_creation_kwargs.copy()
         creation_kwargs["run_parameters"] = run_parameters
         creation_kwargs["region"]         = region
         return cls(**creation_kwargs)
 
     @classmethod
-    def get_defaults_for_region(cls, region_name):
+    def get_default_values_for_region(cls, region_name):
         all_fields = cls._meta.get_fields()
         relevant_fields = [f for f in all_fields if isinstance(f, BaseParameterField)]
         partial_creation_kwargs = {f.name: f.get_defaults_for_region(region_name) for f in relevant_fields}

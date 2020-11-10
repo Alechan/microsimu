@@ -1,9 +1,9 @@
 import django
 from django.test import TestCase
 
-from api.models.models import LAWMSimulation, LAWMYearResult, LAWMRegion, LAWMRegionResult
+from api.models.models import LAWMYearResult
 from api.std_lib.lawm.variables import *
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class LAWMYearResultTest(TestCase, MicroSimuTestMixin):

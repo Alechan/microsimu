@@ -5,7 +5,7 @@ import django
 from django.test import TestCase
 
 from api.models.models import LAWMRegionResult
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class LAWMRegionResultTest(TestCase, MicroSimuTestMixin):

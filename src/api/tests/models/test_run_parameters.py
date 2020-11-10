@@ -1,8 +1,7 @@
 from django.test import TestCase
 
-from api.models.models import LAWMRunParameters, GeneralParameters, RegionalParameters, LAWMRegion
-from api.std_lib.lawm.regions import DEFAULT_REGIONS
-from api.tests.api_test_mixin import MicroSimuTestMixin
+from api.models.models import LAWMRunParameters, LAWMGeneralParameters, LAWMRegionalParameters
+from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
 
 
 class LAWMRunParametersTest(TestCase, MicroSimuTestMixin):
@@ -19,8 +18,8 @@ class LAWMRunParametersTest(TestCase, MicroSimuTestMixin):
 
     def test_get_metadata_returns_correct_info(self):
         expected_metadata = {
-            "general" : GeneralParameters.get_metadata(),
-            "regional": RegionalParameters.get_metadata(),
+            "general" : LAWMGeneralParameters.get_metadata(),
+            "regional": LAWMRegionalParameters.get_metadata(),
         }
         actual_metadata = LAWMRunParameters.get_metadata()
 

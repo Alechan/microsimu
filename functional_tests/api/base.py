@@ -1,5 +1,6 @@
 from urllib.parse import urljoin
 
+DEFAULT_REGIONS_NAMES = {"developed", "latinamerica", "africa", "asia"}
 LAWM_OUTPUT_VARIABLES = {
     'capd_5', 'exlife', 'birthr', 'calor', 'rlfd_3', 'gnpd_5', 'prot', 'capd_3', 'falu', 'capd_2',
     'hsexfl', 'rlfd_2', 'pop', 'excal', 'gnpd_1', 'enrol', 'rlfd_1', 'popr', 'tlf', 'capd_4', 'rlfd_5', 'al',
