@@ -184,6 +184,28 @@ class SimulatePOSTTest(ApiViewsTest):
 
         self.assert_simu_equivalent_to_std_run(new_simu)
 
+    def test_simulate_POST_with_missing_parameters_returns_error(self):
+        expected_status_code = status.HTTP_400_BAD_REQUEST
+        expected_error_fields = {"general", "regional"}
+
+        parameters = {"general":
+                          {"simulation_stop": 2005},
+                      "regional":
+                          {"africa": {"max_calories": 3200}, "asia": {"max_calories": 2600}}
+                      }
+        post_response = self.client.post(self.url, parameters, format="json")
+        actual_status_code = post_response.status_code
+        actual_response_json = post_response.json()
+        actual_response_fields = actual_response_json.keys()
+
+        self.assertEqual(expected_status_code, actual_status_code)
+        self.assertEqual(expected_error_fields, actual_response_fields)
+        actual_general_params_errors = actual_response_json["general"]
+        self.assert_not_empty(actual_general_params_errors)
+        actual_regional_params_errors = actual_response_json["regional"]
+        self.assert_not_empty(actual_regional_params_errors)
+
+
     def test_simulate_POST_with_valid_input_but_not_logged_in_returns_error(self):
         expected_data = {'detail': 'Authentication credentials were not provided.'}
 

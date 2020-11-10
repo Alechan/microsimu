@@ -2,6 +2,11 @@ from rest_framework import serializers
 
 
 class MicroSimuSerializerFieldMixin:
+    def __init__(self, *args, **kwargs):
+        # Force all serializer fields to be required for now
+        kwargs["required"] = True
+        super().__init__(*args, **kwargs)
+
     def to_internal_value(self, data):
         """
         Use the Django Model field to go from primitive data type (int, float, list) to
