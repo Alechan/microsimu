@@ -92,20 +92,19 @@ class BaseParameterField(CustomLAWMFieldMixin, models.Field):
     def __init__(self, model_parameter, use_parameter_default=False, *args, **kwargs):
         if use_parameter_default:
             kwargs["default"]    = model_parameter.default
-        kwargs["validators"] = self.get_validators(model_parameter)
+        kwargs["validators"] = self.get_microsimu_validators(model_parameter)
         super().__init__(*args, **kwargs)
         self.model_component       = model_parameter
         self.model_component_kwarg = "model_parameter"
 
     @staticmethod
-    def get_validators(model_parameter):
+    def get_microsimu_validators(model_parameter):
         # Only add validators if their max or min are not None
         validators = []
         if model_parameter.maximum:
             validators.append(MaxValueParameterValidator(model_parameter.maximum))
         if model_parameter.minimum:
             validators.append(MinValueParameterValidator(model_parameter.minimum))
-            dict()
         return validators
 
     def get_metadata(self):

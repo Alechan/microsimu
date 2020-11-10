@@ -3,7 +3,36 @@ from typing import Any
 
 
 @dataclass
-class ModelGeneralParameter:
+class ModelParameter:
+    value       : Any
+
+    def __lt__(self, other):
+        """
+        Less than
+        :param other:
+        :return: self < other
+        """
+        op = lambda x, y: x < y
+        return self.__op__(op, other)
+
+    def __gt__(self, other):
+        """
+        Greater than
+        :param other:
+        :return: self > other
+        """
+        op = lambda x, y: x > y
+        return self.__op__(op, other)
+
+    def __op__(self, op, other):
+        try:
+            return op(self.value, other.value)
+        except AttributeError:
+            return op(self.value, other)
+
+
+@dataclass
+class ModelGeneralParameter(ModelParameter):
     """
     A class representing parameters of a model independent of the regions. By convention, each subclass
     (like SimulationStop(ModelParameter) should:
@@ -40,7 +69,7 @@ class ModelGeneralParameter:
 
 
 @dataclass
-class ModelRegionalParameter:
+class ModelRegionalParameter(ModelParameter):
     """
     A class representing parameters of a model for the regions. By convention, each subclass
     (like SimulationStop(ModelParameter) should:
