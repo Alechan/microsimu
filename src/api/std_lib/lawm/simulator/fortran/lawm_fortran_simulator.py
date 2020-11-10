@@ -1,4 +1,5 @@
 import os
+from subprocess import DEVNULL
 import subprocess
 from datetime import datetime
 
@@ -25,7 +26,7 @@ class LAWMFortranSimulator:
         cfg_path = timestamp_path / self.cfg_file_name
         self.write_string_to_file(cfg_content, cfg_path)
         command = f"{LAWM_EXECUTABLE_PATH} {self.cfg_file_name} {self.result_file_name}"
-        retcode = subprocess.call(command, stdout=subprocess.PIPE, shell=True, cwd=timestamp_path)
+        retcode = subprocess.call(command, stdout=DEVNULL, stderr=DEVNULL, shell=True, cwd=timestamp_path)
         if not retcode:
             csv_per_region = {
                 Developed.name   : timestamp_path / "result_reg_1_all.csv",
