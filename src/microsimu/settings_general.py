@@ -24,9 +24,11 @@ INSTALLED_APPS = [
     "rest_framework",
     "api",
     "drf_yasg",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -97,3 +99,6 @@ REST_FRAMEWORK = {
         'api.renderers.NoHTMLFormBrowsableAPIRenderer',
     )
 }
+
+# CORS headers
+CORS_ALLOW_ALL_ORIGINS = True
