@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from rest_framework import mixins, status
+from rest_framework import mixins, status, permissions
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -76,8 +76,7 @@ class SimulateViewSet(mixins.CreateModelMixin,
                       GenericViewSet):
     metadata_class = DescriptiveFieldsMetadater
     queryset = LAWMRunParameters.objects.all()
-    # Permissions
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = RunParametersSerializer
 
     def __init__(self):

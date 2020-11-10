@@ -1,6 +1,7 @@
 from copy import deepcopy
-from unittest import skip, mock
+from unittest import mock
 
+from django.contrib.auth import get_user_model
 from django.test import RequestFactory
 from django.urls import reverse
 from rest_framework import status
@@ -11,10 +12,11 @@ from api.models.models import LAWMSimulation, LAWMRunParameters
 from api.serializers.parameters_serializers import RunParametersSerializer
 from api.serializers.results_serializers import RegionResultSerializer
 from api.serializers.simulation_serializers import SimulationListSerializer, SimulationDetailSerializer
-
 from api.std_lib.lawm.regions import Africa
 from api.std_lib.lawm.simulator.exceptions import ValidInputButSimulationError
 from api.tests.helpers.api_test_mixin import MicroSimuTestMixin
+
+User = get_user_model()
 
 
 class ApiViewsTest(APITestCase, MicroSimuTestMixin):
@@ -116,8 +118,11 @@ class SimulateNotPOSTTest(ApiViewsTest):
             sub_dict = self.get_json[field]
             self.assert_not_empty(sub_dict)
 
-    def test_simulate_OPTIONS_returns_correct_metadata(self):
+    def test_simulate_OPTIONS_returns_correct_metadata_when_logged_in(self):
         serializer = RunParametersSerializer()
+
+        user = User.objects.create_user('username', 'plsdonthack')
+        self.client.force_login(user)
 
         options_response     = self.client.options(self.url)
         actual_actions_post  = options_response.data["actions"]["POST"]
@@ -136,6 +141,10 @@ class SimulatePOSTTest(ApiViewsTest):
         cls.expected_fields = {"general", "regional"}
         cls.all_simus_before          = list(LAWMSimulation.objects.all())
         cls.all_run_parameters_before = list(LAWMRunParameters.objects.all())
+
+    def setUp(self):
+        user = User.objects.create_user('username', 'plsdonthack')
+        self.client.force_login(user)
 
     def test_simulate_POST_without_input_returns_error(self):
         post_response = self.client.post(self.url)
@@ -174,6 +183,16 @@ class SimulatePOSTTest(ApiViewsTest):
         self.assertEqual(expected_redirect_url, actual_redirect_url)
 
         self.assert_simu_equivalent_to_std_run(new_simu)
+
+    def test_simulate_POST_with_valid_input_but_not_logged_in_returns_error(self):
+        expected_data = {'detail': 'Authentication credentials were not provided.'}
+
+        self.client.logout()
+        post_response = self.client.post(self.url, self.default_run_parameters, format="json")
+        actual_data = post_response.json()
+
+        self.assertEqual(post_response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(expected_data, actual_data)
 
     @mock.patch('api.std_lib.lawm.simulator.fortran.lawm_fortran_simulator.LAWMFortranSimulator.simulate')
     def test_simulate_POST_that_makes_simulation_return_an_error_returns_a_descriptive_message(self, mock_simulate):
