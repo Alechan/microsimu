@@ -15,6 +15,7 @@ class ModelVariable:
      """
     value       : Any
     name        : str
+    short_name  : str
     fortran_name: str
     unit        : str
     description : str
@@ -41,6 +42,7 @@ class ModelVariable:
 class Population(ModelVariable):
     value       : Any
     name        : str = "Population"
+    short_name  : str = "Population"
     fortran_name: str = "POP(IB)"
     unit        : str = "persons"
     description : str = "The total population."
@@ -51,6 +53,7 @@ class Population(ModelVariable):
 class PopulationGrowth(ModelVariable):
     value       : Any
     name        : str = "Population growth"
+    short_name  : str = "Population growth"
     fortran_name: str = "POPR(IB)"
     unit        : str = "percentage"
     description : str = "The percentage of population growth from one year to the next."
@@ -61,6 +64,7 @@ class PopulationGrowth(ModelVariable):
 class LifeExpectancy(ModelVariable):
     value       : Any
     name        : str = "Life expectancy"
+    short_name  : str = "Life expectancy"
     fortran_name: str = "EXLIFE(IB)"
     unit        : str = "years"
     description : str = "The life expectancy of the population."
@@ -71,6 +75,7 @@ class LifeExpectancy(ModelVariable):
 class GrossMortality(ModelVariable):
     value       : Any
     name        : str = "Gross mortality"
+    short_name  : str = "Gross mortality"
     fortran_name: str = "GRMOR(IB)"
     unit        : str = "deaths per 1000 inhabitants"
     description : str = "The crude death rate calculated by 1000*deaths/pop."
@@ -81,6 +86,7 @@ class GrossMortality(ModelVariable):
 class BirthRate(ModelVariable):
     value       : Any
     name        : str = "Birth rate"
+    short_name  : str = "Birth rate"
     fortran_name: str = "BIRTHR(IB)"
     unit        : str = "births per 1000 per inhabitants"
     description : str = "The crude birth rate calculated by 1000*births/pop."
@@ -91,6 +97,7 @@ class BirthRate(ModelVariable):
 class ChildMortalityRate(ModelVariable):
     value       : Any
     name        : str = "Child mortality rate"
+    short_name  : str = "Child mortality rate"
     fortran_name: str = "CHMOR(IB)"
     unit        : str = "child deaths per 1000 births"
     description : str = "The child death rate calculated by a complex formula."
@@ -101,6 +108,7 @@ class ChildMortalityRate(ModelVariable):
 class Calories(ModelVariable):
     value       : Any
     name        : str = "Calories"
+    short_name  : str = "Calories"
     fortran_name: str = "CALOR(IB)"
     unit        : str = "calories per day per person"
     description : str = "The calories available per day to each person."
@@ -111,6 +119,7 @@ class Calories(ModelVariable):
 class Proteins(ModelVariable):
     value       : Any
     name        : str = "Proteins"
+    short_name  : str = "Proteins"
     fortran_name: str = "PROT(IB)"
     unit        : str = "proteins per day per person"
     description : str = "The proteins available per day to each person."
@@ -121,6 +130,7 @@ class Proteins(ModelVariable):
 class HousesPerFamily(ModelVariable):
     value       : Any
     name        : str = "Houses per family"
+    short_name  : str = "Houses per family"
     fortran_name: str = "HSEXFL(IB)"
     unit        : str = "houses per family"
     description : str = "The houses per family calculated by houses*(people_per_family/pop)."
@@ -131,6 +141,7 @@ class HousesPerFamily(ModelVariable):
 class GNPPerPerson(ModelVariable):
     value       : Any
     name        : str = "GNP per person"
+    short_name  : str = "GNP per person"
     fortran_name: str = "GNPXC(IB)"
     unit        : str = "US$ per person"
     description : str = "The Gross National Product per person calculated by GNP/pop."
@@ -141,6 +152,7 @@ class GNPPerPerson(ModelVariable):
 class EnrolmentPercentage(ModelVariable):
     value       : Any
     name        : str = "Enrolment percentage"
+    short_name  : str = "Enrolment percentage"
     fortran_name: str = "ENROL(IB)"
     unit        : str = "percentage"
     description : str = "Percentage of population between 7 and 18 which is matriculated."
@@ -151,6 +163,7 @@ class EnrolmentPercentage(ModelVariable):
 class MatriculationPercentage(ModelVariable):
     value       : Any
     name        : str = "Matriculation percentage"
+    short_name  : str = "Matriculation percentage"
     fortran_name: str = "EDUCR(IB)"
     unit        : str = "percentage"
     description : str = "Percentage of population that is matriculated."
@@ -161,6 +174,7 @@ class MatriculationPercentage(ModelVariable):
 class Pop11To70LaborForcePercentage(ModelVariable):
     value       : Any
     name        : str = "Percentage of population between ages 11 to 70 that is economically active."
+    short_name  : str = "Economically active percentage"
     fortran_name: str = "EAPOPR(IB)"
     unit        : str = "percentage"
     description : str = "Rate of change of the fraction of the population which is economically active" \
@@ -172,6 +186,7 @@ class Pop11To70LaborForcePercentage(ModelVariable):
 class TotalLaborForce(ModelVariable):
     value       : Any
     name        : str = "Total labor force"
+    short_name  : str = "Total labor force"
     fortran_name: str = "TLF(IB)"
     unit        : str = "persons"
     description : str = "The size of the labor force."
@@ -182,6 +197,7 @@ class TotalLaborForce(ModelVariable):
 class LaborForceFoodSectorProportion(ModelVariable):
     value       : Any
     name        : str = "Labor force food sector proportion"
+    short_name  : str = "Labor F. food sector propor."
     fortran_name: str = "RLFD(1, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of labor force corresponding to the food sector."
@@ -192,6 +208,7 @@ class LaborForceFoodSectorProportion(ModelVariable):
 class LaborForceHousingSectorProportion(ModelVariable):
     value       : Any
     name        : str = "Labor force housing sector proportion"
+    short_name  : str = "Labor F. housing sector propor."
     fortran_name: str = "RLFD(2, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of labor force corresponding to the housing sector."
@@ -202,6 +219,7 @@ class LaborForceHousingSectorProportion(ModelVariable):
 class LaborForceEducationSectorProportion(ModelVariable):
     value       : Any
     name        : str = "Labor force education sector proportion"
+    short_name  : str = "Labor F. Education sector propor"
     fortran_name: str = "RLFD(3, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of labor force corresponding to the education sector."
@@ -212,6 +230,7 @@ class LaborForceEducationSectorProportion(ModelVariable):
 class LaborForceOtherGoodsProportion(ModelVariable):
     value       : Any
     name        : str = "Labor force other goods sector proportion"
+    short_name  : str = "Labor F. other goods sector propor"
     fortran_name: str = "RLFD(4, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of labor force corresponding to the other goods sector."
@@ -222,6 +241,7 @@ class LaborForceOtherGoodsProportion(ModelVariable):
 class LaborForceCapitalGoodsSectorProportion(ModelVariable):
     value       : Any
     name        : str = "Labor force capital goods sector proportion"
+    short_name  : str = "Labor F. capital goods sector propor"
     fortran_name: str = "RLFD(5, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of labor force corresponding to the capital goods sector."
@@ -232,6 +252,7 @@ class LaborForceCapitalGoodsSectorProportion(ModelVariable):
 class TotalCapital(ModelVariable):
     value       : Any
     name        : str = "Total capital"
+    short_name  : str = "Total capital"
     fortran_name: str = "CAPT(IB)"
     unit        : str = "US$"
     description : str = "The aggregated capital of all economic sectors."
@@ -242,6 +263,7 @@ class TotalCapital(ModelVariable):
 class CapitalFoodSectorProportion(ModelVariable):
     value       : Any
     name        : str = "Capital food sector proportion"
+    short_name  : str = "Capital food sector propor."
     fortran_name: str = "CAPD(1, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of capital corresponding to the food sector."
@@ -252,6 +274,7 @@ class CapitalFoodSectorProportion(ModelVariable):
 class CapitalHousingSectorProportion(ModelVariable):
     value       : Any
     name        : str = "Capital housing sector proportion"
+    short_name  : str = "Capital housing sector propor."
     fortran_name: str = "CAPD(2, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of capital corresponding to the housing sector."
@@ -262,6 +285,7 @@ class CapitalHousingSectorProportion(ModelVariable):
 class CapitalEducationSectorProportion(ModelVariable):
     value       : Any
     name        : str = "Capital education sector proportion"
+    short_name  : str = "Capital education sector propor."
     fortran_name: str = "CAPD(3, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of capital corresponding to the education sector."
@@ -272,6 +296,7 @@ class CapitalEducationSectorProportion(ModelVariable):
 class CapitalOtherGoodsSectorProportion(ModelVariable):
     value       : Any
     name        : str = "Capital other goods sector proportion"
+    short_name  : str = "Capital other goods sector propor."
     fortran_name: str = "CAPD(4, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of capital corresponding to the other goods sector."
@@ -282,6 +307,7 @@ class CapitalOtherGoodsSectorProportion(ModelVariable):
 class CapitalCapitalGoodsSectorProportion(ModelVariable):
     value       : Any
     name        : str = "Capital capital goods sector proportion"
+    short_name  : str = "Capital capital goods sector propor."
     fortran_name: str = "CAPD(5, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of capital corresponding to the capital goods sector."
@@ -292,6 +318,7 @@ class CapitalCapitalGoodsSectorProportion(ModelVariable):
 class Pop0to5Percentage(ModelVariable):
     value       : Any
     name        : str = "Population 0 to 5 percentage"
+    short_name  : str = "Population 0 to 5 percentage"
     fortran_name: str = "PYRAM_perc(1,IB)"
     unit        : str = "percentage"
     description : str = "The percentage of the population falling in age group 0 to 5."
@@ -302,6 +329,7 @@ class Pop0to5Percentage(ModelVariable):
 class Pop6to17Percentage(ModelVariable):
     value       : Any
     name        : str = "Population 6 to 17 percentage"
+    short_name  : str = "Population 6 to 17 percentage"
     fortran_name: str = "PYRAM_perc(2,IB)"
     unit        : str = "percentage"
     description : str = "The percentage of the population falling in age group 6 to 17."
@@ -312,6 +340,7 @@ class Pop6to17Percentage(ModelVariable):
 class Pop11to70Percentage(ModelVariable):
     value       : Any
     name        : str = "Population 11 to 70 percentage"
+    short_name  : str = "Population 11 to 70 percentage"
     fortran_name: str = "PYRAM_perc(3,IB)"
     unit        : str = "percentage"
     description : str = "The percentage of the population falling in age group 11 to 70."
@@ -322,6 +351,7 @@ class Pop11to70Percentage(ModelVariable):
 class ArableLand(ModelVariable):
     value       : Any
     name        : str = "Arable land"
+    short_name  : str = "Arable land"
     fortran_name: str = "AL(IB)"
     unit        : str = "1000 ha"
     description : str = "The size of the cultivated arable land. "
@@ -332,6 +362,7 @@ class ArableLand(ModelVariable):
 class ExcessCalories(ModelVariable):
     value       : Any
     name        : str = "Excess Calories"
+    short_name  : str = "Excess Calories"
     fortran_name: str = "EXCAL(IB)"
     unit        : str = "calories per day per person"
     description : str = "The amount of calories above the max calories per day per person."
@@ -342,6 +373,7 @@ class ExcessCalories(ModelVariable):
 class FertilizersProduction(ModelVariable):
     value       : Any
     name        : str = "Fertilizers production"
+    short_name  : str = "Fertilizers production"
     fortran_name: str = "FERT(IB)"
     unit        : str = "1000 tons"
     description : str = "The production of fertilizers."
@@ -352,6 +384,7 @@ class FertilizersProduction(ModelVariable):
 class AgricultureYield(ModelVariable):
     value       : Any
     name        : str = "Agriculture yield"
+    short_name  : str = "Agriculture yield"
     fortran_name: str = "REND(IB)"
     unit        : str = "tons per ha"
     description : str = "The agriculture yield per hectare measured in tons."
@@ -362,6 +395,7 @@ class AgricultureYield(ModelVariable):
 class PotentialArableLandProportion(ModelVariable):
     value       : Any
     name        : str = "Potential arable land proportion"
+    short_name  : str = "Potential arable land proportion"
     fortran_name: str = "FALU(IB)"
     unit        : str = "proportion"
     description : str = "Proportion of potentially arable land that is not cultivated calculated by" \
@@ -373,6 +407,7 @@ class PotentialArableLandProportion(ModelVariable):
 class UrbanPopulationPercentage(ModelVariable):
     value       : Any
     name        : str = "Urban population percentage"
+    short_name  : str = "Urban population percentage"
     fortran_name: str = "URBANR(IB)"
     unit        : str = "percentage"
     description : str = "The percentage of the population living in cities"
@@ -383,6 +418,7 @@ class UrbanPopulationPercentage(ModelVariable):
 class UrbanizationRate(ModelVariable):
     value       : Any
     name        : str = "Urbanization rate"
+    short_name  : str = "Urbanization rate"
     fortran_name: str = "TURBH(IB)"
     unit        : str = "persons per ha"
     description : str = "The urbanization rate calculated by " \
@@ -394,6 +430,7 @@ class UrbanizationRate(ModelVariable):
 class SecondaryLaborForcePercentage(ModelVariable):
     value       : Any
     name        : str = "Secondary laborForce percentage"
+    short_name  : str = "Secondary laborForce percentage"
     fortran_name: str = "SEPOPR(IB)"
     unit        : str = "percentage"
     description : str = "The percentage of secondary labor force calculated by" \
@@ -406,6 +443,7 @@ class SecondaryLaborForcePercentage(ModelVariable):
 class HousesPerPersonPercentage(ModelVariable):
     value       : Any
     name        : str = "Houses per person percentage"
+    short_name  : str = "Houses per person percentage"
     fortran_name: str = "HOUSER(IB)"
     unit        : str = "percentage"
     description : str = "The percentage of houses per population calculated by 100*houses/pop."
@@ -416,6 +454,7 @@ class HousesPerPersonPercentage(ModelVariable):
 class PeoplePerFamily(ModelVariable):
     value       : Any
     name        : str = "People per family"
+    short_name  : str = "People per family"
     fortran_name: str = "PERXFL(IB)"
     unit        : str = "persons"
     description : str = "The number of people per family."
@@ -426,6 +465,7 @@ class PeoplePerFamily(ModelVariable):
 class GNP(ModelVariable):
     value       : Any
     name        : str = "GNP"
+    short_name  : str = "GNP"
     fortran_name: str = "GNP(IB)"
     unit        : str = "US$"
     description : str = "The aggregated Gross National Product of all economic sectors."
@@ -436,6 +476,7 @@ class GNP(ModelVariable):
 class GNPFoodSectorProportion(ModelVariable):
     value       : Any
     name        : str = "GNP food sector proportion"
+    short_name  : str = "GNP food sector propor."
     fortran_name: str = "GNPD(1, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of Gross National Product corresponding to the food sector."
@@ -446,6 +487,7 @@ class GNPFoodSectorProportion(ModelVariable):
 class GNPHousingSectorProportion(ModelVariable):
     value       : Any
     name        : str = "GNP housing sector proportion"
+    short_name  : str = "GNP housing sector propor."
     fortran_name: str = "GNPD(2, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of Gross National Product corresponding to the housing sector."
@@ -456,6 +498,7 @@ class GNPHousingSectorProportion(ModelVariable):
 class GNPEducationSectorProportion(ModelVariable):
     value       : Any
     name        : str = "GNP education sector proportion"
+    short_name  : str = "GNP education sector propor."
     fortran_name: str = "GNPD(3, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of Gross National Product corresponding to the education sector."
@@ -466,6 +509,7 @@ class GNPEducationSectorProportion(ModelVariable):
 class GNPOtherGoodsSectorProportion(ModelVariable):
     value       : Any
     name        : str = "GNP other goods sector proportion"
+    short_name  : str = "GNP other goods sector propor."
     fortran_name: str = "GNPD(4, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of Gross National Product corresponding to the other" \
@@ -477,6 +521,7 @@ class GNPOtherGoodsSectorProportion(ModelVariable):
 class GNPCapitalGoodsSectorProportion(ModelVariable):
     value       : Any
     name        : str = "GNP capital goods sector proportion"
+    short_name  : str = "GNP capital goods sector propor."
     fortran_name: str = "GNPD(5, IB)"
     unit        : str = "proportion"
     description : str = "The proportion of Gross National Product corresponding to the capital" \

@@ -1,0 +1,339 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MicroSimu Visualization: Example</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'api/highcharts/highslide.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'api/tabulator/tabulator.min.css' %}" />
+
+    <style type="text/css">
+        body {
+            background: #efeaff;
+        }
+        .div-text{
+            margin: 0 auto;
+            width: 800px;
+        }
+        .highcharts-figure {
+            min-width: 800px;
+            max-width: 1200px;
+            min-height: 800px;
+            margin: 1em auto;
+        }
+        #variables-table {
+            margin: 1em auto;
+            min-width: 800px;
+            max-width: 1273px;
+        }
+        .tabulator-col-title {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!-- Highcharts -->
+<script type="text/javascript" src="{% static 'api/jquery-3.1.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'api/highcharts/code/highcharts.js'           %}"></script>
+<script type="text/javascript" src="{% static 'api/highcharts/code/modules/data.js'         %}"></script>
+<script type="text/javascript" src="{% static 'api/highcharts/code/modules/series-label.js' %}"></script>
+<script type="text/javascript" src="{% static 'api/highcharts/code/modules/exporting.js'    %}"></script>
+<script type="text/javascript" src="{% static 'api/highcharts/code/modules/export-data.js'  %}"></script>
+<script type="text/javascript" src="{% static 'api/highcharts/code/modules/accessibility.js'%}"></script>
+<script type="text/javascript" src="{% static 'api/highcharts/highslide-full.min.js'        %}"></script>
+<script type="text/javascript" src="{% static 'api/highcharts/highslide.config.js'          %}"></script>
+
+<!-- Tabulator -->
+<script type="text/javascript" src="{% static 'api/tabulator/tabulator.min.js'%}"></script>
+
+<div class="div-text">
+    <h1> Results visualization </h1>
+    <p id="p1">
+        This is only an example of the visualizations that can be produced using the data
+        obtained from MicroSimu's
+        endpoints, in this case using the results corresponding to region $REGION$ of Simulation $SIMULATION_ID$.
+        This page is kept as simple as possible to reduce the "noise" in its code
+        not related to the visualizations shown here, to stimulate the reader's creativity
+        and to remind the reader that, paraphrasing Django, MicroSimu is in the business of models simulation
+        not visualization (at least not yet).
+    </p>
+
+    <p id="p2">
+        These visualizations were dynamically generated using the data retrieved from endpoint <a id="a1" href=""></a>.
+        You are encouraged to compare these results with the ones from other regions and simulations.
+    </p>
+    <h2> Lines plot </h2>
+    <p>
+        Click on the variables in the legend to dynamically add them to the plot above it. You
+        can download the plot as different formats and also the raw data used in int. Click
+        on the button on the upper right corner.
+        Created using <a href="https://www.highcharts.com/">Highcharts</a>.
+    </p>
+</div>
+
+<figure class="highcharts-figure">
+    <div id="container"></div>
+</figure>
+
+<div class="div-text">
+    <h3> Variables information </h3>
+    Table showing the information of the variables available in the plot above.
+    Created using <a href="http://tabulator.info/">Tabulator</a>.
+</div>
+
+<div id="variables-table"></div>
+
+<script>
+    // Helper functions
+    function capitalizeFirstLetter(string) {
+        return string[0].toUpperCase() + string.slice(1);
+    }
+</script>
+
+<script type="text/javascript">
+    // Endpoint related functions
+    async function get_data(endpoint_url) {
+        const response = await fetch(endpoint_url);
+        return await response.json();
+    }
+
+    function variables_sorted_by_short_name(json) {
+        return Object.keys(json.variables).sort((a, b) => {
+            const first_name = json.variables[a].short_name;
+            const second_name = json.variables[b].short_name;
+            if (first_name < second_name) {
+                return -1;
+            }
+            if (first_name > second_name) {
+                return 1;
+            }
+            return 0;
+        });
+    }
+
+    function get_plot_series(json) {
+        const variableKeys = variables_sorted_by_short_name(json);
+        return variableKeys.map((variable) => ({
+            name: json.variables[variable].short_name,
+            data: json.results.map((result) => result[variable]),
+            visible: false,
+        }));
+    }
+
+    function get_simulation_id(json) {
+        const simulation_parts = json.simulation.split("/")
+        return simulation_parts[simulation_parts.length - 2];
+    }
+
+</script>
+
+<script type="text/javascript">
+    // Highcharts related functions
+    function get_x_axis(json) {
+        const ticks = json.results.map((result) => (result.year));
+        return {
+            'title': {'text': 'Year'},
+            'categories': ticks,
+        };
+    }
+
+    function get_legend_item(hc_row) {
+        return '<div style="float:left;width:215px;">' + hc_row.name + '</div>';
+    }
+
+    function get_legend() {
+        return {
+            align: 'center',
+            verticalAlign: 'bottom',
+            borderWidth: 1,
+            borderColor: 'rgb(31,16,38)',
+            useHTML: true,
+            itemMarginBottom: 10,
+            width: 770,
+            labelFormatter: function () {
+                return get_legend_item(this);
+            }
+
+        };
+    }
+
+    function get_chart_options() {
+        return {
+            borderWidth: 2,
+            borderColor: 'rgb(31,16,38)',
+            height: 800,
+            scrollablePlotArea: {
+                minWidth: 700,
+                minHeight: 700
+            },
+        };
+    }
+
+    function get_subtitle(json) {
+        let simu_id = get_simulation_id(json);
+        let region = capitalizeFirstLetter(json.region);
+        return 'Simulation ID: ' + simu_id + " | " + "Region: " + region;
+    }
+
+    function get_plot_data(json) {
+        let subtitle = get_subtitle(json);
+        return {
+            title         : "Lines plot",
+            subtitle      : subtitle,
+            xAxis         : get_x_axis(json),
+            series        : get_plot_series(json),
+            legend        : get_legend(),
+            chart_options : get_chart_options(),
+        };
+    }
+
+    function build_chart(plot_data) {
+        const series          = plot_data.series;
+        const xAxis           = plot_data.xAxis;
+        const title           = plot_data.title;
+        const subtitle        = plot_data.subtitle;
+        const legend          = plot_data.legend;
+        const chart_options   = plot_data.chart_options;
+        Highcharts.chart('container', {
+
+            chart: chart_options,
+
+            title: {
+                text: title,
+            },
+
+            subtitle: {
+                text: subtitle,
+            },
+
+            xAxis: xAxis,
+
+            yAxis: [
+                { // left y axis
+                    title: {
+                        text: null
+                    },
+                    labels: {
+                        align: 'left',
+                        x: 3,
+                        y: 16,
+                        format: '{value:.,0f}'
+                    },
+                    showFirstLabel: false
+                },
+            ],
+
+            legend: legend,
+
+            tooltip: {
+                shared: true,
+                crosshairs: true
+            },
+
+            plotOptions: {
+                series: {
+                    point: {
+                        events: {},
+                    },
+                    marker: {
+                        lineWidth: 1
+                    }
+                }
+            },
+
+            series: series,
+
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        menuItems: ["printChart",
+                            "separator",
+                            "downloadPNG",
+                            "downloadJPEG",
+                            "downloadPDF",
+                            "downloadSVG",
+                            "separator",
+                            "downloadCSV",
+                            "downloadXLS",
+                            //"viewData",
+                            "openInCloud"]
+                    }
+                }
+            }
+
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    // Tabulator: Variables table
+    function create_variables_table(json){
+        const table_columns = [
+            {title: "Name"          , field: "short_name"   , headerFilter: true},
+            {title: "Fortran"       , field: "fortran_name" , headerFilter: true},
+            {title: "Unit"          , field: "unit"         , headerFilter: true},
+            {title: "Category"      , field: "category"     , headerFilter: true},
+            {title: "Description"   , field: "description"  , headerFilter: true, formatter:"textarea", width:500},
+        ];
+        const table_rows = get_variables_table_rows(json);
+
+        new Tabulator("#variables-table", {
+            maxHeight:"100%",
+            resizableRows: true,
+            initialSort: [
+                {column: "short_name", dir: "asc"},
+            ],
+            data: table_rows,
+            columns: table_columns,
+        });
+    }
+
+    function get_variables_table_rows(json) {
+        const variableKeys = Object.keys(json.variables);
+        return variableKeys.map((variable) => (json.variables[variable]));
+    }
+</script>
+
+<script type="text/javascript">
+    // Fill paragraphs
+    function fill_p1(json) {
+        const $p1 = $("#p1")[0];
+        const $p1_base_txt = $p1.textContent;
+        let region = capitalizeFirstLetter(json.region);
+        $p1.textContent = $p1_base_txt
+            .replace("$REGION$", region)
+            .replace("$SIMULATION_ID$", get_simulation_id(json))
+    }
+
+    function fill_a1(endpoint_url) {
+        const $a1 = $("#a1")[0];
+        $a1.href = endpoint_url;
+        $a1.textContent = endpoint_url;
+    }
+
+    // Paragraph dynamic information
+    function fill_paragraph_information(json, endpoint_url) {
+        fill_p1(json);
+        fill_a1(endpoint_url);
+
+    }
+</script>
+
+<script type="text/javascript">
+    // Main execution
+    document.addEventListener('DOMContentLoaded', async function () {
+        let endpoint_url = "{{ endpoint_url }}";
+
+        const json = await get_data(endpoint_url);
+        const plot_data = get_plot_data(json);
+        fill_paragraph_information(json, endpoint_url);
+
+        build_chart(plot_data, endpoint_url);
+
+        create_variables_table(json);
+    });
+
+</script>
+</body>
+</html>

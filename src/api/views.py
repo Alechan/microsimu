@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from django.views import View
 from rest_framework import mixins, status, permissions
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
@@ -157,3 +158,12 @@ class RegionResultDetail(APIView):
         region_result = get_object_or_404(simu.region_results, region__name=region_name)
         serializer = RegionResultSerializer(region_result, context={"request": request})
         return Response(serializer.data)
+
+
+class VisualizeView(View):
+    template_name = 'api/visualize.html'
+
+    def get(self, request, simu_pk, region_name):
+        relative_url = reverse('api:regionresult-detail', args=(simu_pk, region_name))
+        endpoint_url = request.build_absolute_uri(relative_url)
+        return render(request, self.template_name, {"endpoint_url" : endpoint_url})
