@@ -80,7 +80,8 @@ Even if the items listed above end up being inconsequential and it falls into ob
 excuse to learn and get out of my comfort zone so it is a win-win for me.
 
 ### Is this production ready?
-Yes and not yet. It's the exact same code as the one running on [microsimu.alejandrodanos.com.ar] but it still needs
+Yes and not yet. It's the exact same code as the one running on [microsimu.alejandrodanos.com.ar](microsimu.alejandrodanos.com.ar)
+but it still needs
 some extra configuration on the host and it may need a more robust database depending on your needs (see one of
 the questions below).
 
