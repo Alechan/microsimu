@@ -11,7 +11,7 @@ encouraged to create their own if these do not satisfy their needs (there are pl
 capabilities in the future).
 
 ## Demo
-You can find a demo at [microsimu.alejandrodanos.com.ar].
+You can find a demo at [microsimu.alejandrodanos.com.ar](microsimu.alejandrodanos.com.ar).
 This demo is *read-only* for non authorized users, meaning that retrieving past results and
 using the default visualizations is available to everyone but only registered users can
 run simulations. It is planned to allow up to 5 simulation runs to people from the public in the
@@ -55,8 +55,8 @@ we can use the docker compose file to also start instances of nginx and postgres
 One of MicroSimu's secondary objectives is to contribute to the Open Source community with "real world"
 examples of subjects normally hidden in other projects. In this case, you may see that we set the `.env.prod`
 and `.env.db.prod` files, which have very curious names. This is because this is the exact same way that MicroSimu
-is deployed at [microsimu.alejandrodanos.com.ar], the only addition being that the host has another nginx instance
-linked to this containerized nginx. This is planned to be changed in the future as seen on issue [#108].
+is deployed at [microsimu.alejandrodanos.com.ar](microsimu.alejandrodanos.com.ar), the only addition being that the host has another nginx instance
+linked to this containerized nginx (and the fact that the environtment variables have been set with more "real world values" for the site). This is planned to be changed in the future as seen on issue [#108](https://github.com/Alechan/microsimu/issues/108).
 
 ## Models
 ### Latin-American World Model
@@ -86,7 +86,7 @@ the questions below).
 
 ### Is this the code for your website? You're gonna get hacked :O
 Let's hope not. In any case, if you find any vulnerabilities please don't create a new issue as they're public.
-Instead, hit me up on [LinkedIn][https://www.linkedin.com/in/alejandro-dan%C3%B3s-058a57104/].
+Instead, hit me up on [LinkedIn][LinkedIn].
 
 ### You're using a containerized Postgres instance in production? That's so wrong. 
 Kind of but not really. For low traffic sites it's cheaper and easier to maintain than DBaaS alternatives. Nevertheless,
@@ -110,3 +110,6 @@ similar projects.
  Fundacion Bariloche. International Development Research Centre, January 1976.
 -  Danós, Alejandro, Castro, Rodrigo, and Scolnik, Hugo (2017), "Latin American World Model 2.0 Web Interface" Discrete
  Events Simulation Lab, University of Buenos Aires, Retrieved November 12, 2020 from https://lawm.exp.dc.uba.ar/ 
+
+
+[LinkedIn]: https://www.linkedin.com/in/alejandro-dan%C3%B3s-058a57104/
