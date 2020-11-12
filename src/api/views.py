@@ -201,10 +201,6 @@ class SimulationList(APIView):
 class SimulationDetail(APIView):
     """
     Get the details of a simulation
-
-    Append "/visualize" to this endpoint to get an HTML
-    file with visualization examples using the data show
-    below. 
     """
     renderer_classes = APIView.renderer_classes
 
@@ -219,6 +215,10 @@ class RegionResultDetail(APIView):
     """
     Get a region's (Developed Countries, Latin-America, Africa, Asia) results for
     a simulation.
+
+    Append "/visualize" to this endpoint to get an HTML
+    file with visualization examples using the data show
+    below. 
     """
     renderer_classes = APIView.renderer_classes
 
