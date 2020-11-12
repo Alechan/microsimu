@@ -66,8 +66,8 @@
     <h2> Lines plot </h2>
     <p>
         Click on the variables in the legend to dynamically add them to the plot above it. You
-        can download the plot as different formats and also the raw data used in int. Click
-        on the button on the upper right corner.
+        can download the plot in different formats and also download the raw data which is provided
+        ready to be imported in a spreadsheet. Click on the button on the upper right corner.
         Created using <a href="https://www.highcharts.com/">Highcharts</a>.
     </p>
 </div>
@@ -179,7 +179,7 @@
     function get_plot_data(json) {
         let subtitle = get_subtitle(json);
         return {
-            title         : "Lines plot",
+            title         : "LAWM Lines Plot",
             subtitle      : subtitle,
             xAxis         : get_x_axis(json),
             series        : get_plot_series(json),
@@ -245,6 +245,7 @@
             series: series,
 
             exporting: {
+                sourceWidth: 800,
                 buttons: {
                     contextButton: {
                         menuItems: ["printChart",
@@ -256,7 +257,6 @@
                             "separator",
                             "downloadCSV",
                             "downloadXLS",
-                            //"viewData",
                             "openInCloud"]
                     }
                 }

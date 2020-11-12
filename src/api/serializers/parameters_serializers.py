@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.utils.serializer_helpers import ReturnDict
 
 from api.models.models import LAWMGeneralParameters, LAWMRegionalParameters, \
     LAWMRunParameters
@@ -82,7 +83,8 @@ class RunParametersSerializer(serializers.ModelSerializer, metaclass=MicroSimuSe
         :return:
         """
         if not self.instance:
-            data = self.get_default_serialized_data()
+            ret = self.get_default_serialized_data()
+            return ReturnDict(ret, serializer=self)
         else:
             data = super().data
         return data
