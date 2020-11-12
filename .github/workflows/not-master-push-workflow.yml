@@ -23,7 +23,12 @@ jobs:
           pip install -r requirements.txt
       - name: Run internal tests
         working-directory: ./src
-        run: python manage.py test
+        run: coverage run --source='.' manage.py test
+      - name: Upload coverage stats
+        working-directory: ./src
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: coveralls
       - name: Install functional tests dependencies
         run: pip install -r requirements-functional-tests.txt
       - name: Copy functional tests .env.prod file. Dont' worry, the values are used only for functional tests
