@@ -65,7 +65,7 @@ def assert_simu_region_results_are_valid(request_session, simu_1_detail, simu_1_
         # I expect it includes information for all variables
         assert LAWM_OUTPUT_VARIABLES == region_detail["variables"].keys()
         # I expect each variable information json object to have the following fields
-        expected_variable_info_fields = {"name", "fortran_name", "unit", "description", "category"}
+        expected_variable_info_fields = {"name", "short_name", "fortran_name", "unit", "description", "category"}
         for var_info in region_detail["variables"].values():
             assert expected_variable_info_fields == var_info.keys()
         # I expect the results to include all the years of the standard run

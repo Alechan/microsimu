@@ -10,6 +10,7 @@ from api.std_lib.lawm import variables
 class CustomVariable(variables.ModelVariable):
     value       : Any
     name        : str = "The name"
+    short_name  : str = "Name"
     fortran_name: str = "The fortran name"
     unit        : str = "The unit"
     description : str = "The description"
