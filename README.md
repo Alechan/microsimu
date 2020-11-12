@@ -63,8 +63,8 @@ linked to this containerized nginx (and the fact that the environtment variables
 In this first version of MicroSimu, the only model available to study and run simulations is the
 The Latin-American World Model (LAWM), a global model developed in Fortran in 1972 by a multidisciplinary research group
 in Bariloche, Argentina that fell into abandonment 4 years later due to the Military Coup suffered by the country. The
-plan was to include a python translation of the model but due to time constraints it was suspended at a completion of
-about 40%. Therefore, a pre-compiled fortran version of the model is included instead.
+original plan was to release the first version of MicroSimu with a python translation of the model but due to time
+constraints it was suspended at a completion of about 40%. Therefore, a pre-compiled fortran version of the model is included instead.
 
 The book published in 1976 (see bibliography below), describes in great detail the inspiration, assumptions and
 justifications of the model.
