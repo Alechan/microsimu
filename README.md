@@ -11,7 +11,7 @@ encouraged to create their own if these do not satisfy their needs (there are pl
 capabilities in the future).
 
 ## Demo
-You can find a demo at [microsimu.alejandrodanos.com.ar](microsimu.alejandrodanos.com.ar).
+You can find a demo at microsimu.alejandrodanos.com.ar.
 This demo is *read-only* for non authorized users, meaning that retrieving past results and
 using the default visualizations is available to everyone but only registered users can
 run simulations. It is planned to allow up to 5 simulation runs to people from the public in the
