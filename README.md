@@ -55,7 +55,7 @@ we can use the docker compose file to also start instances of nginx and postgres
 One of MicroSimu's secondary objectives is to contribute to the Open Source community with "real world"
 examples of subjects normally hidden in other projects. In this case, you may see that we set the `.env.prod`
 and `.env.db.prod` files, which have very curious names. This is because this is the exact same way that MicroSimu
-is deployed at [microsimu.alejandrodanos.com.ar](microsimu.alejandrodanos.com.ar), the only addition being that the host has another nginx instance
+is deployed at https://microsimu.alejandrodanos.com.ar, the only addition being that the host has another nginx instance
 linked to this containerized nginx (and the fact that the environtment variables have been set with more "real world values" for the site). This is planned to be changed in the future as seen on issue [#108](https://github.com/Alechan/microsimu/issues/108).
 
 ## Models
@@ -80,7 +80,7 @@ Even if the items listed above end up being inconsequential and it falls into ob
 excuse to learn and get out of my comfort zone so it is a win-win for me.
 
 ### Is this production ready?
-Yes and not yet. It's the exact same code as the one running on [microsimu.alejandrodanos.com.ar](microsimu.alejandrodanos.com.ar)
+Yes and not yet. It's the exact same code as the one running on https://microsimu.alejandrodanos.com.ar
 but it still needs
 some extra configuration on the host and it may need a more robust database depending on your needs (see one of
 the questions below).
