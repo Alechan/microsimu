@@ -43,11 +43,13 @@ from_fortran_dict = {
     'popr'  : lambda df: df['POPR'],
     'prot'  : lambda df: df['PROT'],
     'rend'  : lambda df: df['REND'],
-    'rlfd_1': lambda df: df['RLFD(1)'],
-    'rlfd_2': lambda df: df['RLFD(2)'],
-    'rlfd_3': lambda df: df['RLFD(3)'],
-    'rlfd_4': lambda df: df['RLFD(4)'],
-    'rlfd_5': lambda df: df['RLFD(5)'],
+    # Careful, because in the original LAWM, RLFD represented the proportion (0 < proportion < 1) when used in the code
+    # but the percentage when written in the results (percentage = 100*proportion)
+    'rlfd_1': lambda df: df['RLFD(1)_CODE'],
+    'rlfd_2': lambda df: df['RLFD(2)_CODE'],
+    'rlfd_3': lambda df: df['RLFD(3)_CODE'],
+    'rlfd_4': lambda df: df['RLFD(4)_CODE'],
+    'rlfd_5': lambda df: df['RLFD(5)_CODE'],
     'sepopr': lambda df: df['SEPOPR'],
     'tlf'   : lambda df: df['TLF'],
     'turbh' : lambda df: df['TURBH'],
