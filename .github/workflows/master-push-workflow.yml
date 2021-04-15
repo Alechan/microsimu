@@ -16,7 +16,7 @@ jobs:
 
 
       - name: chmod
-        run: chmod +x xxx
+        run: chmod +x test
 
       - name: run
-        run: ./xxx
+        run: ./test
