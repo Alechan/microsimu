@@ -11,12 +11,7 @@ encouraged to create their own if these do not satisfy their needs (there are pl
 capabilities in the future).
 
 ## Demo
-You can find a demo at https://microsimu.alejandrodanos.com.ar.
-This demo is *read-only* for non authorized users, meaning that retrieving past results and
-using the default visualizations is available to everyone but only registered users can
-run simulations. It is planned to allow up to 5 simulation runs to people from the public in the
-future, but for now your only choice is to run MicroSimu locally (which is really easy using
-the python or docker alternatives) or pestering me in [LinkedIn][LinkedIn] for a user.
+Currently offline.
 
 
 ## Locally
@@ -55,7 +50,7 @@ we can use the docker compose file to also start instances of nginx and postgres
 One of MicroSimu's secondary objectives is to contribute to the Open Source community with "real world"
 examples of subjects normally hidden in other projects. In this case, you may see that we set the `.env.prod`
 and `.env.db.prod` files, which have very curious names. This is because this is the exact same way that MicroSimu
-is deployed at https://microsimu.alejandrodanos.com.ar, the only addition being that the host has another nginx instance
+is deployed at the live demo (currently offline), the only addition being that the host has another nginx instance
 linked to this containerized nginx (and the fact that the environtment variables have been set with more "real world values" for the site). This is planned to be changed in the future as seen on issue [#108](https://github.com/Alechan/microsimu/issues/108).
 
 ## Models
@@ -80,7 +75,7 @@ Even if the items listed above end up being inconsequential and it falls into ob
 excuse to learn and get out of my comfort zone so it is a win-win for me.
 
 ### Is this production ready?
-Yes and not yet. It's the exact same code as the one running on https://microsimu.alejandrodanos.com.ar
+Yes and not yet. It's the exact same code as the one that was running on the live demo (currently offline)
 but it still needs
 some extra configuration on the host and it may need a more robust database depending on your needs (see one of
 the questions below).
